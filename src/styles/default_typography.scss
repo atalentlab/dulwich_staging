@@ -1,0 +1,686 @@
+//---------------------------------------------------------
+// #Typography
+//---------------------------------------------------------
+
+// Index
+// - Typography Settings
+// - Typography Base
+
+
+//---------------------------------------------------------
+// #Typography Settings
+//---------------------------------------------------------
+
+@mixin text-xxxxl {
+    @include flex-font-size(56px, 1);
+  }
+  
+  @mixin text-xxxl {
+    @include flex-font-size(40px, 1.2);
+  
+    @include media-query('tablet') {
+      @include flex-font-size(34px, 1.2);
+    }
+  
+    @include media-query('phone-large') {
+      @include flex-font-size(28px, 1.2);
+    }
+  }
+  
+  @mixin text-xxl {
+    @include flex-font-size(90px, 0.9);
+    letter-spacing: -1px;
+    body.zh-Hans & {
+      @include flex-font-size(88px, 0.9);
+      letter-spacing: -1px;
+      @include media-query('tablet-landscape') {
+        @include flex-font-size(72px, 0.9);
+      }
+      @include media-query('tablet') {
+        @include flex-font-size(64px, 0.9);
+      }
+      @include media-query('phone-large') {
+        @include flex-font-size(48px, 0.9);
+      }
+      @include media-query('phone') {
+        @include flex-font-size(40px, 0.9);
+      }
+    }
+  
+    @include media-query('tablet-landscape') {
+      @include flex-font-size(72px, 0.9);
+    }
+    @include media-query('tablet') {
+      @include flex-font-size(64px, 0.9);
+    }
+    @include media-query('phone-large') {
+      @include flex-font-size(48px, 0.9);
+    }
+    @include media-query('phone') {
+      @include flex-font-size(40px, 0.9);
+    }
+  }
+  
+  @mixin text-xl {
+    @include flex-font-size(60px, 1);
+  
+    @include media-query('tablet') {
+      @include flex-font-size(32px, 1);
+    }
+  
+    @include media-query('phone') {
+      @include flex-font-size(24px, 1);
+    }
+  }
+  
+  @mixin text-l {
+    @include flex-font-size(32px, 40px);
+  
+    @include media-query('tablet') {
+      @include flex-font-size(24px, 1);
+    }
+  
+    @include media-query('phone') {
+      @include flex-font-size(24px, 1);
+    }
+  }
+  
+  @mixin text-xm {
+    @include flex-font-size(32px, 1.2);
+  }
+  
+  @mixin text-m {
+    @include flex-font-size(24px, 1.2);
+  }
+  
+  @mixin text-ms {
+    @include flex-font-size(20px, 1.2);
+  }
+  
+  @mixin text-s {
+    @include flex-font-size(18px, 1.2);
+  }
+  
+  @mixin text-s-ex {
+    @include flex-font-size(18px, 1.6);
+  }
+  
+  @mixin text-s-responsive {
+    @include flex-font-size(18px, 1.2);
+    @include media-query(tablet){
+      @include flex-font-size(14px, 1.2);
+    }
+  }
+  
+  @mixin text-xs {
+    @include flex-font-size(16px, 1.2);
+  }
+  
+  @mixin text-xxs {
+    @include flex-font-size(15px, 1.5);
+  }
+  
+  @mixin text-xxxs {
+    @include flex-font-size(14px, 1.6);
+  }
+  
+  @mixin text-xxxxs {
+    @include flex-font-size(13px, 1.6);
+  }
+  
+  @mixin text-serif {
+    font-family: $font-family-serif;
+  
+    // Chinese site in sans serif only
+    body.zh-Hans & {
+      font-family: $font-family-sans-serif;
+    }
+  
+    body.my & {
+      font-family: $font-family-burmese;
+    }
+  }
+  
+  @mixin text-sans-serif {
+    font-family: $font-family-sans-serif;
+  
+    body.my & {
+      font-family: $font-family-burmese;
+    }
+  }
+  
+  //---------------------------------------------------------
+  // Typography Styles
+  //---------------------------------------------------------
+  
+  html {
+    font-size: ($flex-base-font-size / 16px) * 1em; /* [1] */
+    line-height: $flex-base-line-height / $flex-base-font-size; /* [1] */
+    background-color: $flex-base-background-color;
+    color: $flex-base-text-color;
+    font-family: $font-family-sans-serif;
+  }
+  
+  body {
+    &.my {
+      font-family: $font-family-burmese;
+    }
+  }
+  
+  
+  h1, h2, h3, h4, h5, h6 {
+    text-rendering: optimizeLegibility;
+    font-weight: normal;
+  }
+  
+  em {
+    // font-weight: bold;
+    font-style: italic;
+  }
+  
+  hr {
+    margin: 3em 0;
+    padding: 0;
+    border: none;
+    border-top: 1px solid #ddd;
+    color: #eee;
+    text-align: center;
+  }
+  
+  abbr[title],
+  dfn[title] {
+    border-bottom: 1px dotted $flex-base-text-color;
+  }
+  
+  pre {
+    display: block;
+    padding: 15px;
+    font-size: .9em;
+    white-space: pre-line;
+    line-height: 1.6;
+    font-family: arial, sans-serif;
+    color: #fff;
+    background: $flex-base-text-color;
+  }
+  
+  blockquote {
+    position: relative;
+    quotes: "";
+  }
+  
+  cite {
+    display: inline-block;
+  }
+  
+  p {
+    margin: 0 0 0 0;
+  
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
+  }
+  
+  ::selection {
+    background-color: color(red);
+    color: color(white);
+  }
+  
+  // font
+  
+  .text--serif {
+    @include text-serif;
+  }
+  
+  .text--sans-serif {
+    @include text-sans-serif;
+  }
+  
+  // font style
+  
+  .text--medium {
+    font-weight: 500;
+  }
+  
+  .text--black {
+    font-weight: 800;
+  }
+  
+  .text--uppercase{
+    text-transform: uppercase;
+  }
+  
+  .text--nowrap{
+    white-space: nowrap;
+  }
+  // size
+  
+  .text--xxxxl {
+    @include text-xxxxl;
+  }
+  
+  .text--xxxl {
+    @include text-xxxl;
+  }
+  
+  .text--xxl {
+    @include text-xxl;
+  }
+  
+  .text--xl {
+    @include text-xl;
+  }
+  
+  .text--l {
+    @include text-l;
+  }
+  
+  .text--xm {
+    @include text-xm;
+  }
+  
+  .text--m {
+    @include text-m;
+  }
+  
+  .text--ms {
+    @include text-ms;
+  }
+  
+  .text--s {
+    @include text-s;
+  }
+  
+  .text--s-responsive {
+    @include text-s-responsive;
+  }
+  
+  .text--s-ex {
+    @include text-s-ex;
+  }
+  
+  .text--xs {
+    @include text-xs;
+  }
+  
+  .text--xxs {
+    @include text-xxs;
+  }
+  
+  .text--xxxs {
+    @include text-xxxs;
+  }
+  
+  .text--xxxxs {
+    @include text-xxxxs;
+  }
+  
+  // appearance
+  
+  .text--strong {
+    font-weight: bold;
+  }
+  
+  .text--emph {
+    font-style: italic;
+  }
+  
+  .text--caps {
+    text-transform: uppercase;
+  }
+  
+  // colors
+  
+  .text--dark {
+    color: color(greyDarkPrimary);
+  }
+  
+  .text--white {
+    color: color(white);
+  }
+  
+  .text--blue {
+    color: color(blueLight) !important;
+  }
+  
+  .text--green{
+    color: color(brandGreen) !important;
+  }
+  
+  .text--red {
+    color: color(red) !important;
+  }
+  
+  .text--muted {
+    color: color(grey) !important;
+  }
+  
+  .text--center {
+    text-align: center;
+  }
+  
+  .text--left {
+    text-align: left;
+  }
+  
+  .text--right{
+    text-align: right;
+  }
+  
+  /*.text--body {
+    color: color(greyDarkestest);
+  }
+  
+  .text--muted {
+    color: color(greyDarkest);
+  }
+  
+  
+  .text--highlighted {
+    color: color(yellow);
+  }
+  
+  .text--dark {
+    color: color(blueDarker);
+  }
+  
+  .text--darker {
+    color: color(blueDarkest);
+  }
+  
+  .text--darkest {
+    color: color(blueDarkestest);
+  }*/
+  
+  // shadow
+  
+  .text--shadow-m {
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  .text--shadow-s {
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);
+  }
+  
+  // combinations
+  
+  
+  .text--serif--xxxxl {
+    @extend .text--serif;
+    @extend .text--xxxxl;
+  }
+  
+  .text--serif--xxxl {
+    @extend .text--serif;
+    @extend .text--xxxl;
+  }
+  
+  .text--serif--xm--strong {
+    @extend .text--serif;
+    @extend .text--xm;
+    @extend .text--strong;
+  }
+  
+  
+  
+  .text--serif--xxxl--red {
+    @extend .text--serif;
+    @extend .text--xxxl;
+    @extend .text--red;
+  }
+  
+  .text--serif--xxl {
+    @extend .text--serif;
+    @extend .text--xxl;
+  }
+  
+  .text--serif--xxl--emph {
+    @extend .text--serif;
+    @extend .text--xxl;
+    @extend .text--emph;
+  }
+  
+  .text--serif--m {
+    @extend .text--serif;
+    @extend .text--m;
+  }
+  
+  .text--serif--m--caps {
+    @extend .text--serif;
+    @extend .text--m;
+    @extend .text--caps;
+  }
+  
+  .text--serif--l {
+    @extend .text--serif;
+    @extend .text--l;
+  }
+  
+  .text--serif--xl {
+    @extend .text--serif;
+    @extend .text--xl;
+  }
+  
+  .text--serif--l--emph {
+    @extend .text--serif;
+    @extend .text--l;
+    @extend .text--emph;
+  }
+  
+  .text-serif--white--xxl {
+    @extend .text--white;
+    @extend .text--serif;
+    @extend .text--xxl;
+  }
+  
+  .text--sans-serif--medium--xxxs {
+    @extend .text--sans-serif;
+    @extend .text--medium;
+    @extend .text--xxxs;
+  }
+  
+  .text--sans-serif--medium--xs {
+    @extend .text--sans-serif;
+    @extend .text--medium;
+    @extend .text--xs;
+  }
+  
+  .text--sans-serif--medium--xs--caps {
+    @extend .text--sans-serif;
+    @extend .text--medium;
+    @extend .text--xs;
+    @extend .text--caps;
+  }
+  
+  .text--sans-serif--medium--xs--caps--muted {
+    @extend .text--sans-serif;
+    @extend .text--medium;
+    @extend .text--xs;
+    @extend .text--caps;
+    @extend .text--muted;
+  }
+  
+  .text--sans-serif--black {
+    @extend .text--sans-serif;
+    @extend .text--black;
+  }
+  
+  .text--sans-serif--black--xxxs {
+    @extend .text--sans-serif;
+    @extend .text--black;
+    @extend .text--xxxs;
+  }
+  
+  .text--sans-serif--medium {
+    @extend .text--sans-serif;
+    @extend .text--medium;
+  }
+  
+  .text--sans-serif--black--xxxl {
+    @extend .text--sans-serif;
+    @extend .text--black;
+    @extend .text--xxxl;
+  }
+  
+  .text--sans-serif--white--xxxl {
+    @extend .text--sans-serif;
+    @extend .text--white;
+    @extend .text--xxxl;
+  }
+  
+  
+  .text--sans-serif--medium--l {
+    @extend .text--sans-serif;
+    @extend .text--medium;
+    @extend .text--l;
+  }
+  
+  .text--sans-serif--strong--l {
+    @extend .text--sans-serif;
+    @extend .text--strong;
+    @extend .text--l;
+  }
+  
+  .text--sans-serif--black--l {
+    @extend .text--sans-serif;
+    @extend .text--black;
+    @extend .text--l;
+  }
+  
+  
+  
+  .text--sans-serif--black--m--muted {
+    @extend .text--sans-serif;
+    @extend .text--black;
+    @extend .text--m;
+    @extend .text--muted;
+  }
+  
+  .text--sans-serif--medium--m {
+    @extend .text--sans-serif;
+    @extend .text--medium;
+    @extend .text--m;
+  }
+  
+  .text--sans-serif--medium--m--caps {
+    @extend .text--sans-serif;
+    @extend .text--medium;
+    @extend .text--m;
+    @extend .text--caps;
+  }
+  
+  .text--sans-serif--medium--m--caps--muted {
+    @extend .text--sans-serif;
+    @extend .text--medium;
+    @extend .text--m;
+    @extend .text--caps;
+    @extend .text--muted;
+  }
+  
+  .text--sans-serif--medium--s {
+    @extend .text--sans-serif;
+    @extend .text--medium;
+    @extend .text--s;
+  }
+  
+  .text--sans-serif--medium--emph {
+    @extend .text--sans-serif;
+    @extend .text--medium;
+    @extend .text--emph;
+  }
+  
+  .text--tag{
+    @include flex-font-size(20px, 1.2);
+    @include media-query(tablet-landscape){
+      @include flex-font-size(16px, 1.2);
+    }
+  }
+  
+  // separate
+  
+  .subtitle {
+    @extend .text--black;
+    margin-bottom: 30px !important;
+    @include flex-font-size(40px, 1);
+    @include media-query('tablet') {
+      @include flex-font-size(32px, 1);
+    }
+    @include media-query('phone') {
+      @include flex-font-size(20px, 1);
+    }
+  }
+  
+  .dot--red{
+    position: relative;
+    &:after {
+      content: '.';
+      position: absolute;
+      transform: translate(0, 0);
+      bottom: 0;
+      color: color(red);
+          body.zh-Hans &{
+          bottom: -10px;
+        }
+    }
+  }
+  
+  .dot--blue{
+    position: relative;
+    &:after {
+      content: '.';
+      position: absolute;
+      transform: translate(0, 0);
+      bottom: 0;
+      color: color(blueLight);
+          body.zh-Hans &{
+          bottom: -10px;
+        }
+    }
+  }
+  
+  .dot--yellow{
+    position: relative;
+    &:after {
+      content: '.';
+      position: absolute;
+      transform: translate(0, 0);
+      bottom: 0;
+      color: color(yellow);
+          body.zh-Hans &{
+          bottom: -10px;
+        }
+    }
+  }
+  
+  .dot--dark{
+    position: relative;
+    &:after{
+      content: '.';
+      position: absolute;
+      transform: translate(0, 0);
+      bottom: 0;
+      color: color(greyDarkPrimary);
+          body.zh-Hans &{
+          bottom: -10px;
+        }
+      .inspiring-people &{
+        right: 0;
+      }
+    }
+  }
+  //Adding new class for school HP's slider titles.
+  .dot--white{
+    position: relative;
+    &:after{
+      content: '.';
+      //position: absolute;
+      color: color(white);
+          body.zh-Hans &{
+          //bottom: -10px;
+        }
+      .admission-slider &{
+        bottom: 10px;
+      }
+    }
+  }
+  .dulwich-full-width{
+    max-width: 1440px;
+  }

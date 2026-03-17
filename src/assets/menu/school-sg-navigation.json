@@ -1,0 +1,749 @@
+{
+  "en": {
+    "topBar": {
+      "parentPortal": "Parent Portal",
+      "schoolCalendar": "School Calendar"
+    },
+    "siteMapLabel": "See Full Site Map",
+    "searchPlaceholder": "Search",
+    "searchResultsTitle": "Search Results",
+    "searchResultsClose": "Close",
+    "buttons": {
+      "enquire": "Enquire",
+      "applyNow": "Apply Now"
+    },
+    "mobile": {
+      "schools": "Schools",
+      "fullSiteMap": "Full Site Map",
+      "aiAssistant": "AI ASSISTANT"
+    },
+    "navItems": [
+      {
+        "id": "why-dulwich",
+        "label": "Why Dulwich",
+        "sections": [
+          {
+            "id": "our-college",
+            "heading": "OUR COLLEGE",
+            "links": [
+              { "title": "Welcome From the Head of College", "url": "/our-college/from-our-head-of-college" },
+              { "title": "Vision & Values",                  "url": "/about-dulwich/vision-and-values" },
+              { "title": "Dulwich Difference",               "url": "/our-college/dulwich-difference" },
+              { "title": "Campus & Facilities",              "url": "/our-college/campus-environment" },
+              { "title": "University Matriculation",         "url": "#", "schools": ["singapore"] }
+            ]
+          },
+          {
+            "id": "family-of-schools",
+            "heading": "FAMILY OF SCHOOLS",
+            "links": [
+              { "title": "Worldwise Events",         "url": "/holistic-curriculum/worldwise-events" },
+              { "title": "International Experiences", "url": "#" },
+              { "title": "Global Partnership",        "url": "#" },
+              { "title": "Educational Leadership",    "url": "#" }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "academic-results",
+            "heading": "Academic Results",
+            "url": "/our-college/academic-results",
+            "image": "why-academic",
+            "description": "Our students consistently achieve academic results that make Dulwich one of the leading IB Schools in Shanghai, China, and the world.",
+            "buttonText": "Academic Results"
+          },
+          {
+            "id": "the-greenhouse",
+            "heading": "The Greenhouse",
+            "url": "/our-college/the-greenhouse",
+            "image": "why-university",
+            "description": "At Dulwich College International, our holistic curriculum nurtures students to make a positive difference in the world.",
+            "buttonText": "The Greenhouse",
+            "schools": ["singapore"]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "University Matriculation",
+            "url": "#",
+            "image": "why-university",
+            "description": "At Dulwich College International, our holistic curriculum nurtures students to make a positive difference in the world.",
+            "buttonText": "University Matriculation",
+            "schools": ["suzhou"]
+          }
+        ]
+      },
+      {
+        "id": "learning",
+        "label": "Learning",
+        "sections": [
+          {
+            "id": "core-curriculum",
+            "heading": "CORE CURRICULUM",
+            "links": [
+              { "title": "DUCKS (ages 2 to 7)",              "url": "/holistic-curriculum/ducks-ages-2-to-7" },
+              { "title": "Junior School (ages 7 to 11)",      "url": "/holistic-curriculum/junior-school-ages-7-to-11" },
+              { "title": "Senior School (ages 11 to 18)",     "url": "/holistic-curriculum/senior-school-ages-11-to-18" },
+              { "title": "IGCSE",                             "url": "#", "schools": ["singapore"] },
+              { "title": "Post-16 Pathways",                  "url": "#", "schools": ["singapore"] },
+              { "title": "International Baccalaureate",       "url": "#", "schools": ["suzhou"] },
+              { "title": "A-Levels & IAD",                    "url": "#", "schools": ["suzhou"] },
+              { "title": "University & Careers Counselling",  "url": "/how-we-teach-and-learn/dcsg-university-counselling" }
+            ]
+          },
+          {
+            "id": "holistic-education",
+            "heading": "HOLISTIC EDUCATION",
+            "links": [
+              { "title": "Co-Curricular Activities",         "url": "/holistic-curriculum/co-curricular-activities" },
+              { "title": "STEM",                             "url": "/holistic-curriculum/stem-se21" },
+              { "title": "Sports",                           "url": "/holistic-curriculum/sports" },
+              { "title": "Mandarin",                         "url": "/holistic-curriculum/mandarin", "schools": ["suzhou"] },
+              { "title": "Student Leadership",               "url": "#", "schools": ["suzhou"] },
+              { "title": "Visual & Performing Arts",         "url": "/holistic-curriculum/visual-and-performing-arts" },
+              { "title": "Learning Beyond the Classroom",    "url": "/holistic-curriculum/learning-beyond-the-classroom", "schools": ["singapore"] }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "student-leadership",
+            "heading": "Student Leadership",
+            "url": "/holistic-curriculum/student-leadership-programme",
+            "image": "learning-leadership",
+            "description": "The Dulwich Educational Leadership team bring deep expertise and proven excellence to teaching and learning across our network.",
+            "buttonText": "Student Leadership",
+            "schools": ["singapore"]
+          },
+          {
+            "id": "wellbeing",
+            "heading": "Wellbeing",
+            "url": "/how-we-teach-and-learn/wellbeing",
+            "image": "learning-leadership",
+            "description": "Our whole community supports student health, happiness, and social-emotional growth: the foundation for academic and life success.",
+            "buttonText": "Wellbeing",
+            "schools": ["suzhou"]
+          },
+          {
+            "id": "sustainability",
+            "heading": "Sustainability & Global Citizenship",
+            "url": "/our-college/sustainability-and-global-citizenship",
+            "image": "learning-wellbeing",
+            "description": "At Dulwich College International, our holistic curriculum nurtures students to make a positive difference in the world.",
+            "buttonText": "Sustainability & Global Citizenship"
+          }
+        ]
+      },
+      {
+        "id": "community",
+        "label": "Community",
+        "sections": [
+          {
+            "id": "our-community",
+            "heading": "OUR COMMUNITY",
+            "links": [
+              { "title": "Student Life",              "url": "#", "schools": ["singapore"] },
+              { "title": "Teachers & Staff",           "url": "/community/teachers" },
+              { "title": "Friends of Dulwich (FoD)",  "url": "/community/friends-of-dulwich" },
+              { "title": "Alumni",                     "url": "/community/worldwise-alumni-network" },
+              { "title": "Safeguarding & Wellbeing",  "url": "#", "schools": ["singapore"] }
+            ]
+          },
+          {
+            "id": "life-at-dulwich",
+            "heading": "LIFE AT DULWICH",
+            "links": [
+              { "title": "College Calendar", "url": "/our-college/academic-year-calendar" },
+              { "title": "Latest News",      "url": "/dulwich-life" },
+              { "title": "Work at Dulwich", "url": "/working-at-dulwich" }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "meet-our-parents",
+            "heading": "Meet Our Parents",
+            "url": "/community/meet-our-parents",
+            "image": "community-parents",
+            "description": "Hear directly from our parent community about their experiences and why they chose Dulwich College.",
+            "buttonText": "Meet Our Parents"
+          },
+          {
+            "id": "student-stories",
+            "heading": "Students Stories",
+            "url": "/community/student-stories",
+            "image": "community-stories",
+            "description": "Real stories from our students about their journeys, passions, and what makes Dulwich College home.",
+            "buttonText": "Students Stories"
+          }
+        ]
+      },
+      {
+        "id": "admissions",
+        "label": "Admissions",
+        "sections": [
+          {
+            "id": "apply",
+            "heading": "APPLY",
+            "links": [
+              { "title": "Eligibility",         "url": "#" },
+              { "title": "Admissions Criteria", "url": "#" },
+              { "title": "Fees",                "url": "#" },
+              { "title": "FAQs",               "url": "#" },
+              { "title": "Scholarships",        "url": "/admissions/scholarships", "schools": ["singapore"] }
+            ]
+          },
+          {
+            "id": "visit",
+            "heading": "VISIT",
+            "links": [
+              { "title": "Book a Tour",   "url": "/admissions/visit-us?anchor=book-a-tour" },
+              { "title": "Open Day",      "url": "/admissions/visit-us?anchor=open-house" },
+              { "title": "Virtual Tour",  "url": "/admissions/visit-us?anchor=virtual-tour" }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "how-to-apply",
+            "heading": "How to Apply",
+            "url": "/admissions/how-to-apply",
+            "image": "learning-leadership",
+            "description": "How to apply, what to do, which documents you will need to provide, and how to complete assessments and interviews.",
+            "buttonText": "How to Apply"
+          },
+          {
+            "id": "visit-us",
+            "heading": "Visit Us",
+            "url": "/admissions/visit-us",
+            "image": "admissions-visit",
+            "description": "We love meeting new parents. You can make an individual request or join one of our admissions meetings and campus tours.",
+            "buttonText": "Visit Us"
+          }
+        ]
+      }
+    ],
+    "mobileNav": [
+      {
+        "id": "why-dulwich",
+        "label": "Why Dulwich",
+        "type": "sectioned",
+        "borderFull": false,
+        "sections": [
+          {
+            "heading": "HIGHLIGHTED",
+            "style": "highlighted",
+            "links": [
+              { "title": "Academic Results",      "url": "/our-college/academic-results",    "image": "why-academic" },
+              { "title": "The Greenhouse",         "url": "/our-college/the-greenhouse",       "image": "why-university", "schools": ["singapore"] },
+              { "title": "University Matriculation","url": "#",                                 "image": "why-university", "schools": ["suzhou"] }
+            ]
+          },
+          {
+            "heading": "OUR COLLEGE",
+            "links": [
+              { "title": "Welcome From the Head of College", "url": "/our-college/from-our-head-of-college" },
+              { "title": "Vision & Values",                  "url": "/about-dulwich/vision-and-values" },
+              { "title": "Dulwich Difference",               "url": "/our-college/dulwich-difference" },
+              { "title": "Campus & Facilities",              "url": "/our-college/campus-environment" },
+              { "title": "University Matriculation",         "url": "#", "schools": ["singapore"] }
+            ]
+          },
+          {
+            "heading": "FAMILY OF SCHOOLS",
+            "links": [
+              { "title": "Worldwise Events",         "url": "/holistic-curriculum/worldwise-events" },
+              { "title": "International Experiences", "url": "#" },
+              { "title": "Global Partnership",        "url": "#" },
+              { "title": "Educational Leadership",    "url": "#" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "learning",
+        "label": "Learning",
+        "type": "sectioned",
+        "borderFull": false,
+        "sections": [
+          {
+            "heading": "HIGHLIGHTED",
+            "style": "highlighted",
+            "links": [
+              { "title": "Student Leadership",               "url": "/holistic-curriculum/student-leadership-programme", "image": "learning-leadership", "schools": ["singapore"] },
+              { "title": "Wellbeing",                        "url": "/how-we-teach-and-learn/wellbeing",                 "image": "learning-leadership", "schools": ["suzhou"] },
+              { "title": "Sustainability & Global Citizenship","url": "/our-college/sustainability-and-global-citizenship","image": "learning-wellbeing" }
+            ]
+          },
+          {
+            "heading": "CORE CURRICULUM",
+            "links": [
+              { "title": "DUCKS (ages 2 to 7)",              "url": "/holistic-curriculum/ducks-ages-2-to-7" },
+              { "title": "Junior School (ages 7 to 11)",      "url": "/holistic-curriculum/junior-school-ages-7-to-11" },
+              { "title": "Senior School (ages 11 to 18)",     "url": "/holistic-curriculum/senior-school-ages-11-to-18" },
+              { "title": "IGCSE",                             "url": "#", "schools": ["singapore"] },
+              { "title": "Post-16 Pathways",                  "url": "#", "schools": ["singapore"] },
+              { "title": "International Baccalaureate",       "url": "#", "schools": ["suzhou"] },
+              { "title": "A-Levels & IAD",                    "url": "#", "schools": ["suzhou"] },
+              { "title": "University & Careers Counselling",  "url": "/how-we-teach-and-learn/dcsg-university-counselling" }
+            ]
+          },
+          {
+            "heading": "HOLISTIC EDUCATION",
+            "links": [
+              { "title": "Co-Curricular Activities",         "url": "/holistic-curriculum/co-curricular-activities" },
+              { "title": "STEM",                             "url": "/holistic-curriculum/stem-se21" },
+              { "title": "Sports",                           "url": "/holistic-curriculum/sports" },
+              { "title": "Mandarin",                         "url": "/holistic-curriculum/mandarin", "schools": ["suzhou"] },
+              { "title": "Student Leadership",               "url": "#", "schools": ["suzhou"] },
+              { "title": "Visual & Performing Arts",         "url": "/holistic-curriculum/visual-and-performing-arts" },
+              { "title": "Learning Beyond the Classroom",    "url": "/holistic-curriculum/learning-beyond-the-classroom", "schools": ["singapore"] }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "community",
+        "label": "Community",
+        "type": "sectioned",
+        "borderFull": false,
+        "sections": [
+          {
+            "heading": "HIGHLIGHTED",
+            "style": "highlighted",
+            "links": [
+              { "title": "Meet Our Parents", "url": "/community/meet-our-parents", "image": "community-parents" },
+              { "title": "Student Stories",  "url": "/community/student-stories",  "image": "community-stories" }
+            ]
+          },
+          {
+            "heading": "OUR COMMUNITY",
+            "links": [
+              { "title": "Student Life",              "url": "#", "schools": ["singapore"] },
+              { "title": "Teachers & Staff",           "url": "/community/teachers" },
+              { "title": "Friends of Dulwich (FoD)",  "url": "/community/friends-of-dulwich" },
+              { "title": "Alumni",                     "url": "/community/worldwise-alumni-network" },
+              { "title": "Safeguarding & Wellbeing",  "url": "#", "schools": ["singapore"] }
+            ]
+          },
+          {
+            "heading": "LIFE AT DULWICH",
+            "links": [
+              { "title": "College Calendar", "url": "/our-college/academic-year-calendar" },
+              { "title": "Latest News",      "url": "/dulwich-life" },
+              { "title": "Work at Dulwich", "url": "/working-at-dulwich" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "admissions",
+        "label": "Admissions",
+        "type": "sectioned",
+        "borderFull": true,
+        "sections": [
+          {
+            "heading": "HIGHLIGHTED",
+            "style": "highlighted",
+            "links": [
+              { "title": "Visit Us",      "url": "/admissions/visit-us",      "image": "admissions-visit" },
+              { "title": "How to Apply",  "url": "/admissions/how-to-apply",  "image": "learning-leadership" }
+            ]
+          },
+          {
+            "heading": "APPLY",
+            "links": [
+              { "title": "Eligibility",         "url": "#" },
+              { "title": "Admissions Criteria", "url": "#" },
+              { "title": "Fees",                "url": "#" },
+              { "title": "FAQs",               "url": "#" },
+              { "title": "Scholarships",        "url": "/admissions/scholarships", "schools": ["singapore"] }
+            ]
+          },
+          {
+            "heading": "VISIT",
+            "links": [
+              { "title": "Book a Tour",   "url": "/admissions/visit-us?anchor=book-a-tour" },
+              { "title": "Open Day",      "url": "/admissions/visit-us?anchor=open-house" },
+              { "title": "Virtual Tour",  "url": "/admissions/visit-us?anchor=virtual-tour" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "zh": {
+    "topBar": {
+      "parentPortal": "家长平台",
+      "schoolCalendar": "学校日历"
+    },
+    "siteMapLabel": "查看完整网站地图",
+    "searchPlaceholder": "搜索",
+    "searchResultsTitle": "搜索结果",
+    "searchResultsClose": "关闭",
+    "buttons": {
+      "enquire": "咨询",
+      "applyNow": "立即申请"
+    },
+    "mobile": {
+      "schools": "学校",
+      "fullSiteMap": "完整网站地图",
+      "aiAssistant": "AI 助手"
+    },
+    "navItems": [
+      {
+        "id": "why-dulwich",
+        "label": "为什么选择德威",
+        "sections": [
+          {
+            "id": "our-college",
+            "heading": "我们的学院",
+            "links": [
+              { "title": "院长致辞",          "url": "/zh/our-college/from-our-head-of-college" },
+              { "title": "愿景与价值观",      "url": "/zh/about-dulwich/vision-and-values" },
+              { "title": "德威特色",          "url": "/zh/our-college/dulwich-difference" },
+              { "title": "校园与设施",        "url": "/zh/our-college/campus-environment" },
+              { "title": "大学录取",          "url": "#", "schools": ["singapore"] }
+            ]
+          },
+          {
+            "id": "family-of-schools",
+            "heading": "学校系列",
+            "links": [
+              { "title": "世界视野活动",     "url": "/zh/holistic-curriculum/worldwise-events" },
+              { "title": "国际体验",         "url": "#" },
+              { "title": "全球合作伙伴",     "url": "#" },
+              { "title": "教育领导力",       "url": "#" }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "academic-results",
+            "heading": "学术成绩",
+            "url": "/zh/our-college/academic-results",
+            "image": "why-academic",
+            "description": "我们的学生持续取得优异的学术成绩，使德威成为上海、中国乃至全球领先的IB学校之一。",
+            "buttonText": "学术成绩"
+          },
+          {
+            "id": "the-greenhouse",
+            "heading": "温室项目",
+            "url": "/zh/our-college/the-greenhouse",
+            "image": "why-university",
+            "description": "在德威国际学院，我们的全面课程培养学生积极影响世界的能力。",
+            "buttonText": "温室项目",
+            "schools": ["singapore"]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "大学录取",
+            "url": "#",
+            "image": "why-university",
+            "description": "在德威国际学院，我们的全面课程培养学生积极影响世界的能力。",
+            "buttonText": "大学录取",
+            "schools": ["suzhou"]
+          }
+        ]
+      },
+      {
+        "id": "learning",
+        "label": "学习",
+        "sections": [
+          {
+            "id": "core-curriculum",
+            "heading": "核心课程",
+            "links": [
+              { "title": "鸭子（2至7岁）",            "url": "/zh/holistic-curriculum/ducks-ages-2-to-7" },
+              { "title": "初小部（7至11岁）",          "url": "/zh/holistic-curriculum/junior-school-ages-7-to-11" },
+              { "title": "高中部（11至18岁）",         "url": "/zh/holistic-curriculum/senior-school-ages-11-to-18" },
+              { "title": "IGCSE",                      "url": "#", "schools": ["singapore"] },
+              { "title": "16岁后升学路径",             "url": "#", "schools": ["singapore"] },
+              { "title": "国际文凭",                   "url": "#", "schools": ["suzhou"] },
+              { "title": "A-Level与IAD",               "url": "#", "schools": ["suzhou"] },
+              { "title": "大学与职业辅导",             "url": "/zh/how-we-teach-and-learn/dcsg-university-counselling" }
+            ]
+          },
+          {
+            "id": "holistic-education",
+            "heading": "全面教育",
+            "links": [
+              { "title": "课外活动",                  "url": "/zh/holistic-curriculum/co-curricular-activities" },
+              { "title": "科学与技术",                "url": "/zh/holistic-curriculum/stem-se21" },
+              { "title": "体育运动",                  "url": "/zh/holistic-curriculum/sports" },
+              { "title": "普通话",                    "url": "/zh/holistic-curriculum/mandarin", "schools": ["suzhou"] },
+              { "title": "学生领导力",                "url": "#", "schools": ["suzhou"] },
+              { "title": "视觉与表演艺术",            "url": "/zh/holistic-curriculum/visual-and-performing-arts" },
+              { "title": "课外学习",                  "url": "/zh/holistic-curriculum/learning-beyond-the-classroom", "schools": ["singapore"] }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "student-leadership",
+            "heading": "学生领导力",
+            "url": "/zh/holistic-curriculum/student-leadership-programme",
+            "image": "learning-leadership",
+            "description": "德威教育领导团队在整个校网的教学方面拥有深厚的专业知识和卓越的实践经验。",
+            "buttonText": "学生领导力",
+            "schools": ["singapore"]
+          },
+          {
+            "id": "wellbeing",
+            "heading": "身心健康",
+            "url": "/zh/how-we-teach-and-learn/wellbeing",
+            "image": "learning-leadership",
+            "description": "我们的整个社区支持学生的健康、快乐和社会情感成长：这是学业和人生成功的基础。",
+            "buttonText": "身心健康",
+            "schools": ["suzhou"]
+          },
+          {
+            "id": "sustainability",
+            "heading": "可持续发展与全球公民",
+            "url": "/zh/our-college/sustainability-and-global-citizenship",
+            "image": "learning-wellbeing",
+            "description": "在德威国际学院，我们的全面课程培养学生积极影响世界的能力。",
+            "buttonText": "可持续发展与全球公民"
+          }
+        ]
+      },
+      {
+        "id": "community",
+        "label": "社区",
+        "sections": [
+          {
+            "id": "our-community",
+            "heading": "我们的社区",
+            "links": [
+              { "title": "学生生活",              "url": "#", "schools": ["singapore"] },
+              { "title": "教师与员工",            "url": "/zh/community/teachers" },
+              { "title": "德威之友（FoD）",       "url": "/zh/community/friends-of-dulwich" },
+              { "title": "校友",                  "url": "/zh/community/worldwise-alumni-network" },
+              { "title": "安全保障与身心健康",    "url": "#", "schools": ["singapore"] }
+            ]
+          },
+          {
+            "id": "life-at-dulwich",
+            "heading": "德威生活",
+            "links": [
+              { "title": "学院日历", "url": "/zh/our-college/academic-year-calendar" },
+              { "title": "最新消息", "url": "/zh/dulwich-life" },
+              { "title": "加入德威", "url": "/zh/working-at-dulwich" }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "meet-our-parents",
+            "heading": "认识我们的家长",
+            "url": "/zh/community/meet-our-parents",
+            "image": "community-parents",
+            "description": "直接听取我们家长社区的声音，了解他们的经历以及为何选择德威学院。",
+            "buttonText": "认识我们的家长"
+          },
+          {
+            "id": "student-stories",
+            "heading": "学生故事",
+            "url": "/zh/community/student-stories",
+            "image": "community-stories",
+            "description": "来自我们学生关于他们旅程、热情以及是什么让德威学院成为家的真实故事。",
+            "buttonText": "学生故事"
+          }
+        ]
+      },
+      {
+        "id": "admissions",
+        "label": "招生",
+        "sections": [
+          {
+            "id": "apply",
+            "heading": "申请",
+            "links": [
+              { "title": "申请资格", "url": "#" },
+              { "title": "录取标准", "url": "#" },
+              { "title": "学费",     "url": "#" },
+              { "title": "常见问题", "url": "#" },
+              { "title": "奖学金",   "url": "/zh/admissions/scholarships", "schools": ["singapore"] }
+            ]
+          },
+          {
+            "id": "visit",
+            "heading": "参观",
+            "links": [
+              { "title": "预约参观", "url": "/zh/admissions/visit-us?anchor=book-a-tour" },
+              { "title": "开放日",   "url": "/zh/admissions/visit-us?anchor=open-house" },
+              { "title": "虚拟参观", "url": "/zh/admissions/visit-us?anchor=virtual-tour" }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "how-to-apply",
+            "heading": "如何申请",
+            "url": "/zh/admissions/how-to-apply",
+            "image": "learning-leadership",
+            "description": "了解如何申请、需要准备哪些材料、如何完成评估和面试。",
+            "buttonText": "如何申请"
+          },
+          {
+            "id": "visit-us",
+            "heading": "参观我们",
+            "url": "/zh/admissions/visit-us",
+            "image": "admissions-visit",
+            "description": "我们热爱与新家长见面。您可以单独预约，或参加我们的招生会议和校园参观活动。",
+            "buttonText": "参观我们"
+          }
+        ]
+      }
+    ],
+    "mobileNav": [
+      {
+        "id": "why-dulwich",
+        "label": "为什么选择德威",
+        "type": "sectioned",
+        "borderFull": false,
+        "sections": [
+          {
+            "heading": "精选",
+            "style": "highlighted",
+            "links": [
+              { "title": "学术成绩",   "url": "/zh/our-college/academic-results",    "image": "why-academic" },
+              { "title": "温室项目",   "url": "/zh/our-college/the-greenhouse",       "image": "why-university", "schools": ["singapore"] },
+              { "title": "大学录取",   "url": "#",                                     "image": "why-university", "schools": ["suzhou"] }
+            ]
+          },
+          {
+            "heading": "我们的学院",
+            "links": [
+              { "title": "院长致辞",      "url": "/zh/our-college/from-our-head-of-college" },
+              { "title": "愿景与价值观",  "url": "/zh/about-dulwich/vision-and-values" },
+              { "title": "德威特色",      "url": "/zh/our-college/dulwich-difference" },
+              { "title": "校园与设施",    "url": "/zh/our-college/campus-environment" },
+              { "title": "大学录取",      "url": "#", "schools": ["singapore"] }
+            ]
+          },
+          {
+            "heading": "学校系列",
+            "links": [
+              { "title": "世界视野活动",  "url": "/zh/holistic-curriculum/worldwise-events" },
+              { "title": "国际体验",       "url": "#" },
+              { "title": "全球合作伙伴",  "url": "#" },
+              { "title": "教育领导力",    "url": "#" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "learning",
+        "label": "学习",
+        "type": "sectioned",
+        "borderFull": false,
+        "sections": [
+          {
+            "heading": "精选",
+            "style": "highlighted",
+            "links": [
+              { "title": "学生领导力",             "url": "/zh/holistic-curriculum/student-leadership-programme", "image": "learning-leadership", "schools": ["singapore"] },
+              { "title": "身心健康",               "url": "/zh/how-we-teach-and-learn/wellbeing",                 "image": "learning-leadership", "schools": ["suzhou"] },
+              { "title": "可持续发展与全球公民",   "url": "/zh/our-college/sustainability-and-global-citizenship","image": "learning-wellbeing" }
+            ]
+          },
+          {
+            "heading": "核心课程",
+            "links": [
+              { "title": "鸭子（2至7岁）",    "url": "/zh/holistic-curriculum/ducks-ages-2-to-7" },
+              { "title": "初小部（7至11岁）",  "url": "/zh/holistic-curriculum/junior-school-ages-7-to-11" },
+              { "title": "高中部（11至18岁）", "url": "/zh/holistic-curriculum/senior-school-ages-11-to-18" },
+              { "title": "IGCSE",              "url": "#", "schools": ["singapore"] },
+              { "title": "16岁后升学路径",     "url": "#", "schools": ["singapore"] },
+              { "title": "国际文凭",           "url": "#", "schools": ["suzhou"] },
+              { "title": "A-Level与IAD",       "url": "#", "schools": ["suzhou"] },
+              { "title": "大学与职业辅导",     "url": "/zh/how-we-teach-and-learn/dcsg-university-counselling" }
+            ]
+          },
+          {
+            "heading": "全面教育",
+            "links": [
+              { "title": "课外活动",          "url": "/zh/holistic-curriculum/co-curricular-activities" },
+              { "title": "科学与技术",        "url": "/zh/holistic-curriculum/stem-se21" },
+              { "title": "体育运动",          "url": "/zh/holistic-curriculum/sports" },
+              { "title": "普通话",            "url": "/zh/holistic-curriculum/mandarin", "schools": ["suzhou"] },
+              { "title": "学生领导力",        "url": "#", "schools": ["suzhou"] },
+              { "title": "视觉与表演艺术",    "url": "/zh/holistic-curriculum/visual-and-performing-arts" },
+              { "title": "课外学习",          "url": "/zh/holistic-curriculum/learning-beyond-the-classroom", "schools": ["singapore"] }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "community",
+        "label": "社区",
+        "type": "sectioned",
+        "borderFull": false,
+        "sections": [
+          {
+            "heading": "精选",
+            "style": "highlighted",
+            "links": [
+              { "title": "认识我们的家长", "url": "/zh/community/meet-our-parents", "image": "community-parents" },
+              { "title": "学生故事",        "url": "/zh/community/student-stories",  "image": "community-stories" }
+            ]
+          },
+          {
+            "heading": "我们的社区",
+            "links": [
+              { "title": "学生生活",              "url": "#", "schools": ["singapore"] },
+              { "title": "教师与员工",            "url": "/zh/community/teachers" },
+              { "title": "德威之友（FoD）",       "url": "/zh/community/friends-of-dulwich" },
+              { "title": "校友",                  "url": "/zh/community/worldwise-alumni-network" },
+              { "title": "安全保障与身心健康",    "url": "#", "schools": ["singapore"] }
+            ]
+          },
+          {
+            "heading": "德威生活",
+            "links": [
+              { "title": "学院日历", "url": "/zh/our-college/academic-year-calendar" },
+              { "title": "最新消息", "url": "/zh/dulwich-life" },
+              { "title": "加入德威", "url": "/zh/working-at-dulwich" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "admissions",
+        "label": "招生",
+        "type": "sectioned",
+        "borderFull": true,
+        "sections": [
+          {
+            "heading": "精选",
+            "style": "highlighted",
+            "links": [
+              { "title": "参观我们", "url": "/zh/admissions/visit-us",      "image": "admissions-visit" },
+              { "title": "如何申请", "url": "/zh/admissions/how-to-apply",  "image": "learning-leadership" }
+            ]
+          },
+          {
+            "heading": "申请",
+            "links": [
+              { "title": "申请资格", "url": "#" },
+              { "title": "录取标准", "url": "#" },
+              { "title": "学费",     "url": "#" },
+              { "title": "常见问题", "url": "#" },
+              { "title": "奖学金",   "url": "/zh/admissions/scholarships", "schools": ["singapore"] }
+            ]
+          },
+          {
+            "heading": "参观",
+            "links": [
+              { "title": "预约参观", "url": "/zh/admissions/visit-us?anchor=book-a-tour" },
+              { "title": "开放日",   "url": "/zh/admissions/visit-us?anchor=open-house" },
+              { "title": "虚拟参观", "url": "/zh/admissions/visit-us?anchor=virtual-tour" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

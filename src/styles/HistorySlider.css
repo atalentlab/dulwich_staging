@@ -1,0 +1,606 @@
+.history-slider {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: #ffffff;
+}
+
+.history-slider-container {
+  width: 100%;
+  position: relative;
+  padding-left: calc((100% - 1120px) / 2);
+  padding-right: 0;
+}
+
+@media (max-width: 1200px) {
+  .history-slider-container {
+    padding-left: 40px;
+  }
+}
+@media (max-width: 800px) {
+  .history-slider-container {
+    padding-left: 4px;
+  }
+}
+
+.history-slider-container .slick-slide > div {
+  display: flex;
+  height: auto;
+}
+
+.history-slider-container .slick-list {
+  margin: 0;
+  padding-left: 0;
+}
+
+/* Slick Slider Container */
+.history-slider-container .slick-slider {
+  position: relative;
+
+  margin-bottom: 20px;
+}
+
+.history-slider-container .slick-slider .slick-track {
+  display: flex !important;
+  align-items: flex-start;
+  margin-left: 0 !important;
+}
+
+.history-slider-container .slick-slider .slick-slide {
+  display: flex !important;
+  height: auto;
+}
+
+.history-slider-container .slick-list {
+  overflow: hidden;
+  padding-left: 0 !important;
+}
+
+.history-slide-wrapper {
+  padding: 0 18px 10px 10px;
+  height: auto;
+  width: auto !important;
+}
+
+.history-slide-wrapper:first-child {
+  padding-left: 1px;
+}
+
+.history-slide {
+  background: transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  height: auto;
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Quote Card Styles */
+.history-quote-card {
+  position: relative;
+  min-height: 452px;
+  width :424px;
+  border-radius: 16px;
+  padding: 50px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.history-quote-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: inherit;
+  background-position: inherit;
+  background-repeat: inherit;
+  background-size: inherit;
+  mix-blend-mode: multiply;
+  opacity: 0.4;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.quote-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.quote-mark {
+  margin-top :30px;
+  font-size: 120px;
+  line-height: 0;
+  color: white;
+  font-weight: bold;
+  font-family: math;
+
+}
+
+.quote-text {
+  font-size: 20px;
+  line-height: 1.6;
+  color: white;
+  margin: 0 0 auto;
+  font-weight: 400;
+}
+
+.quote-author {
+  margin-top: 40px;
+}
+
+.author-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 4px;
+}
+
+.author-role {
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+/* Image Card Styles */
+.history-slide:hover {
+  transform: translateY(-4px);
+}
+
+.history-slide-image {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  /* background-color: #f5f5f5; */
+  flex-shrink: 0;
+  border-radius: 12px;
+}
+
+.history-slide-image img {
+  width: 100%;
+  height: 450px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.history-slide:hover .history-slide-image img {
+  transform: scale(1.05);
+}
+
+/* Gradient Overlay */
+.history-slide-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70%;
+  /* background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%); */
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Content Overlaid on Image */
+.history-slide-content {
+  bottom: -160px;
+  left: 0;
+  right: 0;
+  padding: 25px 20px;
+  background: transparent;
+  text-align: left;
+ 
+}
+
+.history-slide-quote {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #000;
+  margin: 0 0 12px 0;
+  line-height: 1.1;
+}
+
+.history-slide-author {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.history-slide-role {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #000000;
+  margin: 2px 0 0 0;
+  line-height: 1.4;
+}
+
+
+/* Slick Dots */
+.history-slider-container .slick-dots {
+  display: flex !important;
+  gap: 10px;
+ 
+  padding: 0 20px;
+  margin: 40px 0 0;
+  list-style: none;
+  position: relative;
+  bottom: auto;
+}
+
+.history-slider-container .slick-dots li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: auto;
+  height: auto;
+}
+
+.history-slider-container .slick-dots li button {
+  width: auto;
+  height: auto;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0;
+  line-height: 0;
+}
+
+.history-slider-container .slick-dots li button .history-dot-bar {
+  width: 28px;
+  height: 8px;
+  background-color: #F2EDE9;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 3px;
+  margin-right: 4px;
+  border-radius: 8px;
+  display: block;
+}
+
+.history-slider-container .slick-dots li:hover button .history-dot-bar {
+  background-color: #D30013;
+}
+
+.history-slider-container .slick-dots li.slick-active button .history-dot-bar {
+  background-color: #D30013;
+  width: 90px;
+}
+
+.history-slider-container .slick-dots li button:before {
+  display: none;
+}
+
+/* Custom Arrows */
+.history-arrow {
+  width: 48px;
+  height: 48px;
+  background-color: #FAF7F5;
+  border: 1px solid #F2EDE9;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #D30013;
+  position: absolute;
+  bottom: 10px;
+  left: 80%;
+  transform: none;
+  z-index: 10;
+
+}
+
+.history-arrow-prev {
+  left: 70%;
+}
+
+.history-arrow-next {
+  left: 75%;
+}
+
+.history-arrow:hover {
+  background-color: #D30013;
+  color: #ffffff;
+  border-color: #D30013;
+  transform: scale(1.1);
+}
+
+.history-arrow:active {
+  transform: scale(0.95);
+}
+
+.history-arrow svg {
+  width: 20px;
+  height: 20px;
+}
+
+.history-arrow:before {
+  display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .history-slide {
+    width: 340px;
+  }
+
+  .history-slide-image img {
+    border-radius: 8px;
+    height: 400px;
+  }
+
+  .history-quote-card {
+    min-height: 450px;
+    width: auto;
+    padding: 40px 35px;
+  }
+
+  .history-slide-content {
+    padding: 20px 18px;
+  }
+
+  .history-slide-quote {
+    font-size: 1rem;
+  }
+
+  .history-slide-author {
+    font-size: 0.9rem;
+  }
+
+  .history-slide-role {
+    font-size: 0.8rem;
+  }
+
+
+
+  .quote-text {
+    font-size: 18px;
+  }
+
+  .author-name {
+    font-size: 17px;
+  }
+
+  .author-role {
+    font-size: 15px;
+  }
+
+  .history-slider-container .slick-dots {
+    margin: 25px 0 0;
+  }
+
+  .history-slider-container .slick-dots li button .history-dot-bar {
+    width: 45px;
+  }
+
+  .history-slider-container .slick-dots li.slick-active button .history-dot-bar {
+    width: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .history-slider {
+    padding: 40px 20px;
+  }
+
+  .history-slider-container .slick-slider {
+    padding: 0 0 0px;
+    margin-bottom: 20px;
+  }
+
+  .history-slide-wrapper {
+    padding: 0 8px 0 0;
+  }
+
+  .history-slide-wrapper:first-child {
+    padding-left: 0;
+  }
+
+  .history-slider-container .slick-list {
+    margin: 0;
+    padding-left: 0;
+  }
+
+  .history-slide {
+    width: 300px;
+  }
+
+  .history-slide-image img {
+    height: 380px;
+  }
+
+  .history-quote-card {
+    min-height: 400px;
+    width: 340px;
+    padding: 35px 30px;
+  }
+
+  .history-slide-content {
+    padding: 20px 16px;
+  }
+
+  .history-slide-quote {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .history-slide-author {
+    font-size: 0.88rem;
+  }
+
+  .history-slide-role {
+    font-size: 0.78rem;
+  }
+
+
+  .quote-text {
+    font-size: 17px;
+  }
+
+  .author-name {
+    font-size: 16px;
+  }
+
+  .author-role {
+    font-size: 14px;
+  }
+
+  .quote-author {
+    margin-top: 30px;
+  }
+
+  .history-arrow {
+    width: 44px;
+    height: 44px;
+    bottom: -50px;
+    border-radius:8px;
+  }
+
+  .history-arrow-prev {
+    right: 50px;
+  }
+
+  .history-arrow-next {
+    left: 50%;
+    left: 82%;
+  }
+
+  .history-slider-container .slick-dots {
+    padding: 0 15px;
+    margin: 20px 0 0;
+  }
+
+  .history-slider-container .slick-dots li button .history-dot-bar {
+    width: 40px;
+  }
+
+  .history-slider-container .slick-dots li.slick-active button .history-dot-bar {
+    width: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .history-slider {
+    padding: 30px 15px;
+  }
+
+  .history-slider-container .slick-slider {
+    padding: 0 0 5px;
+    margin-bottom: 15px;
+  }
+
+  .history-slide-wrapper {
+    padding: 0 6px 0 0;
+  }
+
+  .history-slide-wrapper:first-child {
+    padding-left: 2px;
+  }
+
+  .history-slider-container .slick-list {
+    margin: 0;
+    padding-left: 0;
+  }
+
+  .history-slide {
+    width: 280px;
+  }
+
+  .history-slide-image img {
+    height: 360px;
+  }
+
+  .history-quote-card {
+    min-height: 380px;
+    width: 300px;
+    padding: 30px 25px;
+    border-radius: 12px;
+  }
+
+  .history-slide-content {
+    padding: 18px 14px;
+  }
+
+  .history-slide-quote {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+
+  .history-slide-author {
+    font-size: 0.85rem;
+  }
+
+  .history-slide-role {
+    font-size: 0.76rem;
+  }
+
+
+  .quote-text {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .author-name {
+    font-size: 15px;
+  }
+
+  .author-role {
+    font-size: 13px;
+  }
+
+  .quote-author {
+    margin-top: 25px;
+  }
+
+  .pattern-svg {
+    width: 300px;
+    height: 500px;
+  }
+
+  .history-arrow {
+    width: 40px;
+    height: 40px;
+    bottom: -50px;
+  }
+
+  .history-arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .history-arrow-prev {
+    right: 50px;
+  }
+
+  .history-arrow-next {
+    right: 10px;
+  }
+
+  .history-slider-container .slick-dots {
+    padding: 0 15px;
+    margin: 15px 0 0;
+  }
+
+  .history-slider-container .slick-dots li button .history-dot-bar {
+    width: 35px;
+  }
+
+  .history-slider-container .slick-dots li.slick-active button .history-dot-bar {
+    width: 60px;
+  }
+}

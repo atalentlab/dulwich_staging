@@ -1,0 +1,2287 @@
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import * as NavigationMenu from '@radix-ui/react-navigation-menu';
+import { ChevronDown, Menu as X } from 'lucide-react';
+import Icon from '../../Icon';
+import whyUniversity from '../../../assets/images/DCSZ/Two-menu/WhyUniversityMatriculation.jpeg';
+import UniversityM from '../../../assets/images/DCSZ/Two-menu/um.jpg';
+
+import WhyAcademicResults from '../../../assets/images/DCSZ/Two-menu/acre.jpg';
+import Learningwel from '../../../assets/images/DCSZ/Two-menu/Learningwel.png';
+import excelImage from '../../../assets/images/DCSZ/Two-menu/LearningStudentleadership.jpg';
+import communityStudentstories from '../../../assets/images/DCSZ/Two-menu/sustory.jpg';
+import admissionsImage from '../../../assets/images/DCSZ/Two-menu/visitus.jpg';
+import mmpImage from '../../../assets/images/DCSZ/Two-menu/Communitymparents.JPG';
+import suzhou from '../../../assets/images/suzhou.svg';
+import suzhouHighSchool from '../../../assets/images/suzhou-high-school.svg';
+import hengqinHighSchool from '../../../assets/images/hengqin-high-school.svg';
+import sing from '../../../assets/images/sing.svg';
+import seoul from '../../../assets/images/seoul.svg';
+import puxi from '../../../assets/images/puxi.svg';
+import pudong from '../../../assets/images/pudong.svg';
+import bangkok from '../../../assets/images/bangkok.svg';
+import beijing from '../../../assets/images/beijing.svg';
+import { getCurrentSchool, getSchoolUrl } from '../../../utils/schoolDetection';
+import schoolPortals from '../../../assets/config/schoolPortals.json';
+import schoolNavData from '../../../assets/menu/school-navigation.json';
+import sitemapIcon from '../../../assets/images/sitemap.png';
+// ─── School-specific card images ─────────────────────────────────────────────
+// Seoul
+import seoulAcademicResults from '../../../assets/images/seoul/academic results.jpg';
+import seoulHowToApply from '../../../assets/images/seoul/how to apply.jpg';
+import seoulMeetOurParents from '../../../assets/images/seoul/meet our parents.png';
+import seoulStudentLeadership from '../../../assets/images/seoul/student leadership.jpg';
+import seoulStudentStories from '../../../assets/images/seoul/student stories.jpg';
+import seoulUniversityMatriculation from '../../../assets/images/seoul/university matriculation.jpg';
+import seoulWellbeing from '../../../assets/images/seoul/wellbeing.jpg';
+// Bangkok
+import bangkokSustainability from '../../../assets/images/bangkok/Sustainability & Global Citizenship.jpg';
+import bangkokAlumniStories from '../../../assets/images/bangkok/alumni stories.jpg';
+import bangkokHowToApply from '../../../assets/images/bangkok/how to apply.jpg';
+import bangkokStudentStories from '../../../assets/images/bangkok/student stories.jpg';
+import bangkokVisitUs from '../../../assets/images/bangkok/visit us.jpg';
+// Singapore
+import singaporeStudentLeadership from '../../../assets/images/singapore/Student Leadership.jpg';
+import singaporeSustainability from '../../../assets/images/singapore/Sustainability & Global Citizenship.jpg';
+import singaporeGreenhouse from '../../../assets/images/singapore/The Greenhouse Innovation Hub.jpg';
+import singaporeAcademicResults from '../../../assets/images/singapore/academic results.jpeg';
+import singaporeHowToApply from '../../../assets/images/singapore/how to apply.jpg';
+import singaporeMeetOurParents from '../../../assets/images/singapore/meet our parents.jpg';
+import singaporeStudentStories from '../../../assets/images/singapore/student stories.png';
+import singaporeVisitUs from '../../../assets/images/singapore/visit us.jpg';
+// Beijing
+import beijingUniversityMatriculation from '../../../assets/images/beijing/University Matriculation.jpg';
+import beijingUniversityCareers from '../../../assets/images/beijing/University and Careers Counselling.JPG';
+import beijingAcademicResults from '../../../assets/images/beijing/academic results.JPG';
+import beijingHowToApply from '../../../assets/images/beijing/how to apply.jpg';
+import beijingMeetOurParents from '../../../assets/images/beijing/meet our parents.jpg';
+import beijingStudentLeadership from '../../../assets/images/beijing/student leadership.JPG';
+import beijingVisitUs from '../../../assets/images/beijing/visit us.jpg';
+// Suzhou
+import suzhouAcademicResults from '../../../assets/images/suzhou/academic results.jpg';
+import suzhouMeetOurParents from '../../../assets/images/suzhou/meet our parents.png';
+import suzhouStudentStories from '../../../assets/images/suzhou/student stories.jpg';
+import suzhouSustainability from '../../../assets/images/suzhou/sustainability and global citizenship.jpg';
+import suzhouUniversityMatriculation from '../../../assets/images/suzhou/university matriculation.png';
+import suzhouVisitUs from '../../../assets/images/suzhou/Visit us.jpg';
+import suzhouWellbeing from '../../../assets/images/suzhou/wellbeing.jpg';
+// Suzhou High School
+import suzhouHSAcademicResults from '../../../assets/images/suzhou-high-school/Academic results.jpg';
+import suzhouHSHowToApply from '../../../assets/images/suzhou-high-school/how to apply.png';
+import suzhouHSStudentStories from '../../../assets/images/suzhou-high-school/student stories.JPG';
+import suzhouHSUniversityMatriculation from '../../../assets/images/suzhou-high-school/university matriculation.jpeg';
+import suzhouHSVisitUs from '../../../assets/images/suzhou-high-school/Visit us.png';
+// Hengqin High School
+import hengqinAcademicResults from '../../../assets/images/hengqin-high-school/academic results.jpg';
+import hengqinHowToApply from '../../../assets/images/hengqin-high-school/how to apply.jpg';
+import hengqinStudentStories from '../../../assets/images/hengqin-high-school/student stories.jpg';
+import hengqinSustainability from '../../../assets/images/hengqin-high-school/sustainability and global citizenship.JPG';
+import hengqinUniversityMatriculation from '../../../assets/images/hengqin-high-school/university matriculation.JPG';
+import hengqinVisitUs from '../../../assets/images/hengqin-high-school/visit us.jpg';
+// Shanghai Pudong
+import pudongHowToApply from '../../../assets/images/shanghai-pudong/how to apply.jpg';
+import pudongMeetOurParents from '../../../assets/images/shanghai-pudong/meet our parents.jpg';
+import pudongStudentStories from '../../../assets/images/shanghai-pudong/student stories.jpg';
+import pudongSustainability from '../../../assets/images/shanghai-pudong/sustainability and global citizenship.JPG';
+import pudongWellbeing from '../../../assets/images/shanghai-pudong/wellbeing.jpg';
+// Shanghai Puxi
+import puxiAcademicResults from '../../../assets/images/shanghai-puxi/academic results.jpg';
+import puxiHowToApply from '../../../assets/images/shanghai-puxi/how to apply.jpg';
+import puxiMeetOurParents from '../../../assets/images/shanghai-puxi/meet our parents.jpg';
+import puxiStudentStories from '../../../assets/images/shanghai-puxi/student stories.jpg';
+import puxiSustainability from '../../../assets/images/shanghai-puxi/sustainability and global citizenship.JPG';
+import puxiUniversityMatriculation from '../../../assets/images/shanghai-puxi/university matriculation.jpeg';
+import puxiVisitUs from '../../../assets/images/shanghai-puxi/visit us.jpg';
+import puxiWellbeing from '../../../assets/images/shanghai-puxi/wellbeing.jpg';
+// ─────────────────────────────────────────────────────────────────────────────
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
+// Image mapping for highlighted cards in mobile menu
+const imageMap = {
+  // Legacy keys (kept for backwards compatibility)
+  'why-university': whyUniversity,
+  'university-m': UniversityM,
+  'co-curricular': excelImage,
+  curriculum: excelImage,
+  // Unified keys (match schoolCardImages and JSON image fields)
+  'academic-results': WhyAcademicResults,
+  'the-greenhouse': whyUniversity,
+  'university-matriculation': UniversityM,
+  wellbeing: Learningwel,
+  'student-leadership': excelImage,
+  'university-careers': UniversityM,
+  'worldwise-events': UniversityM,
+  sustainability: Learningwel,
+  'founding-families': mmpImage,
+  'meet-our-parents': mmpImage,
+  'student-stories': communityStudentstories,
+  'alumni-stories': communityStudentstories,
+  'how-to-apply': admissionsImage,
+  'visit-us': admissionsImage,
+};
+
+// School-specific card image lookup: schoolSlug → cardId → imported image
+const schoolCardImages = {
+  seoul: {
+    'academic-results': seoulAcademicResults,
+    'university-matriculation': seoulUniversityMatriculation,
+    'wellbeing': seoulWellbeing,
+    'student-leadership': seoulStudentLeadership,
+    'student-stories': seoulStudentStories,
+    'meet-our-parents': seoulMeetOurParents,
+    'how-to-apply': seoulHowToApply,
+  },
+  bangkok: {
+    'sustainability': bangkokSustainability,
+    'alumni-stories': bangkokAlumniStories,
+    'how-to-apply': bangkokHowToApply,
+    'student-stories': bangkokStudentStories,
+    'visit-us': bangkokVisitUs,
+  },
+  singapore: {
+    'the-greenhouse': singaporeGreenhouse,
+    'academic-results': singaporeAcademicResults,
+    'student-leadership': singaporeStudentLeadership,
+    'sustainability': singaporeSustainability,
+    'how-to-apply': singaporeHowToApply,
+    'meet-our-parents': singaporeMeetOurParents,
+    'student-stories': singaporeStudentStories,
+    'visit-us': singaporeVisitUs,
+  },
+  beijing: {
+    'academic-results': beijingAcademicResults,
+    'university-matriculation': beijingUniversityMatriculation,
+    'university-careers': beijingUniversityCareers,
+    'student-leadership': beijingStudentLeadership,
+    'meet-our-parents': beijingMeetOurParents,
+    'how-to-apply': beijingHowToApply,
+    'visit-us': beijingVisitUs,
+  },
+  suzhou: {
+    'academic-results': suzhouAcademicResults,
+    'university-matriculation': suzhouUniversityMatriculation,
+    'wellbeing': suzhouWellbeing,
+    'sustainability': suzhouSustainability,
+    'meet-our-parents': suzhouMeetOurParents,
+    'student-stories': suzhouStudentStories,
+    'visit-us': suzhouVisitUs,
+  },
+  'suzhou-high-school': {
+    'academic-results': suzhouHSAcademicResults,
+    'university-matriculation': suzhouHSUniversityMatriculation,
+    'student-stories': suzhouHSStudentStories,
+    'how-to-apply': suzhouHSHowToApply,
+    'visit-us': suzhouHSVisitUs,
+  },
+  'hengqin-high-school': {
+    'academic-results': hengqinAcademicResults,
+    'university-matriculation': hengqinUniversityMatriculation,
+    'sustainability': hengqinSustainability,
+    'student-stories': hengqinStudentStories,
+    'how-to-apply': hengqinHowToApply,
+    'visit-us': hengqinVisitUs,
+  },
+  'shanghai-pudong': {
+    'wellbeing': pudongWellbeing,
+    'sustainability': pudongSustainability,
+    'meet-our-parents': pudongMeetOurParents,
+    'student-stories': pudongStudentStories,
+    'how-to-apply': pudongHowToApply,
+  },
+  'shanghai-puxi': {
+    'academic-results': puxiAcademicResults,
+    'university-matriculation': puxiUniversityMatriculation,
+    'wellbeing': puxiWellbeing,
+    'sustainability': puxiSustainability,
+    'meet-our-parents': puxiMeetOurParents,
+    'student-stories': puxiStudentStories,
+    'how-to-apply': puxiHowToApply,
+    'visit-us': puxiVisitUs,
+  },
+};
+
+// Helper function to get the current school logo
+const getSchoolLogo = () => {
+  const currentSchool = getCurrentSchool();
+  const logoMap = {
+    'singapore': sing,
+    'suzhou': suzhou,
+    'suzhou-high-school': suzhouHighSchool,
+    'hengqin-high-school': hengqinHighSchool,
+    'seoul': seoul,
+    'shanghai-puxi': puxi,
+    'shanghai-pudong': pudong,
+    'bangkok': bangkok,
+    'beijing': beijing,
+  };
+  return logoMap[currentSchool] || suzhou; // default to suzhou if not found
+};
+
+// Helper function to get school display name
+const getSchoolDisplayName = () => {
+  const currentSchool = getCurrentSchool();
+  const nameMap = {
+    'singapore': 'Dulwich College Singapore',
+    'suzhou': 'Dulwich College Suzhou',
+    'suzhou-high-school': 'Dulwich College Suzhou High School',
+    'hengqin-high-school': 'Dulwich College Hengqin High School',
+    'seoul': 'Dulwich College Seoul',
+    'shanghai-puxi': 'Dulwich College Shanghai Puxi',
+    'shanghai-pudong': 'Dulwich College Shanghai Pudong',
+    'bangkok': 'Dulwich College Bangkok',
+    'beijing': 'Dulwich College Beijing',
+  };
+  return nameMap[currentSchool] || 'Dulwich College';
+};
+
+function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSelectedSchoolSlug, setChatOpen, chatOpen, headerScrolled, pageLayoutType }) {
+  // ── All Hooks MUST be called unconditionally at the top ───────────────────
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeLanguage, setActiveLanguage] = useState('EN');
+  const [openMobileSection, setOpenMobileSection] = useState(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isChineseVersion, setIsChineseVersion] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [currentSearchPage, setCurrentSearchPage] = useState(1);
+  const mobileSearchRef = React.useRef(null);
+  const mobileMenuScrollRef = React.useRef(null);
+
+  // ── All useEffect hooks MUST be called before any conditional returns ─────
+
+  // Check if current URL has zh/ prefix
+  useEffect(() => {
+    const pathname = location.pathname;
+    const isChinese = pathname.startsWith('/zh/') || pathname === '/zh';
+    setIsChineseVersion(isChinese);
+    setActiveLanguage(isChinese ? '中文' : 'EN');
+  }, [location.pathname]);
+
+  // Auto-select school based on current subdomain (when availableSchools is loaded)
+  useEffect(() => {
+    if (!availableSchools || availableSchools.length === 0) return;
+    if (!setSelectedSchool || !setSelectedSchoolSlug) return;
+
+    const currentSchoolSlug = getCurrentSchool();
+    if (!currentSchoolSlug) return;
+
+    const matched = availableSchools.find(
+      (s) => (s?.slug || '').toLowerCase() === currentSchoolSlug.toLowerCase()
+    );
+    if (!matched) return;
+
+    const expectedName = `Dulwich College ${matched.title}`;
+    // Avoid pointless state updates
+    if (selectedSchool !== expectedName) {
+      setSelectedSchool(expectedName);
+      setSelectedSchoolSlug(matched.slug);
+    }
+  }, [availableSchools, selectedSchool, setSelectedSchool, setSelectedSchoolSlug]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const shouldBeScrolled = window.scrollY > 20;
+      // Only update if state actually changes to avoid unnecessary re-renders
+      if (scrolled !== shouldBeScrolled) {
+        setScrolled(shouldBeScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrolled]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.height = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    };
+  }, [mobileMenuOpen]);
+
+  // Prevent body scroll when chat is open
+  useEffect(() => {
+    if (chatOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.height = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    };
+  }, [chatOpen]);
+
+  // Prevent body scroll when search modal is open and reset page number
+  useEffect(() => {
+    if (showSearchResults) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.height = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+      setCurrentSearchPage(1); // Reset page when modal closes
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    };
+  }, [showSearchResults]);
+
+  // Scroll search input into view when focused on mobile
+  useEffect(() => {
+    if (isSearchFocused && mobileSearchRef.current && mobileMenuScrollRef.current) {
+      // Use requestAnimationFrame for better timing
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const searchElement = mobileSearchRef.current;
+          const scrollContainer = mobileMenuScrollRef.current;
+
+          if (searchElement && scrollContainer) {
+            // Get the position of the search element
+            const searchRect = searchElement.getBoundingClientRect();
+            const containerRect = scrollContainer.getBoundingClientRect();
+
+            // Calculate how much to scroll
+            const scrollOffset = searchElement.offsetTop - containerRect.top - 80; // 80px from top for better visibility
+
+            scrollContainer.scrollTo({
+              top: scrollOffset,
+              behavior: 'smooth'
+            });
+          }
+        }, 400); // Increased delay to allow keyboard to fully appear
+      });
+    }
+  }, [isSearchFocused]);
+
+  // ── Layout Type 4: Minimal Header with Logo Only ──────────────────────────
+  // Debug logging and robust type conversion (same as international PageHeader)
+  const normalizedLayoutType = pageLayoutType !== undefined && pageLayoutType !== null
+    ? parseInt(pageLayoutType, 10)
+    : null;
+
+  // Debug logging - always show in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('School PageHeader - pageLayoutType:', pageLayoutType, 'Type:', typeof pageLayoutType, 'Normalized:', normalizedLayoutType);
+  }
+
+  if (normalizedLayoutType === 4) {
+    const schoolLogo = getSchoolLogo();
+    const schoolName = getSchoolDisplayName();
+
+    console.log('✅ Rendering MINIMAL header for school:', schoolName);
+
+    return (
+      <>
+        {/* DESKTOP MINIMAL HEADER */}
+        <header className="hidden lg:block fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+          <div className="px-4 py-4">
+            <div className="max-w-[1120px] mx-auto flex items-left justify-left">
+              <img
+                src={schoolLogo}
+                alt={schoolName}
+                className="h-12 w-[270px] cursor-pointer hover:scale-105 transition-all duration-200"
+                onClick={() => window.location.href = '/'}
+              />
+            </div>
+          </div>
+        </header>
+
+        {/* MOBILE MINIMAL HEADER */}
+        <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+          <div className="px-4 py-3">
+            <div className="flex items-left justify-left">
+              <img
+                src={schoolLogo}
+                alt={schoolName}
+                className="h-10 w-[220px] cursor-pointer"
+                onClick={() => window.location.href = '/'}
+              />
+            </div>
+          </div>
+        </header>
+      </>
+    );
+  }
+
+  // ── Normal Header (all other layout types) ────────────────────────────────
+
+  const redirectToSchool = (school) => {
+    const schoolSlug = typeof school === 'string' ? school : school?.slug;
+
+    // "International" / main site: redirect to static link
+    if (!schoolSlug || schoolSlug === 'international') {
+      window.location.assign('https://www.dulwich-prod.atalent.xyz/');
+      return;
+    }
+
+    // Use school URL directly from API response if available (without appending current path)
+    if (typeof school === 'object' && school?.url) {
+      // Clean up escaped forward slashes if present
+      const cleanUrl = school.url.replace(/\\\//g, '/');
+      window.location.assign(cleanUrl);
+    } else {
+      // Fallback to utility function if URL not available
+      window.location.assign(getSchoolUrl(schoolSlug, ''));
+    }
+  };
+
+  const handleSchoolSelect = (school) => {
+    const schoolName = `Dulwich College ${school.title}`;
+    setSelectedSchool?.(schoolName);
+    setSelectedSchoolSlug?.(school.slug);
+
+    const currentSchoolSlug = getCurrentSchool() || '';
+    const nextSlug = school.slug || '';
+    if (currentSchoolSlug !== nextSlug) {
+      redirectToSchool(school);
+    }
+  };
+
+  // Use headerScrolled prop if provided, otherwise fall back to internal scrolled state
+  const isScrolled = headerScrolled !== undefined ? headerScrolled : scrolled;
+
+  // Language toggle function
+  const toggleLanguage = (e) => {
+    e.preventDefault();
+    const pathname = location.pathname;
+    const search = location.search;
+    const hash = location.hash;
+
+    let newPath;
+    if (isChineseVersion) {
+      // Remove zh/ prefix
+      newPath = pathname.replace(/^\/zh(\/|$)/, '/');
+      if (newPath === '') newPath = '/';
+    } else {
+      // Add zh/ prefix
+      if (pathname === '/') {
+        newPath = '/zh/';
+      } else if (pathname.startsWith('/')) {
+        newPath = '/zh' + pathname;
+      } else {
+        newPath = '/zh/' + pathname;
+      }
+    }
+
+    navigate(newPath + search + hash);
+  };
+
+  // Nav data — switches between en/zh based on URL language
+  const nav = isChineseVersion ? schoolNavData.zh : schoolNavData.en;
+
+  // Helpers: look up nav items, sections, cards, and school-filtered links by id
+  const getNavItem = (id) => nav.navItems.find(n => n.id === id) || {};
+  const getSection = (navItem, id) => (navItem.sections || []).find(s => s.id === id) || {};
+
+  // Returns the card best matching current school (handles duplicate ids with different schools filters)
+  const getCard = (navItem, id) => {
+    const s = getCurrentSchool();
+    const cards = (navItem.cards || []).filter(c => c.id === id);
+    if (!s) return cards[0] || {};
+    const _m = (arr) => arr.some(e => e.split(',').map(x => x.trim()).includes(s));
+    return cards.find(c => c.schools && _m(c.schools))
+      || cards.find(c => !c.schools && (!c.excludeSchools || !_m(c.excludeSchools)))
+      || {};
+  };
+
+  // Returns true if the card's schools/excludeSchools JSON fields allow current school
+  const showCard = (card) => {
+    if (!card || !card.id) return false;
+    const s = getCurrentSchool();
+    if (!s) return true;
+    const _m = (arr) => arr.some(e => e.split(',').map(x => x.trim()).includes(s));
+    return (!card.schools || _m(card.schools))
+      && (!card.excludeSchools || !_m(card.excludeSchools));
+  };
+
+  // Returns school-specific image for a card, falling back to provided default
+  const getCardImage = (cardId, fallback) => {
+    const school = getCurrentSchool();
+    return (school && schoolCardImages[school]?.[cardId]) || fallback;
+  };
+
+  const filterLinks = (links = []) => {
+    const s = getCurrentSchool();
+    if (!s) return links;
+    const _m = (arr) => arr.some(e => e.split(',').map(x => x.trim()).includes(s));
+    return links.filter(l =>
+      (!l.schools || _m(l.schools)) &&
+      (!l.excludeSchools || !_m(l.excludeSchools))
+    );
+  };
+
+  // Shorthand nav sections used in JSX below
+  const whyNav       = getNavItem('why-dulwich');
+  const learningNav  = getNavItem('learning');
+  const communityNav = getNavItem('community');
+  const admissionsNav= getNavItem('admissions');
+
+  // Search handler function
+  const handleSearch = async (e, pageNumber = 1) => {
+    if (e) e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    setIsSearching(true);
+    setShowSearchResults(true);
+    setCurrentSearchPage(pageNumber);
+
+    try {
+      // Build search URL with required and optional parameters
+      const searchParams = new URLSearchParams({
+        query: searchQuery.trim()
+      });
+
+      // Add optional page parameter for pagination
+      if (pageNumber > 1) {
+        searchParams.append('page', pageNumber.toString());
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/search?${searchParams.toString()}`);
+      const data = await response.json();
+      setSearchResults(data);
+    } catch (error) {
+      console.error('Search error:', error);
+      setSearchResults({ success: false, errors: { general: ['Failed to fetch search results'] } });
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Handle pagination
+  const handleSearchPageChange = (pageNumber) => {
+    handleSearch(null, pageNumber);
+  };
+
+  const school = getCurrentSchool();
+  const parentPortalUrl = schoolPortals[school] || '#';
+
+  return (
+    <>
+      <style>{`
+        @keyframes smoothSlideDown {
+          from {
+            opacity: 0;
+            transform: scaleY(0.95) translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: scaleY(1) translateY(0);
+          }
+        }
+
+        @keyframes smoothSlideUp {
+          from {
+            opacity: 1;
+            transform: scaleY(1) translateY(0);
+          }
+          to {
+            opacity: 0;
+            transform: scaleY(0.95) translateY(-10px);
+          }
+        }
+
+        @keyframes slideInFromTop {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+            max-height: 0;
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 2000px;
+          }
+        }
+
+        [data-radix-navigation-menu-content] {
+          transform-origin: top center;
+        }
+
+        [data-radix-navigation-menu-content][data-state="open"] {
+          animation: smoothSlideDown 200ms ease-out;
+        }
+
+        [data-radix-navigation-menu-content][data-state="closed"] {
+          animation: smoothSlideUp 150ms ease-in;
+        }
+
+        [data-state=open] .nav-content {
+          animation: smoothSlideDown 200ms ease-out;
+          transform-origin: top center;
+        }
+
+        [data-state=closed] .nav-content {
+          animation: smoothSlideUp 200ms ease-in;
+          transform-origin: top center;
+        }
+
+        /* Header minimize on scroll for page_layout_type 5 */
+        body.header-minimized header {
+          height: 80px !important;
+          transition: height 0.3s ease-in-out;
+          overflow: hidden;
+        }
+
+        body.header-minimized header > div {
+          padding-top: 0.5rem !important;
+          padding-bottom: 0.5rem !important;
+        }
+
+        body.header-minimized header img {
+          height: 2.5rem !important;
+          transition: height 0.3s ease-in-out;
+        }
+
+        /* Custom scrollbar for mobile menu */
+        .mobile-menu-scroll {
+          -webkit-overflow-scrolling: touch;
+          scroll-behavior: smooth;
+          overscroll-behavior: contain;
+        }
+
+        /* Prevent viewport from resizing on keyboard open */
+        @supports (-webkit-touch-callout: none) {
+          .mobile-menu-scroll {
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+          }
+        }
+
+        .mobile-menu-scroll::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .mobile-menu-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .mobile-menu-scroll::-webkit-scrollbar-thumb {
+          background: #D1D5DB;
+          border-radius: 3px;
+        }
+
+        .mobile-menu-scroll::-webkit-scrollbar-thumb:hover {
+          background: #3C3737;
+        }
+
+        /* Smooth transition for mobile menu padding */
+        .mobile-menu-scroll {
+          transition: padding-bottom 0.3s ease-out;
+        }
+
+        /* Smooth dropdown transitions */
+        .dropdown-content {
+          overflow: hidden;
+          transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-out;
+        }
+
+        .dropdown-content-enter {
+          max-height: 0;
+          opacity: 0;
+        }
+
+        .dropdown-content-enter-active {
+          max-height: 2000px;
+          opacity: 1;
+        }
+
+        .dropdown-content-exit {
+          max-height: 2000px;
+          opacity: 1;
+        }
+
+        .dropdown-content-exit-active {
+          max-height: 0;
+          opacity: 0;
+        }
+
+        /* Smooth chevron rotation */
+        .chevron-rotate {
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Smooth underline animation */
+        .section-underline {
+          transform-origin: left;
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Stagger animation for cards */
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .card-stagger-1 {
+          animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+        }
+
+        .card-stagger-2 {
+          animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+        }
+
+        /* Smooth link transitions */
+        .link-item {
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Search focus highlighting */
+        .search-container-focused {
+          position: sticky;
+          bottom: 0;
+          z-index: 10;
+        }
+
+        /* Smooth keyboard appearance handling */
+        @media screen and (max-width: 1023px) {
+          .mobile-menu-scroll {
+            scroll-padding-bottom: 400px;
+          }
+        }
+      `}</style>
+
+      {/* DESKTOP HEADER - Shows on screens >= lg (1024px) */}
+      <header className="hidden lg:block fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+        {/* Simplified Header when Chat is Open */}
+        {chatOpen && (
+          <div className="">
+            <div className="max-w-[1120px] mx-auto flex items-center justify-end gap-3">
+              {/* Close Button */}
+              <button
+                onClick={() => setChatOpen(false)}
+                className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-700 hover:bg-gray-500 transition-colors"
+                aria-label="Close chat"
+              >
+                <X className="w-4 h-4 text-white" />
+              </button>
+
+              {/* Right Side Buttons */}
+              <div className="flex items-center gap-3">
+                {/* Ask AI Button - Active State (Click to close) */}
+                <div className="relative bg-[#FAF7F5] gap-3" onClick={() => setChatOpen(false)}>
+                  {/* <div className="my-3 py-3 px-2 align-middle"
+
+                          style={{
+                            color: 'black',
+                            borderColor: 'unset',
+                                                     }}
+                      >
+                        Ask AI
+                        <Icon icon="Icon-AI" size={20} color="#D30013" className="transition-all duration-300" />
+                      </div> */}
+                  {/* Active Indicator - Red underline */}
+                  <div
+                    className="absolute bottom-0 left-0 right-0 h-[5px] bg-[#D30013] rounded-full"
+                    style={{ animation: 'slideIn 0.3s ease-out' }}
+                  />
+                </div>
+
+                <button
+                  className="group flex items-center gap-2 px-4 py-3 text-sm font-medium border-2 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
+                  style={{ color: '#D30013', borderColor: '#D30013' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FEF2F2'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                >
+                  Enquire
+                  <Icon icon="Icon_Email" size={20} className="transition-transform duration-300" />
+                </button>
+
+                <a href="/admissions/apply-now">
+                  <button
+                    className="group flex items-center gap-2 px-4 py-3.5 text-sm font-medium text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg active:scale-95"
+                    style={{ backgroundColor: '#D30013' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#B8000F'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#D30013'; }}
+                  >
+                    Apply Now
+                    <Icon icon="Icon-Arrow" size={18} color="white" className="transition-transform duration-300 group-hover:translate-x-1" />
+                  </button>
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Normal Header when Chat is Closed */}
+        {!chatOpen && (
+          <>
+            {/* Top Bar - Hidden when scrolled */}
+            {!isScrolled && (
+              <div className="px-4 py-2">
+                <div className="max-w-[1120px] mx-auto px-5 flex items-center justify-between">
+                  {/* Logo and School Name */}
+                  <div className="flex items-center gap-4">
+                  {
+  getCurrentSchool() === 'singapore' ? (
+    <a
+      href="https://singapore.dulwich-prod.atalent.xyz/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src={sing}
+        alt="Dulwich College Singapore"
+        className="w-[270px] transition-all duration-500 ease-out hover:scale-105"
+      />
+    </a>
+  ) : getCurrentSchool() === 'suzhou' ? (
+    <a
+      href="https://suzhou.dulwich-prod.atalent.xyz/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src={suzhou}
+        alt="Dulwich College Suzhou"
+        className="h-12 w-[270px] transition-all duration-500 ease-out hover:scale-105"
+      />
+    </a>
+  ) : getCurrentSchool() === 'suzhou-high-school' ? (
+    <a
+      href="https://suzhou-high-school.dulwich-prod.atalent.xyz/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src={suzhouHighSchool}
+        alt="Dulwich College Suzhou High School"
+        className="h-12 w-[270px] transition-all duration-500 ease-out hover:scale-105"
+      />
+    </a>
+  ) : getCurrentSchool() === 'hengqin-high-school' ? (
+    <a
+      href="https://hengqin-high-school.dulwich-prod.atalent.xyz/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src={hengqinHighSchool}
+        alt="Dulwich College Hengqin High School"
+        className="h-12 w-[270px] transition-all duration-500 ease-out hover:scale-105"
+      />
+    </a>
+  ) : getCurrentSchool() === 'seoul' ? (
+    <a
+      href="https://seoul.dulwich-prod.atalent.xyz/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src={seoul}
+        alt="Dulwich College Seoul"
+        className="h-12 w-[270px] transition-all duration-500 ease-out hover:scale-105"
+      />
+    </a>
+  ) : getCurrentSchool() === 'shanghai-puxi' ? (
+    <a
+      href="https://shanghai-puxi.dulwich-prod.atalent.xyz/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src={puxi}
+        alt="Dulwich College Shanghai Puxi"
+        className="h-12 w-[270px] transition-all duration-500 ease-out hover:scale-105"
+      />
+    </a>
+  ): getCurrentSchool() === 'shanghai-pudong' ? (
+    <a
+      href="https://shanghai-pudong.dulwich-prod.atalent.xyz/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src={pudong}
+        alt="Dulwich College Shanghai Pudong"
+        className="h-12 w-[270px] transition-all duration-500 ease-out hover:scale-105"
+      />
+    </a>
+  ): getCurrentSchool() === 'bangkok' ? (
+    <a
+      href="https://bangkok.dulwich-prod.atalent.xyz/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src={bangkok}
+        alt="Dulwich College Bangkok"
+        className="h-12 w-[270px] transition-all duration-500 ease-out hover:scale-105"
+      />
+    </a>
+  ): getCurrentSchool() === 'beijing' ? (
+    <a
+      href="https://beijing.dulwich-prod.atalent.xyz/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src={beijing}
+        alt="Dulwich College Beijing"
+        className="h-12 w-[270px] transition-all duration-500 ease-out hover:scale-105"
+      />
+    </a>
+  ): null
+}
+               </div>
+
+                  {/* Top Right Links */}
+                  <div className="flex items-center gap-6 text-sm text-[#3C3C3B]">
+                    {parentPortalUrl && parentPortalUrl !== '#' && (
+                      <a href={parentPortalUrl} target="_blank" rel="noopener noreferrer" className="hover:text-red-600 transition-colors parent-portal"
+                      style={{ color: '#3C3C3B', lineHeight: '2.2', borderRight: '1px solid #E3D9D1', paddingRight: '30px' }}>
+                      {nav.topBar.parentPortal}                    </a>
+                    )}
+
+                    <a href={isChineseVersion ? "/zh/community/life-at-dulwich/school-calendar" : "/community/life-at-dulwich/school-calendar"} className="hover:text-red-600 transition-colors" style={{ color: '#3C3C3B'}}>
+                      {nav.topBar.schoolCalendar}
+                    </a>
+                    {/* Hide language switcher for Singapore, Bangkok, and Seoul */}
+                    {!['singapore', 'bangkok', 'seoul'].includes(getCurrentSchool()) && (
+                      <a href="#" onClick={toggleLanguage} className="hover:text-red-800 font-extrabold transition-colors">
+                        {isChineseVersion ? 'EN' : '中文'}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Main Navigation */}
+            <div className={`px-4 ${isScrolled ? 'py-3' : 'py-4'} transition-all duration-200`}>
+              <div className="max-w-[1120px] mx-auto px-5 flex items-center justify-between">
+                {/* Logo - Only visible when scrolled */}
+                <div className={`w-full flex items-center justify-left gap-5 ${isScrolled ? 'ml-[0%]' : 'ml-[2%]'}`}>
+                  {isScrolled && (
+                    <div className="items-center animate-in fade-in slide-in-from-left-4 duration-200">
+                      <img
+                        src="/images/crest-logo.svg"
+                        alt="Dulwich College"
+                        className="transition-all duration-500 ease-out h-12 min-w-[38px] hover:scale-110"
+                      />
+                    </div>
+
+                  )}
+
+                  {/* Navigation Menu */}
+                  <NavigationMenu.Root
+                    className="flex"
+                    onValueChange={(value) => setIsDrawerOpen(!!value)}
+                    delayDuration={100}
+                  >
+                    <NavigationMenu.List className="flex items-left gap-1">
+                      {/* Why Dulwich - Full Width Drawer */}
+                      <NavigationMenu.Item>
+                        <NavigationMenu.Trigger className={`group px-3 py-1 text-[16px] font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative min-w-[150px]`}>
+                          {whyNav.label}
+                          <span className={`absolute ${isScrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] scale-x-0 group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-transform duration-200 origin-left`}></span>
+                        </NavigationMenu.Trigger>
+                        <NavigationMenu.Content className={`nav-content fixed left-0 right-0 ${isScrolled ? 'top-[72px]' : 'top-[138px]'} w-full z-[60]`}>
+                          <div className="w-full bg-white">
+                            <div className="w-[1120px] mx-auto px-4 py-8">
+                              <div className="grid grid-cols-4 gap-8 mb-8">
+
+                                {/* OUR COLLEGE Section */}
+                                <div className='text-left'>
+                                  <ul className="space-y-4">
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{getSection(whyNav, 'our-college').heading}</h3>
+                                    {filterLinks(getSection(whyNav, 'our-college').links).map((link, i) => (
+                                      <li key={i}>
+                                        <a href={link.url} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                          {link.title}
+                                        </a>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+
+                                {/* FAMILY OF SCHOOLS Section */}
+                                <div className='text-left'>
+                                  <ul className="space-y-4">
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{getSection(whyNav, 'family-of-schools').heading}</h3>
+                                    {filterLinks(getSection(whyNav, 'family-of-schools').links).map((link, i) => (
+                                      <li key={i}>
+                                        <a href={link.url} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                          {link.title}
+                                        </a>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+
+                                {/* Academic Results Card */}
+                                {(() => { const card = getCard(whyNav, 'academic-results'); return (
+                                <a href={card.url}>
+                                  <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{card.heading}</h3>
+                                  <div className="text-left overflow-hidden">
+                                    <img src={getCardImage(card.image, WhyAcademicResults)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
+                                    <div className='mt-5'>
+                                      <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
+                                      <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                    </div>
+                                  </div>
+                                </a>
+                                ); })()}
+
+                                {/* School-specific cards — driven by JSON schools/excludeSchools */}
+                                {showCard(getCard(whyNav, 'the-greenhouse')) && (() => { const card = getCard(whyNav, 'the-greenhouse'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] font-bold mb-2 uppercase tracking-widest">{card.heading}</h3>
+                                    <div className="text-left rounded-sm overflow-hidden">
+                                      <img src={getCardImage(card.image, whyUniversity)} alt={card.heading} className="w-full h-40 object-cover rounded-lg" />
+                                      <div className="mt-5">
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                                {showCard(getCard(whyNav, 'university-matriculation')) && (() => { const card = getCard(whyNav, 'university-matriculation'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] font-bold mb-2 uppercase text-left tracking-widest">{card.heading}</h3>
+                                    <div className="text-left rounded-sm overflow-hidden">
+                                      <img src={getCardImage(card.image, whyUniversity)} alt={card.heading} className="w-full h-40 object-cover rounded-lg" />
+                                      <div className="mt-5">
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                              </div>
+
+                              {/* Bottom Section */}
+                              <div className="pt-6 border-t col-span-2 border-[#EAE8E4] flex items-center justify-between">
+                                <a href="/sitemap" className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                  {nav.siteMapLabel}
+                                </a>
+                                <form onSubmit={handleSearch} className="relative w-[50%]">
+                                  <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                                    <Icon icon="Icon-Search" size={16} color="#3C3737" />
+                                  </div>
+                                  <input
+                                    type="text"
+                                    placeholder={nav.searchPlaceholder}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    autoComplete="off"
+                                    autoCorrect="off"
+                                    autoCapitalize="off"
+                                    spellCheck="false"
+                                    className="w-full pl-10 pr-4 py-2 border border-[#EAE8E4] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent"
+                                  />
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </NavigationMenu.Content>
+                      </NavigationMenu.Item>
+
+                      <NavigationMenu.Item>
+                        <NavigationMenu.Trigger className={`group px-3 py-1 text-[16px] font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative`}>
+                          {learningNav.label}
+                          <span className={`absolute ${isScrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] scale-x-0 group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-transform duration-200 origin-left`}></span>
+                        </NavigationMenu.Trigger>
+                        <NavigationMenu.Content className={`nav-content fixed left-0 right-0 ${isScrolled ? 'top-[72px]' : 'top-[138px]'} w-full z-[60]`}>
+                          <div className="w-full bg-white">
+                            <div className="w-[1120px] mx-auto px-4 py-8">
+                              <div className="grid grid-cols-4 gap-8 mb-8">
+
+                                {/* CORE CURRICULUM Section */}
+                                <div className='text-left'>
+                                  <ul className="space-y-4">
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{getSection(learningNav, 'core-curriculum').heading}</h3>
+                                    {filterLinks(getSection(learningNav, 'core-curriculum').links).map((link, i) => (
+                                      <li key={i}>
+                                        <a href={link.url} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                          {link.title}
+                                        </a>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+
+                                {/* HOLISTIC EDUCATION Section */}
+                                <div className='text-left'>
+                                  <ul className="space-y-4">
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{getSection(learningNav, 'holistic-education').heading}</h3>
+                                    {filterLinks(getSection(learningNav, 'holistic-education').links).map((link, i) => (
+                                      <li key={i}>
+                                        <a href={link.url} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                          {link.title}
+                                        </a>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+
+                                {/* School-specific learning cards — driven by JSON schools/excludeSchools */}
+                                {showCard(getCard(learningNav, 'student-leadership')) && (() => { const card = getCard(learningNav, 'student-leadership'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-7  uppercase tracking-widest">{card.heading}</h3>
+                                    <div className="text-left overflow-hidden">
+                                      <img src={getCardImage(card.image, imageMap[card.image] || excelImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
+                                      <div className='mt-5'>
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                                {showCard(getCard(learningNav, 'wellbeing')) && (() => { const card = getCard(learningNav, 'wellbeing'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest min-h-[38px]">{card.heading}</h3>
+                                    <div className="text-left overflow-hidden">
+                                      <img src={getCardImage(card.image, imageMap[card.image] || excelImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
+                                      <div className='mt-5'>
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                                {showCard(getCard(learningNav, 'university-careers')) && (() => { const card = getCard(learningNav, 'university-careers'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest min-h-[38px]">{card.heading}</h3>
+                                    <div className="text-left overflow-hidden">
+                                      <img src={getCardImage(card.image, imageMap[card.image] || excelImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
+                                      <div className='mt-5'>
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                                {showCard(getCard(learningNav, 'worldwise-events')) && (() => { const card = getCard(learningNav, 'worldwise-events'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest min-h-[38px]">{card.heading}</h3>
+                                    <div className="text-left overflow-hidden">
+                                      <img src={getCardImage(card.image, imageMap[card.image] || excelImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
+                                      <div className='mt-5'>
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                                {/* Sustainability Card */}
+                                {showCard(getCard(learningNav, 'sustainability')) && (() => { const card = getCard(learningNav, 'sustainability'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{card.heading}</h3>
+                                    <div className="text-left rounded-sm overflow-hidden">
+                                      <img src={getCardImage(card.image, Learningwel)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
+                                      <div className="mt-5">
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                              </div>
+
+                              {/* Bottom Section */}
+                              <div className="pt-6 border-t col-span-2 border-[#EAE8E4] flex items-center justify-between">
+                                <a href="/sitemap" className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                  {nav.siteMapLabel}
+                                </a>
+                                <form onSubmit={handleSearch} className="relative w-[50%]">
+                                  <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                                    <Icon icon="Icon-Search" size={16} color="#9CA3AF" />
+                                  </div>
+                                  <input
+                                    type="text"
+                                    placeholder={nav.searchPlaceholder}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    autoComplete="off"
+                                    autoCorrect="off"
+                                    autoCapitalize="off"
+                                    spellCheck="false"
+                                    className="w-full pl-10 pr-4 py-2 border border-[#EAE8E4] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent"
+                                  />
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </NavigationMenu.Content>
+                      </NavigationMenu.Item>
+
+                      <NavigationMenu.Item>
+                        <NavigationMenu.Trigger className={`group px-3 py-1 text-[16px] font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative`}>
+                          {communityNav.label}
+                          <span className={`absolute ${isScrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] scale-x-0 group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-transform duration-200 origin-left`}></span>
+                        </NavigationMenu.Trigger>
+                        <NavigationMenu.Content className={`nav-content fixed left-0 right-0 ${isScrolled ? 'top-[72px]' : 'top-[138px]'} w-full z-[60]`}>
+                          <div className="w-full bg-white">
+                            <div className="w-[1120px] mx-auto px-4 py-8">
+                              <div className="grid grid-cols-4 gap-8 mb-8">
+
+                                {/* OUR COMMUNITY Section */}
+                                <div className='text-left'>
+                                  <ul className="space-y-4">
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{getSection(communityNav, 'our-community').heading}</h3>
+                                    {filterLinks(getSection(communityNav, 'our-community').links).map((link, i) => (
+                                      <li key={i}>
+                                        <a href={link.url} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                          {link.title}
+                                        </a>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+
+                                {/* LIFE AT DULWICH Section */}
+                                <div className='text-left'>
+                                  <ul className="space-y-4">
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{getSection(communityNav, 'life-at-dulwich').heading}</h3>
+                                    {filterLinks(getSection(communityNav, 'life-at-dulwich').links).map((link, i) => (
+                                      <li key={i}>
+                                        <a href={link.url} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                          {link.title}
+                                        </a>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+
+                                {/* Community cards — driven by JSON schools/excludeSchools */}
+                                {showCard(getCard(communityNav, 'meet-our-parents')) && (() => { const card = getCard(communityNav, 'meet-our-parents'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{card.heading}</h3>
+                                    <div className="text-left overflow-hidden">
+                                      <img src={getCardImage(card.image, imageMap[card.image] || mmpImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
+                                      <div className='mt-5'>
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                                {showCard(getCard(communityNav, 'founding-families')) && (() => { const card = getCard(communityNav, 'founding-families'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{card.heading}</h3>
+                                    <div className="text-left overflow-hidden">
+                                      <img src={getCardImage(card.image, imageMap[card.image] || mmpImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
+                                      <div className='mt-5'>
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                                {showCard(getCard(communityNav, 'student-stories')) && (() => { const card = getCard(communityNav, 'student-stories'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{card.heading}</h3>
+                                    <div className="text-left rounded-sm overflow-hidden">
+                                      <img src={getCardImage(card.image, imageMap[card.image] || communityStudentstories)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
+                                      <div className="mt-5">
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                                {showCard(getCard(communityNav, 'alumni-stories')) && (() => { const card = getCard(communityNav, 'alumni-stories'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{card.heading}</h3>
+                                    <div className="text-left rounded-sm overflow-hidden">
+                                      <img src={getCardImage(card.image, imageMap[card.image] || communityStudentstories)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
+                                      <div className="mt-5">
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                              </div>
+
+                              {/* Bottom Section */}
+                              <div className="pt-6 border-t col-span-2 border-[#EAE8E4] flex items-center justify-between">
+                                <a href="/sitemap" className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                  {nav.siteMapLabel}
+                                </a>
+                                <form onSubmit={handleSearch} className="relative w-[50%]">
+                                  <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                                    <Icon icon="Icon-Search" size={16} color="#9CA3AF" />
+                                  </div>
+                                  <input
+                                    type="text"
+                                    placeholder={nav.searchPlaceholder}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    autoComplete="off"
+                                    autoCorrect="off"
+                                    autoCapitalize="off"
+                                    spellCheck="false"
+                                    className="w-full pl-10 pr-4 py-2 border border-[#EAE8E4] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent"
+                                  />
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </NavigationMenu.Content>
+                      </NavigationMenu.Item>
+
+                      {/* Admissions */}
+                      <NavigationMenu.Item>
+                        <NavigationMenu.Trigger className={`group px-3 py-1 text-[16px] font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative`}>
+                          {admissionsNav.label}
+                          <span className={`absolute ${isScrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] scale-x-0 group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-transform duration-200 origin-left`}></span>
+                        </NavigationMenu.Trigger>
+                        <NavigationMenu.Content className={`nav-content fixed left-0 right-0 ${isScrolled ? 'top-[72px]' : 'top-[138px]'} w-full z-[60]`}>
+                          <div className="w-full bg-white">
+                            <div className="w-[1120px] mx-auto px-4 py-8">
+                              <div className="grid grid-cols-4 gap-8 mb-8">
+
+                                {/* APPLY Section */}
+                                <div className='text-left'>
+                                  <ul className="space-y-4">
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{getSection(admissionsNav, 'apply').heading}</h3>
+                                    {filterLinks(getSection(admissionsNav, 'apply').links).map((link, i) => (
+                                      <li key={i}>
+                                        <a href={link.url} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                          {link.title}
+                                        </a>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+
+                                {/* VISIT Section */}
+                                <div className='text-left'>
+                                  <ul className="space-y-4">
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{getSection(admissionsNav, 'visit').heading}</h3>
+                                    {filterLinks(getSection(admissionsNav, 'visit').links).map((link, i) => (
+                                      <li key={i}>
+                                        <a href={link.url} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                          {link.title}
+                                        </a>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+
+                                {/* How to Apply Card */}
+                                {(() => { const card = getCard(admissionsNav, 'how-to-apply'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{card.heading}</h3>
+                                    <div className="text-left overflow-hidden">
+                                      <img src={getCardImage(card.image, excelImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
+                                      <div className='mt-5'>
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                                {/* Visit Us Card */}
+                                {(() => { const card = getCard(admissionsNav, 'visit-us'); return (
+                                  <a href={card.url}>
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{card.heading}</h3>
+                                    <div className="text-left rounded-sm overflow-hidden">
+                                      <img src={getCardImage(card.image, admissionsImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
+                                      <div className="mt-5">
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                      </div>
+                                    </div>
+                                  </a>
+                                ); })()}
+
+                              </div>
+
+                              {/* Bottom Section */}
+                              <div className="pt-6 border-t col-span-2 border-[#EAE8E4] flex items-center justify-between">
+                                <a href="/sitemap" className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                  {nav.siteMapLabel}
+                                </a>
+                                <form onSubmit={handleSearch} className="relative w-[50%]">
+                                  <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                                    <Icon icon="Icon-Search" size={16} color="#9CA3AF" />
+                                  </div>
+                                  <input
+                                    type="text"
+                                    placeholder={nav.searchPlaceholder}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    autoComplete="off"
+                                    autoCorrect="off"
+                                    autoCapitalize="off"
+                                    spellCheck="false"
+                                    className="w-full pl-10 pr-4 py-2 border border-[#EAE8E4] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent"
+                                  />
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </NavigationMenu.Content>
+                      </NavigationMenu.Item>
+
+
+                    </NavigationMenu.List>
+
+
+                  </NavigationMenu.Root>
+                </div>
+
+                {/* Right Side Buttons */}
+                <div className="w-full flex justify-end items-center gap-3">
+                  {/* Ask AI Button with Active State */}
+                  <div className="relative">
+                    {/* <button
+                      onClick={() => setChatOpen && setChatOpen(!chatOpen)}
+                      className={`group flex items-center gap-2 px-4 py-3 text-sm font-medium border rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 ${
+                          chatOpen ? 'shadow-md' : ''
+                      }`}
+                      style={{
+                        color: chatOpen ? 'white' : '#D30013',
+                        borderColor: '#D30013',
+                        backgroundColor: chatOpen ? '#D30013' : 'transparent'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!chatOpen) {
+                          e.currentTarget.style.backgroundColor = '#D30013';
+                          e.currentTarget.style.color = 'white';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!chatOpen) {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                          e.currentTarget.style.color = '#D30013';
+                        }
+                      }}
+                  >
+                    Ask AI
+                    <Icon icon="Icon-AI" size={20} color={chatOpen ? 'white' : undefined} className="transition-all duration-300" />
+                  </button> */}
+                    {/* Active Indicator - Red underline */}
+                    {chatOpen && (
+                      <div
+                        className="absolute -bottom-1 left-0 right-0 h-1 bg-[#D30013] rounded-full animate-in slide-in-from-bottom-2 duration-300"
+                        style={{ animation: 'slideIn 0.3s ease-out' }}
+                      />
+                    )}
+                  </div>
+
+<a href={isChineseVersion ? "/zh/admissions/enquire" : "/admissions/enquire"}>
+
+                  <button
+                    className="group flex items-center gap-2 px-4 py-3 text-sm font-medium border rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
+                    style={{ color: '#D30013', borderColor: '#D30013' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FEF2F2'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                  >
+                    {nav.buttons.enquire}
+                    <Icon icon="Icon_Email" size={20} className="transition-transform duration-300" />
+                  </button>
+                  </a>
+                  <a href="/admissions/apply-now">
+                  <button
+                    className="group flex items-center gap-2 px-4 py-3.5 text-sm font-medium text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg active:scale-95"
+                    style={{ backgroundColor: '#D30013' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#B8000F'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#D30013'; }}
+                  >
+                    {nav.buttons.applyNow}
+                    <Icon icon="Icon-Arrow" size={18} color="white" className="transition-transform duration-300 group-hover:translate-x-1" />
+                  </button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </header>
+
+      {/* Overlay - Dims background when drawer is open */}
+      {isDrawerOpen && (
+        <div
+          className="
+              hidden lg:block
+              fixed inset-0
+              bg-gray-400/40
+              z-40
+              animate-in fade-in duration-200
+            "
+          style={{ top: isScrolled ? '72px' : '154px' }}
+        />
+      )}
+
+      {/* MOBILE HEADER - Shows on screens < lg (below 1024px) */}
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+        <div className="px-4 py-2.5 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className='flex items-center'>
+              {/* Crest Logo */}
+              {/* <img
+                src="/images/crest-logo.svg"
+                alt="Dulwich College"
+                className="h-10 w-auto cursor-pointer pr-4"
+                onClick={() => window.location.href = '/'}
+              /> */}
+              {/* School Logo based on current school */}
+              {getCurrentSchool() === 'singapore' ? (
+                <a
+                  href="https://singapore.dulwich-prod.atalent.xyz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={sing}
+                    alt="Dulwich College Singapore"
+                    className="w-[220px] cursor-pointer transition-all duration-500 ease-out hover:scale-105"
+                  />
+                </a>
+              ) : getCurrentSchool() === 'suzhou' ? (
+                <a
+                  href="https://suzhou.dulwich-prod.atalent.xyz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={suzhou}
+                    alt="Dulwich College Suzhou"
+                    className="w-[220px] cursor-pointer transition-all duration-500 ease-out hover:scale-105"
+                  />
+                </a>
+              ) : getCurrentSchool() === 'suzhou-high-school' ? (
+                <a
+                  href="https://suzhou-high-school.dulwich-prod.atalent.xyz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={suzhouHighSchool}
+                    alt="Dulwich College Suzhou High School"
+                    className="w-[220px] cursor-pointer transition-all duration-500 ease-out hover:scale-105"
+                  />
+                </a>
+              ) : getCurrentSchool() === 'hengqin-high-school' ? (
+                <a
+                  href="https://hengqin-high-school.dulwich-prod.atalent.xyz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={hengqinHighSchool}
+                    alt="Dulwich College Hengqin High School"
+                    className="w-[220px] cursor-pointer transition-all duration-500 ease-out hover:scale-105"
+                  />
+                </a>
+              ) : getCurrentSchool() === 'seoul' ? (
+                <a
+                  href="https://seoul.dulwich-prod.atalent.xyz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={seoul}
+                    alt="Dulwich College Seoul"
+                    className="w-[220px] cursor-pointer transition-all duration-500 ease-out hover:scale-105"
+                  />
+                </a>
+              ) : getCurrentSchool() === 'shanghai-puxi' ? (
+                <a
+                  href="https://shanghai-puxi.dulwich-prod.atalent.xyz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={puxi}
+                    alt="Dulwich College Shanghai Puxi"
+                    className="w-[220px] cursor-pointer transition-all duration-500 ease-out hover:scale-105"
+                  />
+                </a>
+              ) : getCurrentSchool() === 'shanghai-pudong' ? (
+                <a
+                  href="https://shanghai-pudong.dulwich-prod.atalent.xyz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={pudong}
+                    alt="Dulwich College Shanghai Pudong"
+                    className="w-[220px] cursor-pointer transition-all duration-500 ease-out hover:scale-105"
+                  />
+                </a>
+              ) : getCurrentSchool() === 'bangkok' ? (
+                <a
+                  href="https://bangkok.dulwich-prod.atalent.xyz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={bangkok}
+                    alt="Dulwich College Bangkok"
+                    className="w-[220px] cursor-pointer transition-all duration-500 ease-out hover:scale-105"
+                  />
+                </a>
+              ) : getCurrentSchool() === 'beijing' ? (
+                <a
+                  href="https://beijing.dulwich-prod.atalent.xyz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={beijing}
+                    alt="Dulwich College Beijing"
+                    className="w-[220px] cursor-pointer transition-all duration-500 ease-out hover:scale-105"
+                  />
+                </a>
+              ) : null}
+            </div>
+
+            {/* Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Open menu"
+            >
+              <Icon icon="Icon-Menu" size={24} color="#D30013" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* MOBILE BOTTOM NAVIGATION - Fixed at bottom */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
+        <div className="grid grid-cols-3 h-16">
+          {/* VISIT US */}
+          <a
+            href='/admissions/visit-us'
+            className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors"
+          >
+            <Icon icon="map2" size={20} color="#3C3C3B" />
+            <span className="text-[10px] text-[#3C3C3B]">VISIT US</span>
+          </a>
+
+          {/* ENQUIRE */}
+          <a href='#' className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
+            <Icon icon="Icon_Email" size={20} color="#374151" />
+            <span className="text-[10px] text-[#3C3C3B]">ENQUIRE</span>
+          </a>
+
+          {/* APPLY */}
+          <button className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
+            <Icon icon="Icon-Arrow" size={20} color="#D30013" />
+            <span className="text-[10px] text-[#3C3C3B]">APPLY</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* MOBILE MENU OVERLAY */}
+      {mobileMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="lg:hidden fixed inset-0 z-[100] bg-black bg-opacity-50 animate-in fade-in duration-300"
+            onClick={() => setMobileMenuOpen(false)}
+            style={{ touchAction: 'none' }}
+            onTouchMove={(e) => e.preventDefault()}
+          />
+
+          {/* Menu Panel - Slides in from right */}
+          <div className="lg:hidden fixed top-0 right-0 bottom-0 w-full max-w-md z-[101] bg-white shadow-2xl transition-transform duration-300 ease-out flex flex-col"
+            style={{
+              transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+              maxHeight: '100vh',
+              maxHeight: '100dvh'
+            }}>
+            {/* Menu Header */}
+            <div className="bg-white px-3 py-4 flex items-center justify-between flex-shrink-0">
+              <a
+                href="/"
+                className="flex items-center gap-0 text-[#3C3C3B]] hover:text-[#D30013] transition-colors"
+              >
+                <div className="w-11 h-8 bg-white flex items-center justify-center">
+                  <Icon icon="Icon-Home" size={24} color="#3C3C3B" />
+                </div>
+                <span className="text-[12px] font-bold">HOME</span>
+              </a>
+              <button onClick={() => setMobileMenuOpen(false)} className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                <Icon icon="Close-Button" size={38} color="#D30013"/>
+              </button>
+            </div>
+
+            {/* Menu Content */}
+            <div className="flex flex-col flex-1 overflow-hidden">
+              {/* Menu Items - mapped from navItems */}
+              <div
+                ref={mobileMenuScrollRef}
+            className="flex-1 px-5 py-0 space-y-1 overflow-y-auto mobile-menu-scroll"
+                style={{
+                  paddingBottom: isSearchFocused ? '70vh' : '1.5rem',
+                  transition: 'padding-bottom 0.4s ease-out'
+                }}
+              >
+                {nav.navItems.map((navItem) => (
+                  <React.Fragment key={navItem.id}>
+                    <div className="relative">
+                      <button
+                        onClick={() => setOpenMobileSection(openMobileSection === navItem.id ? null : navItem.id)}
+                        className="w-full flex items-center justify-between py-4"
+                      >
+                        <span className="text-[20px] text-[#3C3C3B] font-normal">{navItem.label}</span>
+                        <ChevronDown className={`chevron-rotate w-7 h-6 text-[#D30013] ${openMobileSection === navItem.id ? 'rotate-180' : 'rotate-0'}`} />
+                      </button>
+                      {/* Red underline when expanded */}
+                      <div
+                        className={`section-underline absolute left-0 right-0 bottom-0 h-[4px] bg-[#9E1422] ${
+                          openMobileSection === navItem.id ? 'scale-x-100' : 'scale-x-0'
+                        }`}
+                      />
+                    </div>
+
+                    {openMobileSection === navItem.id && (
+                      <div
+                        className="dropdown-content bg-white px-0 py-3 mb-2 text-left"
+                        style={{
+                          animation: 'slideInFromTop 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+                        }}
+                      >
+                        <div className="space-y-6">
+                          {navItem.sections.map((sec, i) => {
+                            const filteredLinks = filterLinks(sec.links);
+                            if (filteredLinks.length === 0) return null;
+
+                            return (
+                              <div key={i}>
+                                {sec.style === 'highlighted' ? (
+                                  <>
+                                    {/* Highlighted Section Header */}
+                                    <h3 className="text-[12px] font-bold text-[#3C3C3B] mb-3 uppercase tracking-[1.1px]">{sec.heading || 'HIGHLIGHTED'}</h3>
+                                  </>
+                                ) : (
+                                  <h3 className="text-[12px] font-bold text-[#3C3C3B] mb-4 uppercase tracking-[1.1px]">{sec.heading}</h3>
+                                )}
+
+                                {/* Card Grid for highlighted items */}
+                                {sec.style === 'highlighted' ? (
+                                  <div className="grid grid-cols-2 gap-4 mb-6 text-left">
+                                    {filteredLinks.map((link, j) => (
+                                      <a key={j} href={link.url} className={`block group card-stagger-${j + 1}`}>
+                                        <div className="bg-white rounded text-left overflow-hidden shadow-sm border border-[#F2EDE9] hover:shadow-md transition-all duration-300">
+                                          {link.image && (
+                                            <div className="aspect-[4/3] overflow-hidden relative">
+                                              <img
+                                                src={getCardImage(link.image, imageMap[link.image])}
+                                                alt={link.title}
+                                                className="w-full h-full min-w-[168px] object-cover group-hover:scale-105 transition-transform duration-300"
+                                              />
+                                            </div>
+                                          )}
+                                          <div className="h-[36px] px-2 flex items-center justify-between bg-white">
+                                            <span className="text-[12px] leading-3 font-semibold text-[#D30013]">{link.title}</span>
+                                            <Icon icon="Icon-Chevron-Large" size={15} color="#D30013" className="font-semibold flex-shrink-0 group-hover:translate-x-1 transition-transform" />
+                                          </div>
+                                        </div>
+                                      </a>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  /* Regular link list */
+                                  <div className="space-y-0">
+                                    {filteredLinks.map((link, j) => (
+                                      <a key={j} href={link.url} className="link-item block text-base text-[#3C3C3B] hover:text-[#D30013] hover:pl-2 py-3.5 border-b border-gray-100 last:border-b-0">
+                                        {link.title}
+                                      </a>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </React.Fragment>
+                ))}
+
+
+
+                <a href="/sitemap" className="link-item flex items-center gap-3 py-3.5 text-[15px] text-[#3C3C3B] hover:text-[#D30013] hover:pl-2">
+                  <img src={sitemapIcon} alt="Site Map" className="w-5 h-5" />
+                  <span className='text-[14px] font-medium text-[#3C3C3B]'>Full Site Map</span>
+                </a>
+
+                <button
+                  onClick={() => setOpenMobileSection(openMobileSection === 'schools' ? null : 'schools')}
+                  className="w-full flex items-center justify-between py-3.5 text-[14px] font-medium text-[#3C3C3B] hover:text-[#D30013] transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon icon="Icon-Menu" size={20} color="#3C3C3B" />
+                    <span className='text-[14px] font-medium text-[#3C3C3B]'>Schools</span>
+                  </div>
+                  <ChevronDown className={`chevron-rotate w-5 h-5 text-[#D30013] ${openMobileSection === 'schools' ? 'rotate-180' : 'rotate-0'}`} />
+                </button>
+                {openMobileSection === 'schools' && availableSchools && (
+                  <div
+                    className="dropdown-content bg-gray-50 rounded-lg p-4 mb-2 space-y-2"
+                    style={{
+                      animation: 'slideInFromTop 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                  >
+                    {availableSchools.map((school) => (
+                      <button
+                        key={school.id}
+                        onClick={() => {
+                          handleSchoolSelect(school);
+                          setMobileMenuOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 ${
+                          selectedSchool === `Dulwich College ${school.title}`
+                            ? 'bg-white font-semibold text-[#D30013] scale-[1.02]'
+                            : 'hover:bg-white hover:scale-[1.02] text-[#4B5563]'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span>Dulwich College {school.title}</span>
+                          {selectedSchool === `Dulwich College ${school.title}` && (
+                            <span className="text-[#D30013] text-lg">✓</span>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {parentPortalUrl && parentPortalUrl !== '#' && (
+                  <a href={parentPortalUrl} target="_blank" rel="noopener noreferrer" className="link-item flex items-center gap-3 py-3 text-[14px] text-[#3C3C3B] hover:text-[#D30013] hover:pl-2 transition-colors">
+                    <Icon icon="Icon_External" size={20} color="#3C3C3B" />
+                    <span className='text-[14px] font-medium text-[#3C3C3B]'>Parent Portal</span>
+                  </a>
+                )}
+
+                <a href={isChineseVersion ? "/zh/community/life-at-dulwich/school-calendar" : "/community/life-at-dulwich/school-calendar"} className="link-item flex items-center gap-3 py-3 text-base text-[#3C3C3B] hover:text-[#D30013] hover:pl-2 transition-colors mb-4">
+                  <Icon icon="Icon---Download" size={20} color="#3C3C3B" />
+                  <span className='text-[14px] font-medium text-[#3C3C3B]'>School Calendar</span>
+                </a>
+
+                {/* Search and Language Tabs */}
+                <div
+                  ref={mobileSearchRef}
+                  className={`mt-4 pt-4 border-t border-[#F2EDE9] px-4 py-4 -mx-4 transition-all duration-300 ${
+                    isSearchFocused ? 'bg-white shadow-lg' : 'bg-[#fff]'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    {/* Search */}
+                    <form onSubmit={handleSearch} className="relative flex-1">
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                      <Icon icon="Icon-Search" size={20} color="#3C3737" />
+                      </div>
+                      <input
+                        type="text"
+                        placeholder={nav.searchPlaceholder || 'Search'}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onFocus={() => {
+                          setIsSearchFocused(true);
+                        }}
+                        onBlur={() => {
+                          // Delay blur to allow keyboard to close smoothly
+                          setTimeout(() => {
+                            setIsSearchFocused(false);
+                          }, 100);
+                        }}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck="false"
+                        inputMode="search"
+                        className={`w-full pl-10 pr-4 py-2.5  bg-[#FAF7F5] border bottom-[#F2EDE9] rounded-lg text-sm transition-all duration-300 ${
+                          isSearchFocused
+                            ? 'border-[#D30013] ring-2 ring-[#D30013] ring-opacity-50 shadow-lg'
+                            : 'border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent'
+                        }`}
+                      />
+                    </form>
+
+                    {/* Language Tabs - Hidden for Singapore, Bangkok, and Seoul */}
+                    {!['singapore', 'bangkok', 'seoul'].includes(getCurrentSchool()) && (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={(e) => {
+                            if (!isChineseVersion) {
+                              toggleLanguage(e);
+                            }
+                          }}
+                          className={`relative px-3 py-2.5 text-sm font-bold  transition-colors ${activeLanguage === '中文'
+                            ? 'text-[#3C3737]'
+                            : 'text-[#3C3737] hover:text-[#3C3737]'
+                            }`}
+                        >
+                          中文
+                          {activeLanguage === '中文' && (
+                          <span className="absolute bottom-0 left-0 right-0 h-[4px] bg-[#9E1422]" />
+                          )}
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            if (isChineseVersion) {
+                              toggleLanguage(e);
+                            }
+                          }}
+                          className={`relative px-3 py-2.5 text-sm font-bold transition-colors ${activeLanguage === 'EN'
+                            ? 'text-[#3C3737]'
+                            : 'text-[#3C3737] hover:text-[#3C3737]'
+                            }`}
+                        >
+                          EN
+                          {activeLanguage === 'EN' && (
+                               <span className="absolute bottom-0 left-0 right-0 h-[4px] bg-[#9E1422]" />
+
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Empty Bottom Section - for proper layout */}
+              <div className="flex-shrink-0"></div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* SEARCH RESULTS MODAL - Shows on all screen sizes */}
+      {showSearchResults && (
+        <>
+          <style>{`
+            @keyframes modalZoomIn {
+              from {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+              }
+              to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+              }
+            }
+
+            @keyframes backdropFadeIn {
+              from {
+                opacity: 0;
+              }
+              to {
+                opacity: 1;
+              }
+            }
+
+            .modal-zoom-in {
+              animation: modalZoomIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+
+            .backdrop-fade-in {
+              animation: backdropFadeIn 0.3s ease-out;
+            }
+
+            .result-card-hover {
+              transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .result-card-hover:hover {
+              transform: translateY(-4px);
+              box-shadow: 0 12px 24px rgba(211, 0, 19, 0.15);
+            }
+
+            /* Custom scrollbar for modal content */
+            .modal-zoom-in .flex-1 {
+              scroll-behavior: smooth;
+            }
+
+            .modal-zoom-in .flex-1::-webkit-scrollbar {
+              width: 10px;
+            }
+
+            .modal-zoom-in .flex-1::-webkit-scrollbar-track {
+              background: #f8f8f8;
+              border-radius: 10px;
+              margin: 10px 0;
+            }
+
+            .modal-zoom-in .flex-1::-webkit-scrollbar-thumb {
+              background: #D30013;
+              border-radius: 10px;
+              border: 2px solid #f8f8f8;
+            }
+
+            .modal-zoom-in .flex-1::-webkit-scrollbar-thumb:hover {
+              background: #9E1422;
+            }
+
+            /* Smooth scrolling for all browsers */
+            .scroll-smooth {
+              scroll-behavior: smooth;
+              -webkit-overflow-scrolling: touch;
+            }
+
+            /* Ensure modal scrolls properly on mobile */
+            @media (max-width: 768px) {
+              .modal-zoom-in .flex-1 {
+                max-height: calc(90vh - 300px);
+                min-height: 300px;
+              }
+            }
+
+            /* Firefox scrollbar */
+            .modal-zoom-in .flex-1 {
+              scrollbar-width: thin;
+              scrollbar-color: #D30013 #f8f8f8;
+            }
+
+          `}</style>
+
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-60 z-[200] backdrop-fade-in"
+            onClick={() => setShowSearchResults(false)}
+          />
+
+          {/* Modal */}
+          <div className="fixed inset-0 z-[201] flex items-center justify-center p-4 lg:p-6 pointer-events-none">
+            <div
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] modal-zoom-in flex flex-col pointer-events-auto"
+              style={{ overflow: 'hidden' }}
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-6 lg:px-8 py-5 lg:py-6 border-b border-gray-200 bg-gradient-to-r from-[#FAF7F5] to-white flex-shrink-0">
+                <div>
+                  <h2 className="text-2xl lg:text-3xl font-bold text-[#9E1422]">{nav.searchResultsTitle || 'Search Results'}</h2>
+                  {searchQuery && (
+                    <p className="text-sm text-gray-600 mt-1">Searching for: <span className="font-semibold text-[#3C3C3B]">"{searchQuery}"</span></p>
+                  )}
+                </div>
+                <button
+                  onClick={() => setShowSearchResults(false)}
+                  className="p-1 hover:bg-white rounded-full transition-all duration-200 hover:shadow-md"
+                  aria-label="Close modal"
+                > <Icon icon="Close-Button" size={38} color="#D30013"/>                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div
+                className="px-6 lg:px-8 py-6 flex-1 scroll-smooth"
+                style={{
+                  overflowY: 'scroll',
+                  overflowX: 'hidden',
+                  WebkitOverflowScrolling: 'touch',
+                  scrollBehavior: 'smooth',
+                  minHeight: '200px',
+                  maxHeight: 'calc(90vh - 240px)'
+                }}
+              >
+                {isSearching ? (
+                  <div className="py-16 text-center">
+                    <div className="relative inline-flex">
+                      <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-t-4 border-[#D30013]"></div>
+                      <div className="absolute top-0 left-0 animate-ping rounded-full h-16 w-16 border-4 border-[#D30013] opacity-20"></div>
+                    </div>
+                    <p className="mt-6 text-lg font-medium text-gray-700">Searching for "{searchQuery}"...</p>
+                    <p className="mt-2 text-sm text-gray-500">Please wait while we fetch the results</p>
+                  </div>
+                ) : searchResults ? (
+                  <div>
+                    {searchResults.content || searchResults.results ? (
+                      <div>
+                        {(searchResults.content || searchResults.results) && (searchResults.content || searchResults.results).length > 0 ? (
+                          <>
+                            {/* Results Count Badge */}
+                            <div className="mb-6 flex items-center gap-3">
+                              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#9E1422] to-[#D30013] text-white rounded-full shadow-md">
+                                <Icon icon="Icon-Search" size={16} color="white" />
+                                <span className="font-semibold text-sm">
+                                  {searchResults.total ? `${searchResults.total} Result${searchResults.total !== 1 ? 's' : ''}` : `${(searchResults.content || searchResults.results).length} Result${(searchResults.content || searchResults.results).length !== 1 ? 's' : ''}`}
+                                </span>
+                              </div>
+                              {searchResults.page && (
+                                <span className="text-sm text-gray-600 font-medium">
+                                  Page {searchResults.page}
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Results Grid */}
+                            <div className="space-y-4">
+                              {(searchResults.content || searchResults.results).map((result, index) => (
+                                <a
+                                  key={result.id || index}
+                                  href={result.url}
+                                  className="result-card-hover block p-5 lg:p-6 rounded-xl border-2 border-gray-200 hover:border-[#D30013] bg-white hover:bg-gradient-to-br hover:from-white hover:to-[#FEF2F2] group"
+                                  onClick={() => setShowSearchResults(false)}
+                                  style={{ animationDelay: `${index * 0.05}s` }}
+                                >
+                                  {/* Title */}
+                                  <h3 className="text-lg lg:text-xl font-bold text-[#3C3C3B] group-hover:text-[#D30013] transition-colors mb-3">
+                                    {result.title}
+                                  </h3>
+
+                                  {/* Content/Excerpt */}
+                                  {result.excerpt && (
+                                    <p className="text-sm lg:text-base text-gray-700 mb-4 line-clamp-3 leading-relaxed">
+                                      {result.excerpt}
+                                    </p>
+                                  )}
+
+                                  {/* URL */}
+                                  <div className="flex items-center gap-2 text-xs text-[#D30013] font-medium">
+                                    <Icon icon="Icon-Chevron-Large" size={12} color="#D30013" />
+                                    <span className="truncate">{result.url}</span>
+                                  </div>
+                                </a>
+                              ))}
+                            </div>
+
+                            {/* Pagination Controls */}
+                            {(searchResults.page > 1 || !searchResults.noMore) && (
+                              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8 pt-6 border-t-2 border-gray-200">
+                                <button
+                                  onClick={() => handleSearchPageChange(currentSearchPage - 1)}
+                                  disabled={currentSearchPage === 1}
+                                  className="w-full sm:w-auto px-5 py-2.5 text-sm font-medium border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-[#D30013] hover:text-[#D30013] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 disabled:hover:text-inherit transition-all duration-200 flex items-center justify-center gap-2"
+                                >
+                                  <Icon icon="Icon-Chevron-Large" size={14} style={{ transform: 'rotate(180deg)' }} />
+                                  Previous
+                                </button>
+
+                                <span className="px-4 py-2 text-sm font-medium text-gray-700">
+                                  Page {searchResults.page || currentSearchPage}
+                                </span>
+
+                                <button
+                                  onClick={() => handleSearchPageChange(currentSearchPage + 1)}
+                                  disabled={searchResults.noMore}
+                                  className="w-full sm:w-auto px-5 py-2.5 text-sm font-medium border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-[#D30013] hover:text-[#D30013] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 disabled:hover:text-inherit transition-all duration-200 flex items-center justify-center gap-2"
+                                >
+                                  Next
+                                  <Icon icon="Icon-Chevron-Large" size={14} />
+                                </button>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="py-16 text-center">
+                            <div className="flex justify-center mb-6">
+                              <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center">
+                                <Icon icon="Icon-Search" size={48} color="#9CA3AF" />
+                              </div>
+                            </div>
+                            <h3 className="text-2xl font-bold text-gray-700 mb-3">No Results Found</h3>
+                            <p className="text-lg text-gray-600 mb-2">We couldn't find any matches for <span className="font-semibold text-[#D30013]">"{searchQuery}"</span></p>
+                            <p className="text-sm text-gray-500 mt-4">Try using different keywords or check your spelling</p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="py-8">
+                        <div className="bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-200 rounded-xl p-6 lg:p-8">
+                          <div className="flex items-start gap-4">
+                            <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-[#D30013] to-[#9E1422] rounded-full flex items-center justify-center">
+                              <X className="w-6 h-6 text-white" />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="text-xl lg:text-2xl font-bold text-[#D30013] mb-3">
+                                Search Error
+                              </h3>
+                              {searchResults.errors && (
+                                <div className="space-y-3">
+                                  {Object.entries(searchResults.errors).map(([key, messages]) => (
+                                    <div key={key} className="text-sm">
+                                      <span className="font-semibold text-gray-700 capitalize block mb-2 text-base">{key}:</span>
+                                      {Array.isArray(messages) ? (
+                                        <ul className="list-disc list-inside text-[#D30013] space-y-1 ml-2">
+                                          {messages.map((msg, idx) => (
+                                            <li key={idx} className="text-sm">{msg}</li>
+                                          ))}
+                                        </ul>
+                                      ) : (
+                                        <span className="text-[#D30013]">{messages}</span>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="px-6 lg:px-8 py-5 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white flex-shrink-0">
+                <button
+                  onClick={() => setShowSearchResults(false)}
+                  className="w-full py-3.5 px-6 text-base font-semibold text-[#D30013] border-2 border-[#D30013] rounded-xl hover:bg-[#D30013] hover:text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md"
+                >
+                  {nav.searchResultsClose || 'Close'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+export default PageHeader;

@@ -1,0 +1,216 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?485t9i');
+  src:  url('fonts/icomoon.eot?485t9i#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?485t9i') format('truetype'),
+    url('fonts/icomoon.woff?485t9i') format('woff'),
+    url('fonts/icomoon.svg?485t9i#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-Close-Button:before {
+  content: "\e900";
+}
+.icon-Age-Range:before {
+  content: "\e901";
+}
+.icon-Arrow-Small:before {
+  content: "\e902";
+}
+.icon-Shield:before {
+  content: "\e903";
+}
+.icon-Icon-Camera:before {
+  content: "\e904";
+}
+.icon-Icon-Menu:before {
+  content: "\e905";
+}
+.icon-Icon-Social-RedNote:before {
+  content: "\e906";
+}
+.icon-Icon---PDF:before {
+  content: "\e907";
+}
+.icon-Icon---Download:before {
+  content: "\e908";
+}
+.icon-Icon-Chevron-small:before {
+  content: "\e909";
+}
+.icon-Icon-Minimize:before {
+  content: "\e90a";
+}
+.icon-Icon-AI:before {
+  content: "\e90b";
+}
+.icon-Icon-Add:before {
+  content: "\e90c";
+}
+.icon-Icon-Info:before {
+  content: "\e90d";
+}
+.icon-Icon-Alert:before {
+  content: "\e90e";
+}
+.icon-Icon-Star:before {
+  content: "\e90f";
+}
+.icon-Icon-Chevron-Large:before {
+  content: "\e910";
+}
+.icon-Icon-Cycle:before {
+  content: "\e911";
+}
+.icon-Icon-Cross-Solid:before {
+  content: "\e912";
+}
+.icon-Icon_Tick-Solid:before {
+  content: "\e913";
+}
+.icon-Icon-Hourglass:before {
+  content: "\e914";
+}
+.icon-Icon_External:before {
+  content: "\e915";
+}
+.icon-Icon_Email:before {
+  content: "\e916";
+}
+.icon-Icon-Pin:before {
+  content: "\e917";
+}
+.icon-Icon_Copy:before {
+  content: "\e918";
+}
+.icon-Icon_Phone:before {
+  content: "\e919";
+}
+.icon-Icon-Search:before {
+  content: "\e91a";
+}
+.icon-Icon-Arrow:before {
+  content: "\e91b";
+}
+.icon-Icon---Lang:before {
+  content: "\e91c";
+}
+.icon-Icon-Clock:before {
+  content: "\e91d";
+}
+.icon-Icon-Social-WC:before {
+  content: "\e91e";
+}
+.icon-Icon-Social-YK:before {
+  content: "\e91f";
+}
+.icon-Icon-Social-YT:before {
+  content: "\e920";
+}
+.icon-Icon-Social-LI:before {
+  content: "\e921";
+}
+.icon-Icon-Profile_Add:before {
+  content: "\e922";
+}
+.icon-Icon-Social-FB:before {
+  content: "\e923";
+}
+.icon-Icon-Social-IG:before {
+  content: "\e924";
+}
+.icon-uniE925:before {
+  content: "\e925";
+}
+.icon-uniE926:before {
+  content: "\e926";
+}
+.icon-uniE927:before {
+  content: "\e927";
+}
+.icon-Button-Expand:before {
+  content: "\e928";
+}
+.icon-Icon-Home:before {
+  content: "\e929";
+}
+.icon-Icon-Lang-En:before {
+  content: "\e92a";
+}
+.icon-Icon-Schools:before {
+  content: "\e92b";
+}
+.icon-Icon---Expand:before {
+  content: "\e92c";
+}
+.icon-bag:before {
+  content: "\e92d";
+}
+.icon-dock:before {
+  content: "\e92e";
+}
+.icon-plant:before {
+  content: "\e92f";
+}
+.icon-images1:before {
+  content: "\e932";
+}
+.icon-book1:before {
+  content: "\e933";
+}
+.icon-graduation-cap:before {
+  content: "\e934";
+}
+.icon-bucket:before {
+  content: "\e935";
+}
+.icon-plants:before {
+  content: "\e936";
+}
+.icon-dock1:before {
+  content: "\e937";
+}
+.icon-map3:before {
+  content: "\e938";
+}
+.icon-map2:before {
+  content: "\e939";
+}
+.icon-DCI-Icon_Curriculum-ALevel:before {
+  content: "\e93a";
+}
+.icon-DCI-Icon_Curriculum-BoardingA:before {
+  content: "\e93b";
+}
+.icon-DCI-Icon_Curriculum-BoardingB:before {
+  content: "\e93c";
+}
+.icon-DCI-Icon_Curriculum-IGCSE:before {
+  content: "\e93d";
+}
+.icon-DCI-Icon_Curriculum-Pre_ALevel:before {
+  content: "\e93e";
+}
+.icon-images:before {
+  content: "\e930";
+}
+.icon-book:before {
+  content: "\e931";
+}

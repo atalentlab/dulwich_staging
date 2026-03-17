@@ -1,0 +1,11 @@
+{
+  "bangkok": "#",
+  "shanghai-pudong": "https://portal-dcspd.dulwich.org/",
+  "shanghai-puxi": "https://portal-dcspx.dulwich.org/",
+  "seoul": "https://portal-dcsl.dulwich.org/",
+  "singapore": "https://portal-dcsg.dulwich.org/",
+  "suzhou": "https://portal-dcsz.dulwich.org/",
+  "hengqin-high-school": "#",
+  "suzhou-high-school": "https://portal-dhsz.dulwich.org/",
+  "beijing": "https://portal-dcb.dulwich.org/"
+}

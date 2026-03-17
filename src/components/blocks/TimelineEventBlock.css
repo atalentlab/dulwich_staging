@@ -1,0 +1,4 @@
+/* Hide scrollbar for the timeline panel - WebKit browsers */
+.tl-scroll-hide::-webkit-scrollbar {
+  display: none;
+}

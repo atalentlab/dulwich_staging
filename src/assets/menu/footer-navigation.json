@@ -1,0 +1,137 @@
+{
+  "en": {
+    "ourSchools": "Find a School",
+    "pleaseSelect": "Please select",
+    "international": "International",
+    "columns": [
+      {
+        "id": "about",
+        "label": "About",
+        "links": [
+          { "title": "Our Origins",           "url": "/about-dulwich/our-origins" },
+          { "title": "Vision & Values",        "url": "/about-dulwich/vision-and-values" },
+          { "title": "School Locations",       "url": "/about-dulwich/live-worldwise" },
+          { "title": "Offerings",              "url": "/admissions/faqs" },
+          { "title": "Educational Leadership", "url": "/about-dulwich/world-class-facilities" }
+        ]
+      },
+      {
+        "id": "live",
+        "label": "Live",
+        "links": [
+          { "title": "Enrichment Programmes",              "url": "/holistic-curriculum/visual-performing-arts" },
+          { "title": "Visual & Performing Arts",           "url": "/holistic-curriculum/visual-performing-arts" },
+          { "title": "Sports",                             "url": "/holistic-curriculum/sports" },
+          { "title": "Science & Technology",               "url": "/holistic-curriculum/stem-se21" },
+          { "title": "Mandarin",                           "url": "/holistic-curriculum/mandarin" },
+          { "title": "Sustainability & Global Citizenship","url": "/about-dulwich/sustainability-and-global-citizenship" },
+          { "title": "Student Leadership",                 "url": "/holistic-curriculum/worldwise-events" },
+          { "title": "Wellbeing",                          "url": "/holistic-curriculum/wellbeing" }
+        ]
+      },
+      {
+        "id": "world",
+        "label": "World",
+        "links": [
+          { "title": "Worldwide Events",          "url": "/holistic-curriculum/worldwise-events" },
+          { "title": "Ignite: Switzerland",       "url": "/holistic-curriculum/ignite-switzerland-programme" },
+          { "title": "Worldwide Alumni Network",  "url": "/community/worldwise-alumni-network" },
+          { "title": "Family of Schools",         "url": "?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" },
+          { "title": "Dulwich Life",              "url": "/dulwich-life" }
+        ]
+      },
+      {
+        "id": "wise",
+        "label": "Wise",
+        "links": [
+          { "title": "Academic Excellence",             "url": "/holistic-curriculum/academic-results" },
+          { "title": "University & Careers Counselling","url": "/how-we-teach-and-learn/university-and-careers-counselling" },
+          { "title": "Worldwide Skills Profile",        "url": "/about-dulwich/world-class-facilities" }
+        ],
+        "externalLinks": {
+          "heading": "External Links",
+          "links": [
+         
+            { "title": "Founding School",     "url": "/find-a-school" },
+            { "title": "Education In Motion", "url": "https://www.eimglobal.com/?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" }
+          ]
+        }
+      }
+    ],
+    "safeguarding": {
+      "title": "Safeguarding Matters:",
+      "text": "We are fully committed to safeguarding all of our students from any form of harm or abuse. Click",
+      "linkText": "here",
+      "linkUrl": "https://assets.dulwich.org/static/23-24-DCI-EN-Safeguarding-Policy_for-GroupSite_IA_20230705.pdf",
+      "suffix": "for more information."
+    }
+  },
+
+  "zh": {
+    "ourSchools": "寻找学校",
+    "international": "国际",
+    "pleaseSelect": "请选择",
+    "columns": [
+      {
+        "id": "about",
+        "label": "关于",
+        "links": [
+          { "title": "我们的起源",         "url": "/zh/about-dulwich/our-origins" },
+          { "title": "愿景与价值观",        "url": "/zh/about-dulwich/vision-and-values" },
+          { "title": "学校位置",            "url": "/zh/about-dulwich/live-worldwise" },
+          { "title": "供品",               "url": "/zh/admissions/faqs" },
+          { "title": "教育领导力",          "url": "/zh/about-dulwich/world-class-facilities" }
+        ]
+      },
+      {
+        "id": "live",
+        "label": "居住",
+        "links": [
+          { "title": "丰富课程",              "url": "/zh/holistic-curriculum/visual-performing-arts" },
+          { "title": "视觉与表演艺术",         "url": "/zh/holistic-curriculum/visual-performing-arts" },
+          { "title": "运动的",               "url": "/zh/holistic-curriculum/sports" },
+          { "title": "科学与创新",            "url": "/zh/holistic-curriculum/stem-se21" },
+          { "title": "普通话",               "url": "/zh/holistic-curriculum/mandarin" },
+          { "title": "可持续发展与全球公民",   "url": "/zh/about-dulwich/sustainability-and-global-citizenship" },
+          { "title": "学生领导力",            "url": "/zh/holistic-curriculum/worldwise-events" },
+          { "title": "身心健康",             "url": "/zh/holistic-curriculum/wellbeing" }
+        ]
+      },
+      {
+        "id": "world",
+        "label": "全球视野",
+        "links": [
+          { "title": "世界视野活动",          "url": "/zh/holistic-curriculum/worldwise-events" },
+          { "title": "点燃计划：瑞士",        "url": "/zh/holistic-curriculum/ignite-switzerland-programme" },
+          { "title": "世界视野校友网络",       "url": "/zh/community/worldwise-alumni-network" },
+          { "title": "学校系列",             "url": "?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" },
+          { "title": "德威生活",             "url": "/zh/dulwich-life" }
+        ]
+      },
+      {
+        "id": "wise",
+        "label": "卓越智慧",
+        "links": [
+          { "title": "学术卓越",        "url": "/zh/holistic-curriculum/academic-results" },
+          { "title": "大学与职业辅导",  "url": "/zh/how-we-teach-and-learn/university-and-careers-counselling" },
+          { "title": "世界视野技能档案","url": "/zh/about-dulwich/world-class-facilities" }
+        ],
+        "externalLinks": {
+          "heading": "外部链接",
+          "links": [
+            { "title": "家长平台", "url": "https://portal-dcb.dulwich.org/" },
+            { "title": "创始学校", "url": "/find-a-school" },
+            { "title": "动态教育", "url": "https://www.eimglobal.com/?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" }
+          ]
+        }
+      }
+    ],
+    "safeguarding": {
+      "title": "安全保障重要提示：",
+      "text": "我们全力保护所有学生免受任何形式的伤害或虐待。",
+      "linkText": "点击这里",
+      "linkUrl": "https://assets.dulwich.org/static/23-24-DCI-EN-Safeguarding-Policy_for-GroupSite_IA_20230705.pdf",
+      "suffix": "了解更多信息。"
+    }
+  }
+}
