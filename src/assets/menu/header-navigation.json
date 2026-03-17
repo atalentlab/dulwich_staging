@@ -10,16 +10,16 @@
         "id": "about",
         "label": "About",
         "links": [
-          { "title": "Our Origins", "url": "about-dulwich/our-origins" },
-          { "title": "Vision & Values", "url": "about-dulwich/vision-and-values" },
-          { "title": "School Locations", "url": "find-a-school" },
-          { "title": "Offerings", "url": "about-dulwich/offering" }
+          { "title": "Our Origins", "url": "/about-dulwich/our-origins" },
+          { "title": "Vision & Values", "url": "/about-dulwich/vision-and-values" },
+          { "title": "School Locations", "url": "/find-a-school" },
+          { "title": "Offerings", "url": "/about-dulwich/offering" }
          
         ],
         "cards": [
           {
             "heading": "LIVE WORLDWISE",
-            "url": "about-dulwich/live-worldwise",
+            "url": "/about-dulwich/live-worldwise",
             "imageKey": "live",
             "imageAlt": "Visit Us",
             "description": "We nurture students to Live Worldwise and develop the skills and character to make a positive difference in the world.",
@@ -27,7 +27,7 @@
           },
           {
             "heading": "EDUCATIONAL LEADERSHIP",
-            "url": "about-dulwich/educational-leadership",
+            "url": "/about-dulwich/educational-leadership",
             "imageKey": "el",
             "imageAlt": "Educational Leadership",
             "description": "The Dulwich Educational Leadership team bring deep expertise and proven excellence to teaching and learning across our network.",
@@ -40,17 +40,17 @@
         "id": "live",
         "label": "Live",
         "links": [
-          { "title": "Visual & Performing Arts", "url": "live/visual-performing-arts" },
-          { "title": "Sports", "url": "live/sports" },
-          { "title": "STEM", "url": "live/stem-se21" },
-          { "title": "Mandarin", "url": "live/mandarin" },
-          { "title": "Sustainability & Global Citizenship", "url": "about-dulwich/sustainability-and-global-citizenship" }
+          { "title": "Visual & Performing Arts", "url": "/live/visual-performing-arts" },
+          { "title": "Sports", "url": "/live/sports" },
+          { "title": "STEM", "url": "/live/stem-se21" },
+          { "title": "Mandarin", "url": "/live/mandarin" },
+          { "title": "Sustainability & Global Citizenship", "url": "/about-dulwich/sustainability-and-global-citizenship" }
           
         ],
         "cards": [
           {
             "heading": "STUDENT LEADERSHIP",
-            "url": "live/student-leadership",
+            "url": "/live/student-leadership",
             "imageKey": "sle",
             "imageAlt": "Student Leadership",
             "description": "Dulwich students are empowered with the motivation, confidence, and skillset to lead with purpose.",
@@ -58,7 +58,7 @@
           },
           {
             "heading": "WELLBEING",
-            "url": "live/wellbeing",
+            "url": "/live/wellbeing",
             "imageKey": "well",
             "imageAlt": "Wellbeing",
             "description": "Students are our top priority. Their wellbeing, needs, and talents are at the heart of everything we do.",
@@ -140,18 +140,18 @@
             "heading": "HIGHLIGHTED",
             "style": "highlighted",
             "links": [
-              { "title": "Educational Leadership", "url": "about-dulwich/educational-leadership", "image": "el" },
-              { "title": "Live Worldwise", "url": "about-dulwich/live-worldwise", "image": "live" }
+              { "title": "Educational Leadership", "url": "/about-dulwich/educational-leadership", "image": "el" },
+              { "title": "Live Worldwise", "url": "/about-dulwich/live-worldwise", "image": "live" }
             ]
           },
           {
             "heading": "ABOUT",
             "style": "normal",
         "links": [
-          { "title": "Our Origins", "url": "about-dulwich/our-origins" },
-          { "title": "Vision & Values", "url": "about-dulwich/vision-and-values" },
-          { "title": "School Locations", "url": "find-a-school" },
-          { "title": "Offerings", "url": "about-dulwich/offering" }
+          { "title": "Our Origins", "url": "/about-dulwich/our-origins" },
+          { "title": "Vision & Values", "url": "/about-dulwich/vision-and-values" },
+          { "title": "School Locations", "url": "/find-a-school" },
+          { "title": "Offerings", "url": "/about-dulwich/offering" }
         ]
           }
         ]
@@ -166,19 +166,19 @@
             "heading": "HIGHLIGHTED",
             "style": "highlighted",
             "links": [
-              { "title": "Student Leadership", "url": "live/student-leadership", "image": "sle" },
-              { "title": "Wellbeing", "url": "live/wellbeing", "image": "well" }
+              { "title": "Student Leadership", "url": "/live/student-leadership", "image": "sle" },
+              { "title": "Wellbeing", "url": "/live/wellbeing", "image": "well" }
             ]
           },
           {
             "heading": "LIVE",
             "style": "normal",
         "links": [
-          { "title": "Visual & Performing Arts", "url": "live/visual-performing-arts" },
-          { "title": "Sports", "url": "live/sports" },
-          { "title": "STEM", "url": "live/stem-se21" },
-          { "title": "Mandarin", "url": "live/mandarin" },
-          { "title": "Sustainability & Global Citizenship", "url": "about-dulwich/sustainability-and-global-citizenship" }
+          { "title": "Visual & Performing Arts", "url": "/live/visual-performing-arts" },
+          { "title": "Sports", "url": "/live/sports" },
+          { "title": "STEM", "url": "/live/stem-se21" },
+          { "title": "Mandarin", "url": "/live/mandarin" },
+          { "title": "Sustainability & Global Citizenship", "url": "/about-dulwich/sustainability-and-global-citizenship" }
         ]
           }
         ]
@@ -193,17 +193,17 @@
             "heading": "HIGHLIGHTED",
             "style": "highlighted",
             "links": [
-              { "title": "Worldwise Alumni Network", "url": "world/worldwise-alumni-network", "image": "wan" },
-              { "title": " International Experiences", "url": "world/worldwise-events", "image": "we" }
+              { "title": "Worldwise Alumni Network", "url": "/world/worldwise-alumni-network", "image": "wan" },
+              { "title": " International Experiences", "url": "/world/worldwise-events", "image": "we" }
             ]
           },
           {
             "heading": "WORLD",
             "style": "normal",
             "links": [
-              { "title": "Family of Schools", "url": "world/one-family-of-schools" },
-              { "title": "Global Partnership", "url": "world/global-partnerships" },
-              { "title": "Dulwich Life", "url": "dulwich-life" }
+              { "title": "Family of Schools", "url": "/world/one-family-of-schools" },
+              { "title": "Global Partnership", "url": "/world/global-partnerships" },
+              { "title": "Dulwich Life", "url": "/dulwich-life" }
             ]
           }
         ]
@@ -218,9 +218,9 @@
             "heading": "HIGHLIGHTED",
             "style": "highlighted",
             "links": [
-              { "title": "Academic Excellence", "url": "wise/academic-results", "image": "excel" },
-              { "title": "University Matriculation", "url": "wise/university-matriculation", "image": "matric" },
-              { "title": "University & Careers Counselling", "url": "wise/university-and-careers-counselling", "image": "uni" }
+              { "title": "Academic Excellence", "url": "/wise/academic-results", "image": "excel" },
+              { "title": "University Matriculation", "url": "/wise/university-matriculation", "image": "matric" },
+              { "title": "University & Careers Counselling", "url": "/wise/university-and-careers-counselling", "image": "uni" }
             ]
           }
                    
@@ -229,7 +229,7 @@
     ],
     "mobileExtraLinks": [
       { "label": "Full Site Map", "href": "/sitemap" },
-      { "label": "Parent Portal", "href": "#parent-portal" },
+  
       { "label": "School Calendar", "href": "/community/life-at-dulwich/school-calendar" }
     ]
   },
@@ -429,7 +429,7 @@
             "style": "highlighted",
             "links":[
               { "title": "智胜全球校友会", "url": "/zh/world/worldwise-alumni-network", "image": "wan" },
-              { "title": "智胜全球活动", "url": "zh/world/worldwise-events", "image": "we" }
+              { "title": "智胜全球活动", "url": "/zh/world/worldwise-events", "image": "we" }
             ]
           },
           {
@@ -464,9 +464,8 @@
     ],
  
     "mobileExtraLinks": [
-      { "label": "完整网站地图", "href": "#sitemap" },
-      { "label": "家长门户", "href": "#parent-portal" },
-      { "label": "学校日历", "href": "#calendar" }
+      { "label": "完整网站地图", "href": "/sitemap" }
+ 
     ]
   }
 }
