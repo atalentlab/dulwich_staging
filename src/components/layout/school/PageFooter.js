@@ -5,8 +5,8 @@ import eimLogo from '../../../assets/images/eim-logo-blue.svg';
 import { getSchoolUrl, getCurrentSchool } from '../../../utils/schoolDetection';
 import { useMainMenu } from '../../../hooks/useMainMenu';
 import { useSchoolInfo } from '../../../hooks/useSchoolInfo';
+import { useSchools } from '../../../hooks/useSchools';
 import schoolFooterNavData from '../../../assets/menu/school-footer-navigation.json';
-import { fetchSchools } from '../../../api/schoolPageService';
 
 // Import school logos from logo_white folder as fallback
 import singaporeLogo from '../../../assets/images/logo_white/singapore.svg';
@@ -160,8 +160,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   // Fetch school information from API
   const { schoolInfo, isLoading: isSchoolInfoLoading } = useSchoolInfo(currentSchoolSlug, locale);
 
-  // State for fetched schools from API
-  const [fetchedSchools, setFetchedSchools] = useState([]);
+  // Use cached schools hook instead of fetching directly
+  const { schools: fetchedSchools } = useSchools(locale);
 
   // State for the left dropdown - default to localised "Please select"
   const [selectedOption, setSelectedOption] = useState(t.pleaseSelect);
@@ -192,24 +192,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
     );
   }, [t.pleaseSelect]);
 
-  // Fetch schools from API based on locale
-  useEffect(() => {
-    const loadSchools = async () => {
-      try {
-        console.log('🔍 School PageFooter - Fetching schools with locale:', locale);
-        const schoolsList = await fetchSchools(locale);
-        console.log('🔍 School PageFooter - Fetched schools:', schoolsList);
-
-        if (Array.isArray(schoolsList)) {
-          setFetchedSchools(schoolsList);
-        }
-      } catch (error) {
-        console.error('Error fetching schools in school footer:', error);
-      }
-    };
-
-    loadSchools();
-  }, [locale]);
+  // Schools are now fetched via useSchools hook (cached with React Query)
+  // No need for manual fetching - the hook handles it automatically
 
   // State for dropdown open/close (desktop)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -318,8 +302,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   // Update display name based on selected school or current URL
   useEffect(() => {
     const currentSchoolSlug = getCurrentSchool();
-    // Use fetchedSchools from API, fallback to availableSchools from props
-    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
+    // Use fetchedSchools from useSchools hook (cached), fallback to availableSchools from props
+    const schoolsToUse = fetchedSchools && fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
 
     if (currentSchoolSlug && schoolsToUse) {
       const currentSchoolData = schoolsToUse.find(s => s.slug === currentSchoolSlug);
@@ -345,8 +329,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   const selectOptions = useMemo(() => {
     const options = [t.pleaseSelect];
 
-    // Use fetchedSchools from API, fallback to availableSchools from props
-    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
+    // Use fetchedSchools from useSchools hook (cached), fallback to availableSchools from props
+    const schoolsToUse = fetchedSchools && fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
 
     if (schoolsToUse && schoolsToUse.length > 0) {
       const schoolOptions = schoolsToUse.map(school => school.title);
@@ -359,8 +343,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   // Create a mapping for school data lookup
   const schoolDataMap = useMemo(() => {
     const map = {};
-    // Use fetchedSchools from API, fallback to availableSchools from props
-    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
+    // Use fetchedSchools from useSchools hook (cached), fallback to availableSchools from props
+    const schoolsToUse = fetchedSchools && fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
 
     if (schoolsToUse && schoolsToUse.length > 0) {
       schoolsToUse.forEach(school => {

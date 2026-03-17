@@ -19,7 +19,7 @@ const ColoredBlock = ({ content }) => {
     'bg-red': 'bg-[#9E1422]',
     'bg-blue': 'bg-[#1E3A8A]',
     'bg-green': 'bg-[#166534]',
-    'bg-yellow': 'bg-[#A73636]',
+    'bg-yellow': 'bg-[#9E1422]',
   };
 
   // Text alignment mapping
@@ -47,21 +47,21 @@ const ColoredBlock = ({ content }) => {
         {/* Grey/Gray Background - Simple Layout */}
         {!isColoredBg && (
           <div className={`max-w-[800px] mt-[-16%] bg-white rounded-lg shadow p-8 md:p-12 ${textAlignClass}`}>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-[#3C3C3B]">
               {blockTitle || 'Grey Coloured Block'}
             </h2>
-            <p className="text-lg text-gray-700 leading-relaxed mb-8">
+            <p className="text-lg text-[#3C3C3B] leading-relaxed mb-8">
               {blockCopy || 'Block Copy Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'}
             </p>
 
-            {/* CTA Button */}
-            {ctaType !== 'none' && (
+            {/* CTA Button - Only show if ctaType is not 'none' AND ctaLink exists */}
+            {ctaType !== 'none' && ctaLink && ctaText && (
               <div className={textAlign === 'center' ? 'flex justify-center' : textAlign === 'right' ? 'flex justify-end' : ''}>
                 <a
-                  href={ctaLink || '#'}
+                  href={ctaLink}
                   className="inline-flex items-center gap-2 bg-[#D30013] hover:bg-[#8B2B2B] text-white font-semibold px-6 py-3 rounded-md transition-colors duration-200"
                 >
-                  {ctaText || 'Check Eligibility'}
+                  {ctaText}
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-1">
                     <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -73,21 +73,22 @@ const ColoredBlock = ({ content }) => {
 
         {/* Colored Background - With White Content Box */}
         {isColoredBg && (
-          <div className={`max-w-[800px] mt-[-16%] bg-[#FCFAF9] rounded-lg shadow-lg p-8 md:p-12 ${textAlignClass}`}>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
+          <div className={`max-w-[800px] mt-[-16%] bottom bottom-[#F2EDE9] bg-[#FCFAF9] rounded-lg shadow-lg p-8 md:p-12 ${textAlignClass}`}>
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-[#3C3C3B]">
               {blockTitle || 'Red Coloured Block'}
             </h2>
-            <p className="text-lg text-gray-700 leading-relaxed mb-8">
+            <p className="text-lg text-[#3C3C3B] leading-relaxed mb-8">
               {blockCopy || 'Block Copy Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'}
             </p>
 
-            {ctaType !== 'none' && (
+            {/* CTA Button - Only show if ctaType is not 'none' AND ctaLink exists */}
+            {ctaType !== 'none' && ctaLink && ctaText && (
               <div className={textAlign === 'center' ? 'flex justify-center' : textAlign === 'right' ? 'flex justify-end' : ''}>
                 <a
-                  href={ctaLink || '#'}
+                  href={ctaLink}
                   className="inline-flex items-center gap-2 bg-[#D30013] hover:bg-[#8B2B2B] text-white font-semibold px-6 py-3 rounded-md transition-colors duration-200"
                 >
-                  {ctaText || 'Check Eligibility'}
+                  {ctaText}
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-1">
                     <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>

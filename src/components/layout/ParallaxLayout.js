@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import lottie from 'lottie-web';
+// DISABLED: Lottie animations causing 403 errors - external files not accessible
+// import lottie from 'lottie-web';
 import BannerBlock from '../blocks/BannerBlock';
 import BlockRenderer from '../blocks/BlockRenderer';
 import PageFooter from './PageFooter';
@@ -95,8 +96,19 @@ const ParallaxLayout = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Initialize Lottie animations
+  // DISABLED: Lottie animations - external files not accessible (403 errors)
+  // Hide animation containers to prevent layout issues
   useEffect(() => {
+    // Hide animation containers
+    if (lottieRef1.current) {
+      lottieRef1.current.style.display = 'none';
+    }
+    if (lottieRef2.current) {
+      lottieRef2.current.style.display = 'none';
+    }
+
+    // Original Lottie animation code disabled below:
+    /*
     // Clean up previous animations
     lottieAnimations.current.forEach(anim => anim.destroy());
     lottieAnimations.current = [];
@@ -137,6 +149,7 @@ const ParallaxLayout = ({
       lottieAnimations.current.forEach(anim => anim.destroy());
       lottieAnimations.current = [];
     };
+    */
   }, []);
 
   // Add AOS attributes to banner and content elements (exclude statistics sections)

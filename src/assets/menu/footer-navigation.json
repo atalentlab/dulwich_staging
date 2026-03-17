@@ -10,33 +10,34 @@
         "links": [
           { "title": "Our Origins",           "url": "/about-dulwich/our-origins" },
           { "title": "Vision & Values",        "url": "/about-dulwich/vision-and-values" },
-          { "title": "School Locations",       "url": "/about-dulwich/live-worldwise" },
-          { "title": "Offerings",              "url": "/admissions/faqs" },
-          { "title": "Educational Leadership", "url": "/about-dulwich/world-class-facilities" }
+          { "title": "School Locations",       "url": "/find-a-school" },
+          { "title": "Offerings",              "url": "/about-dulwich/offering" },
+          { "title": "Live Worldwise",              "url": "/about-dulwich/live-worldwise" },
+          { "title": "Educational Leadership", "url": "/about-dulwich/educational-leadership" }
         ]
       },
       {
         "id": "live",
         "label": "Live",
         "links": [
-          { "title": "Enrichment Programmes",              "url": "/holistic-curriculum/visual-performing-arts" },
-          { "title": "Visual & Performing Arts",           "url": "/holistic-curriculum/visual-performing-arts" },
-          { "title": "Sports",                             "url": "/holistic-curriculum/sports" },
-          { "title": "Science & Technology",               "url": "/holistic-curriculum/stem-se21" },
-          { "title": "Mandarin",                           "url": "/holistic-curriculum/mandarin" },
+      
+          { "title": "Visual & Performing Arts",           "url": "/live/visual-performing-arts" },
+          { "title": "Sports",                             "url": "/live/sports" },
+          { "title": "Science & Technology",               "url": "/live/stem-se21" },
+          { "title": "Mandarin",                           "url": "/live/mandarin" },
           { "title": "Sustainability & Global Citizenship","url": "/about-dulwich/sustainability-and-global-citizenship" },
-          { "title": "Student Leadership",                 "url": "/holistic-curriculum/worldwise-events" },
-          { "title": "Wellbeing",                          "url": "/holistic-curriculum/wellbeing" }
+          { "title": "Student Leadership",                 "url": "/live/student-leadership" },
+          { "title": "Wellbeing",                          "url": "/live/wellbeing" }
         ]
       },
       {
         "id": "world",
         "label": "World",
         "links": [
-          { "title": "Worldwide Events",          "url": "/holistic-curriculum/worldwise-events" },
-          { "title": "Ignite: Switzerland",       "url": "/holistic-curriculum/ignite-switzerland-programme" },
-          { "title": "Worldwide Alumni Network",  "url": "/community/worldwise-alumni-network" },
-          { "title": "Family of Schools",         "url": "?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" },
+          { "title": "Global Parnerships",          "url": "/world/global-partnerships" },
+          { "title": "Worldwise Events",            "url": "/world/worldwise-events" },
+          { "title": "Worldwide Alumni Network",  "url": "/world/worldwise-alumni-network" },
+          { "title": "Family of Schools",         "url": "/world/one-family-of-schools" },
           { "title": "Dulwich Life",              "url": "/dulwich-life" }
         ]
       },
@@ -44,9 +45,9 @@
         "id": "wise",
         "label": "Wise",
         "links": [
-          { "title": "Academic Excellence",             "url": "/holistic-curriculum/academic-results" },
-          { "title": "University & Careers Counselling","url": "/how-we-teach-and-learn/university-and-careers-counselling" },
-          { "title": "Worldwide Skills Profile",        "url": "/about-dulwich/world-class-facilities" }
+          { "title": "Academic Excellence",             "url": "/wise/academic-results" },
+          { "title": "University & Careers Counselling","url": "/wise/university-and-careers-counselling" },
+          { "title": "University Matriculation",        "url": "/wise/university-matriculation" }
         ],
         "externalLinks": {
           "heading": "External Links",
@@ -74,52 +75,52 @@
     "columns": [
       {
         "id": "about",
-        "label": "关于",
+        "label": "关于我们",
         "links": [
-          { "title": "我们的起源",         "url": "/zh/about-dulwich/our-origins" },
+          { "title": "起源",         "url": "/zh/about-dulwich/our-origins" },
           { "title": "愿景与价值观",        "url": "/zh/about-dulwich/vision-and-values" },
-          { "title": "学校位置",            "url": "/zh/about-dulwich/live-worldwise" },
-          { "title": "供品",               "url": "/zh/admissions/faqs" },
-          { "title": "教育领导力",          "url": "/zh/about-dulwich/world-class-facilities" }
+          { "title": "查找学校",            "url": "/zh/find-a-school" },
+          { "title": "心怀世界 睿引未来",     "url": "/zh/about-dulwich/live-worldwise" },
+          { "title": "学术领导团队",          "url": "/zh/about-dulwich/educational-leadership" }
         ]
       },
       {
         "id": "live",
-        "label": "居住",
+        "label": "Live",
         "links": [
-          { "title": "丰富课程",              "url": "/zh/holistic-curriculum/visual-performing-arts" },
-          { "title": "视觉与表演艺术",         "url": "/zh/holistic-curriculum/visual-performing-arts" },
-          { "title": "运动的",               "url": "/zh/holistic-curriculum/sports" },
-          { "title": "科学与创新",            "url": "/zh/holistic-curriculum/stem-se21" },
+          { "title": "视觉和表演艺术",         "url": "/zh/live/visual-performing-arts" },
+          { "title": "运动",                "url": "/zh/live/sports" },
+          { "title": "STEM / SE21",       "url": "/zh/live/stem-se21" },
+          { "title": "中文",            "url": "/zh/live/mandarin" },
           { "title": "普通话",               "url": "/zh/holistic-curriculum/mandarin" },
-          { "title": "可持续发展与全球公民",   "url": "/zh/about-dulwich/sustainability-and-global-citizenship" },
-          { "title": "学生领导力",            "url": "/zh/holistic-curriculum/worldwise-events" },
-          { "title": "身心健康",             "url": "/zh/holistic-curriculum/wellbeing" }
+          { "title": "可持续发展与全球公民意识",   "url": "/zh/about-dulwich/sustainability-and-global-citizenship" },
+          { "title": "学生领导力",            "url": "/zh/live/student-leadership" },
+          { "title": "身心健康",             "url": "/zh/live/wellbeing" }
         ]
       },
       {
         "id": "world",
-        "label": "全球视野",
+        "label": "World",
         "links": [
-          { "title": "世界视野活动",          "url": "/zh/holistic-curriculum/worldwise-events" },
-          { "title": "点燃计划：瑞士",        "url": "/zh/holistic-curriculum/ignite-switzerland-programme" },
-          { "title": "世界视野校友网络",       "url": "/zh/community/worldwise-alumni-network" },
-          { "title": "学校系列",             "url": "?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" },
-          { "title": "德威生活",             "url": "/zh/dulwich-life" }
+          { "title": "德威大家庭",          "url": "/zh/world/one-family-of-schools" },
+          { "title": "全球战略合作",        "url": "/zh/world/global-partnerships" },
+          { "title": "德威聚焦",            "url": "/zh/dulwich-life" },
+          { "title": "无论何地 与你同在",             "url": "/zh/world/worldwise-alumni-network" },
+          { "title": "智胜全球活动",             "url": "/zh/world/worldwise-events" }
         ]
       },
       {
         "id": "wise",
         "label": "卓越智慧",
         "links": [
-          { "title": "学术卓越",        "url": "/zh/holistic-curriculum/academic-results" },
-          { "title": "大学与职业辅导",  "url": "/zh/how-we-teach-and-learn/university-and-careers-counselling" },
-          { "title": "世界视野技能档案","url": "/zh/about-dulwich/world-class-facilities" }
+          { "title": "学术卓越",        "url": "/zh/wise/academic-results" },
+          { "title": "大学升学成果",  "url": "/zh/wise/university-matriculation" },
+          { "title": "大学升学及职业指导" ,"url": "/zh/wise/university-and-careers-counselling" }
         ],
         "externalLinks": {
           "heading": "外部链接",
           "links": [
-            { "title": "家长平台", "url": "https://portal-dcb.dulwich.org/" },
+         
             { "title": "创始学校", "url": "/find-a-school" },
             { "title": "动态教育", "url": "https://www.eimglobal.com/?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" }
           ]

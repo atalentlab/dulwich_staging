@@ -45,12 +45,29 @@ const BannerBlock = ({ content, sectionRefs, isVisible }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Autoplay video if there's no image
+  // Autoplay video if there's no image - with faster loading
   useEffect(() => {
     if (shouldAutoplayVideo && videoRef.current) {
-      videoRef.current.play().catch(err => {
-        console.log('Autoplay prevented:', err);
-      });
+      // Set playback rate to load faster initially
+      videoRef.current.playbackRate = 1.0;
+
+      // Start loading video immediately
+      videoRef.current.load();
+
+      // Play as soon as enough data is buffered
+      const handleCanPlay = () => {
+        videoRef.current.play().catch(err => {
+          console.log('Autoplay prevented:', err);
+        });
+      };
+
+      videoRef.current.addEventListener('canplay', handleCanPlay);
+
+      return () => {
+        if (videoRef.current) {
+          videoRef.current.removeEventListener('canplay', handleCanPlay);
+        }
+      };
     }
   }, [shouldAutoplayVideo]);
 
@@ -140,7 +157,7 @@ const BannerBlock = ({ content, sectionRefs, isVisible }) => {
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40"></div>
           </div>
         ) : isVideoPlaying && hasValidVideo ? (
-          <div className="absolute inset-0 w-full h-full">
+          <div className="absolute inset-0 w-full h-full max-[1400px]:mt-[38px]">
             <video
               ref={videoRef}
               className="absolute inset-0 w-full h-full object-cover"
@@ -148,6 +165,8 @@ const BannerBlock = ({ content, sectionRefs, isVisible }) => {
               muted
               playsInline
               loop
+              preload="auto"
+              loading="eager"
             >
               <source src={videoUrl || "https://assets.dulwich.org/pages/live-worldwide-cut-no-audio.mp4"} type="video/mp4" />
               Your browser does not support the video tag.
@@ -312,6 +331,8 @@ const BannerBlock = ({ content, sectionRefs, isVisible }) => {
             muted
             playsInline
             loop
+            preload="auto"
+            loading="eager"
           >
             <source src={videoUrl || "https://assets.dulwich.org/pages/live-worldwide-cut-no-audio.mp4"} type="video/mp4" />
             Your browser does not support the video tag.
