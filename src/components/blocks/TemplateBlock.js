@@ -76,9 +76,7 @@ const TemplateBlock = ({ content }) => {
     const loadTags = async () => {
       if (template === 'network-news' || template === 'school-news') {
         try {
-          // Add CMS suffix to school parameter if present
-          const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
-          const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
+          const schoolParam = currentSchoolSlug || null;
 
           // Fetch school-specific tags and global tags in parallel
           const [schoolTags, globalTags] = await Promise.all([
@@ -199,9 +197,7 @@ const TemplateBlock = ({ content }) => {
 
           console.log('Starting initial fetch of articles...');
 
-          // Add CMS suffix to school parameter if present
-          const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
-          const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
+          const schoolParam = currentSchoolSlug || null;
 
           for (let page = 1; page <= 3; page++) {
             const response = await fetchAllArticles({
@@ -289,9 +285,7 @@ const TemplateBlock = ({ content }) => {
     const nextPage = pageNo + 1;
 
     try {
-      // Add CMS suffix to school parameter if present
-      const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
-      const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
+      const schoolParam = currentSchoolSlug || null;
 
       const response = await fetchAllArticles({
         slug: 'dulwich-life',

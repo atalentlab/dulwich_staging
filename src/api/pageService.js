@@ -3,7 +3,7 @@
  * Centralized API logic for all page-related requests
  */
 
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
 
 /**
  * Static header configuration - used across all pages
