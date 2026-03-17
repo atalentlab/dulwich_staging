@@ -2,6 +2,8 @@ import React from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 /**
  * DownloadSelectBlock Component
  * Displays a dropdown/select menu to choose and download files
@@ -35,7 +37,7 @@ const DownloadSelectBlock = ({ content }) => {
   const handleDownload = (fileUrl) => {
     const downloadUrl = fileUrl.startsWith('http')
       ? fileUrl
-      : `https://www.dulwich.atalent.xyz${fileUrl}`;
+      : `${API_BASE_URL}${fileUrl}`;
 
     window.open(downloadUrl, '_blank');
   };
@@ -48,7 +50,7 @@ const DownloadSelectBlock = ({ content }) => {
       const filePromises = fileArray.map(async (file) => {
         const downloadUrl = file['download-select'].startsWith('http')
           ? file['download-select']
-          : `https://www.dulwich.atalent.xyz${file['download-select']}`;
+          : `${API_BASE_URL}${file['download-select']}`;
 
         const response = await fetch(downloadUrl);
         const blob = await response.blob();

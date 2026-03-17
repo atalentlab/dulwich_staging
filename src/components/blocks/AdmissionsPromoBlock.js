@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Icon from '../Icon';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 const schoolsData = [
   {
     name: "Dulwich College Beijing",
@@ -162,7 +164,7 @@ const CustomDropdown = ({ value, options, onChange, isOpen, setIsOpen, placehold
 // ── AdmissionsPromoBlock ───────────────────────────────────────────────────────
 const AdmissionsPromoBlock = ({ content }) => {
   const { title, description, image, 'image_description': imageDescription } = content;
-  const defaultImageUrl = image?.startsWith('http') ? image : `https://www.dulwich.atalent.xyz${image}`;
+  const defaultImageUrl = image?.startsWith('http') ? image : `${API_BASE_URL}${image}`;
 
   const [selectedSchoolName, setSelectedSchoolName] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

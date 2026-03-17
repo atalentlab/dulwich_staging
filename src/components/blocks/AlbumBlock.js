@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MoveDiagonal, Camera, X } from 'lucide-react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 /**
  * AlbumBlock Component
  * Displays a gallery/album of images
@@ -43,7 +45,7 @@ const AlbumBlock = ({ content }) => {
       console.log('Fetching albums with IDs:', albums);
 
       const promises = albums.map(albumId =>
-        fetch(`https://www.dulwich.atalent.xyz/api/albums/${albumId}/media`)
+        fetch(`${API_BASE_URL}/api/albums/${albumId}/media`)
           .then(res => res.json())
           .then(data => {
             if (data.success && data.data) {
@@ -298,7 +300,7 @@ const AlbumBlock = ({ content }) => {
                 }`}
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = 'https://www.dulwich.atalent.xyz/images/placeholders/no-image.gif';
+                  e.target.src = `${API_BASE_URL}/images/placeholders/no-image.gif`;
                 }}
               />
             </div>

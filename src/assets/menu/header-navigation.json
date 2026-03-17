@@ -2,7 +2,7 @@
   "en": {
     "topBar": {
       "admissions": { "label": "Admissions", "url": "/admissions" },
-      "careers": { "label": "Careers", "url": "/working-at-dulwich" }
+      "careers": { "label": "Careers", "url": "/careers" }
     },
     "siteMapLabel": "See Full Site Map",
     "desktopNav": [
@@ -237,7 +237,7 @@
   "zh": {
     "topBar": {
       "admissions": { "label": "招生", "url": "/zh/admissions" },
-      "careers": { "label": "职业机会", "url": "/zh/working-at-dulwich" }
+      "careers": { "label": "职业机会", "url": "/zh/careers" }
     },
     "siteMapLabel": "查看完整网站地图",
   "desktopNav": [

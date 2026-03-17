@@ -1,5 +1,7 @@
 import React from 'react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 const QuoteBlock = ({ content }) => {
   const {
     name,
@@ -8,7 +10,7 @@ const QuoteBlock = ({ content }) => {
     copy,
     'anchor-id': anchorId
   } = content;
-  const imageUrl = image?.startsWith('http') ? image : `https://www.dulwich.atalent.xyz${image}`;
+  const imageUrl = image?.startsWith('http') ? image : `${API_BASE_URL}${image}`;
 
   return (
     <section data-id={anchorId} className="py-12 my-3 mx-2 px-4 mb-8 bg-[#FAF7F5]">

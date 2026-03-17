@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import mapStaticImage from '../../assets/images/map-static.png';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 // Parse DMS (e.g. "11°05'43.8") or decimal string to decimal degrees
 function parseCoord(val) {
   if (!val) return null;
@@ -35,7 +37,7 @@ const ContactCardBlock = ({ content }) => {
         {title && <h2 className="text-4xl font-bold mb-12 text-left text-gray-800">{title}</h2>}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {nestedBlocks.map((card, index) => {
-            const imageUrl = card.image?.startsWith('http') ? card.image : `https://www.dulwich.atalent.xyz${card.image}`;
+            const imageUrl = card.image?.startsWith('http') ? card.image : `${API_BASE_URL}${card.image}`;
 
             // Support both google and bing/amap coordinates
             const googleLat = parseCoord(card.google_lat);

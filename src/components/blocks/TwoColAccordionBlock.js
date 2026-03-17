@@ -1,5 +1,7 @@
 import React from 'react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 /**
  * TwoColAccordionBlock Component
  * Displays card items in a two-column layout with images and content
@@ -34,7 +36,7 @@ const TwoColAccordionBlock = ({ content }) => {
           {col.map((item, index) => {
             const imageUrl = item.image?.startsWith('http')
               ? item.image
-              : `https://www.dulwich.atalent.xyz${item.image}`;
+              : `${API_BASE_URL}${item.image}`;
 
             return (
               <div

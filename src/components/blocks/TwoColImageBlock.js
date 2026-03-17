@@ -1,5 +1,7 @@
 import React from 'react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 const TwoColImageBlock = ({ content }) => {
   const {
     col = [],
@@ -19,7 +21,7 @@ const TwoColImageBlock = ({ content }) => {
           {colArray.map((column, index) => {
             const imageUrl = column.image?.startsWith('http')
               ? column.image
-              : `https://www.dulwich.atalent.xyz${column.image}`;
+              : `${API_BASE_URL}${column.image}`;
 
             return (
               <div key={index} className="relative group overflow-hidden">

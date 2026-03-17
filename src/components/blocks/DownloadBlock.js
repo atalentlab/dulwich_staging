@@ -1,6 +1,8 @@
 import React from 'react';
 import Icon from '../Icon';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 /**
  * DownloadBlock Component
  * Displays downloadable files with CTA buttons in a card layout
@@ -62,7 +64,7 @@ const DownloadBlock = ({ content }) => {
             {downloads.map((item, index) => {
               const downloadUrl = item.download?.startsWith('http')
                 ? item.download
-                : `https://www.dulwich.atalent.xyz${item.download}`;
+                : `${API_BASE_URL}${item.download}`;
 
               return (
                 <a

@@ -4,6 +4,8 @@ import { MoveDiagonal } from 'lucide-react';
 import Icon from '../Icon';
 import Icon1 from '../Icon';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 /**
  * TaxonomyBlock Component
  * Displays categorized content based on taxonomy
@@ -166,7 +168,7 @@ const TaxonomyBlock = ({ content }) => {
   const fetchSchools = async () => {
     try {
       const response = await fetch(
-        `https://www.dulwich.atalent.xyz/api/get_schools_by_taxonomy?taxonomy_id=${taxonomy}&locale=${locale}`
+        `${API_BASE_URL}/api/get_schools_by_taxonomy?taxonomy_id=${taxonomy}&locale=${locale}`
       );
       const data = await response.json();
 
@@ -186,7 +188,7 @@ const TaxonomyBlock = ({ content }) => {
         setLoadingMore(true);
       }
 
-      let url = `https://www.dulwich.atalent.xyz/api/get_term_by_taxonomy?taxonomy_id=${taxonomy}&page_no=${page}&locale=${locale}`;
+      let url = `${API_BASE_URL}/api/get_term_by_taxonomy?taxonomy_id=${taxonomy}&page_no=${page}&locale=${locale}`;
       if (filter && filter !== 'All') {
         url += `&school_id=${filter}`;
       }

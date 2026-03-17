@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 export default function FeeStructureBlock({ content }) {
   const [openSections, setOpenSections] = useState({});
   const [feeData, setFeeData] = useState([]);
@@ -35,7 +37,7 @@ export default function FeeStructureBlock({ content }) {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          `https://www.dulwich.atalent.xyz/api/fee_structure?school=${schoolFromURL}`
+          `${API_BASE_URL}/api/fee_structure?school=${schoolFromURL}`
         );
         if (!response.ok) throw new Error(`Failed to fetch data for school: ${schoolFromURL}`);
         const result = await response.json();

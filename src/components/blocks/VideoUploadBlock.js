@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 /**
  * VideoUploadBlock Component
  * Displays uploaded video with poster image
@@ -24,8 +26,8 @@ const VideoUploadBlock = ({ content }) => {
   };
 
   // Construct full video URL
-  const videoUrl = video?.startsWith('http') ? video : `https://www.dulwich.atalent.xyz${video}`;
-  const posterUrl = image?.startsWith('http') ? image : `https://www.dulwich.atalent.xyz${image}`;
+  const videoUrl = video?.startsWith('http') ? video : `${API_BASE_URL}${video}`;
+  const posterUrl = image?.startsWith('http') ? image : `${API_BASE_URL}${image}`;
 
   return (
     <section data-id={anchorId} className="py-16 px-4 bg-white">

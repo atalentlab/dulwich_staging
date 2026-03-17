@@ -7,6 +7,8 @@ import InternationalPageHeader from '../components/layout/PageHeader';
 import InternationalPageFooter from '../components/layout/PageFooter';
 import icoStar2 from '../assets/images/ico-star2.svg';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 // Recursive component to render nested menu items
 const MenuItem = ({ item, level = 0 }) => {
   const hasChildren = item.items && item.items.length > 0;
@@ -17,7 +19,7 @@ const MenuItem = ({ item, level = 0 }) => {
     if (item.url && item.url !== '#') {
       // Remove common base URLs to get the relative path
       return item.url
-        .replace('https://www.dulwich.atalent.xyz/', '')
+        .replace(`${API_BASE_URL}/`, '')
         .replace(/https:\/\/[^.]+\.dulwich-frontend\.atalent\.xyz\//, '')
         .replace(/https:\/\/[^.]+\.dulwich\.atalent\.xyz\//, '');
     }
@@ -128,7 +130,7 @@ function SitemapPage() {
         setLoading(true);
 
         // Build API URL - for international site (no school detected), don't pass school parameter
-        let apiUrl = 'https://www.dulwich.atalent.xyz/api/mainmenu';
+        let apiUrl = `${API_BASE_URL}/api/mainmenu`;
 
         if (isSchool && detectedSchool) {
           // School site - pass school parameter
@@ -151,7 +153,7 @@ function SitemapPage() {
             const normalized = {
               id: item.id,
               title: item.title || item.menu_name,
-              slug: item.slug || (item.url && item.url !== '#' ? item.url.replace('https://www.dulwich.atalent.xyz/', '') : null),
+              slug: item.slug || (item.url && item.url !== '#' ? item.url.replace(`${API_BASE_URL}/`, '') : null),
               url: item.url,
               menu_name: item.menu_name,
               items: []

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './TimelineEventBlock.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 /**
  * TimelineEventBlock Component
  * Vertical timeline — left sticky nav, right panel slides via CSS translateY.
@@ -27,7 +29,7 @@ const TimelineEventBlock = ({ content }) => {
     try {
       setLoading(true);
       const promises = timeline_event.map(id =>
-        fetch(`https://www.dulwich.atalent.xyz/api/timeline_events_by_id?event_id=${id}${locale ? `&locale=${locale}` : ''}`)
+        fetch(`${API_BASE_URL}/api/timeline_events_by_id?event_id=${id}${locale ? `&locale=${locale}` : ''}`)
           .then(r => r.json())
           .then(d => (d.success && Array.isArray(d.data) ? d.data : []))
           .catch(() => [])

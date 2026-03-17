@@ -4,6 +4,8 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './YearsAnniversaryBlock.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 /**
  * Custom Arrow Components
  */
@@ -140,7 +142,7 @@ const YearsAnniversaryBlock = ({ content }) => {
 
       // Fetch data for each anniversary ID
       const promises = years_anniversary.map(anniversaryId =>
-        fetch(`https://www.dulwich.atalent.xyz/api/years_anniversary/${anniversaryId}`)
+        fetch(`${API_BASE_URL}/api/years_anniversary/${anniversaryId}`)
           .then(res => res.json())
           .then(data => {
             if (data.success && data.data) {

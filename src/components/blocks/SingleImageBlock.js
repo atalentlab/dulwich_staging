@@ -1,5 +1,7 @@
 import React from 'react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 /**
  * SingleImageBlock Component
  * Displays a single image with optional title and caption
@@ -36,7 +38,7 @@ const SingleImageBlock = ({ content }) => {
   const headingLine2 = title2 || null;
 
   // Construct full image URL
-  const imageUrl = image?.startsWith('http') ? image : `https://www.dulwich.atalent.xyz${image}`;
+  const imageUrl = image?.startsWith('http') ? image : `${API_BASE_URL}${image}`;
 
   // Determine if full-width layout
   const isFullWidth = alignment === 'full-width' || alignment === 'full';

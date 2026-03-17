@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+
 const HolisticCurriculumBlock = ({ content }) => {
   const {
     image,
@@ -29,7 +31,7 @@ const HolisticCurriculumBlock = ({ content }) => {
 
     // Strip out common base URLs to get relative path
     const urlPatterns = [
-      'https://www.dulwich.atalent.xyz/',
+      `${API_BASE_URL}/`,
       'https://www.dulwich-frontend.atalent.xyz/',
       /https:\/\/[^.]+\.dulwich-frontend\.atalent\.xyz\//,
       /https:\/\/[^.]+\.dulwich\.atalent\.xyz\//,
@@ -92,7 +94,7 @@ const HolisticCurriculumBlock = ({ content }) => {
     }));
 
   const imageUrl = image
-    ? (image.startsWith('http') ? image : `https://www.dulwich.atalent.xyz${image}`)
+    ? (image.startsWith('http') ? image : `${API_BASE_URL}${image}`)
     : 'https://images.unsplash.com/photo-1588072432836-e10032774350?w=1920&q=80';
 
   console.log('HolisticCurriculumBlock - Image URL:', imageUrl);
