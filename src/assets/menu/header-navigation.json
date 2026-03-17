@@ -70,15 +70,15 @@
         "id": "world",
         "label": "World",
         "links": [
-          { "title": "Family of Schools", "url": "world/one-family-of-schools" },
-          { "title": "Global Partnership", "url": "world/global-partnerships" },
+          { "title": "Family of Schools", "url": "/world/one-family-of-schools" },
+          { "title": "Global Partnership", "url": "/world/global-partnerships" },
           { "title": "Dulwich Life", "url": "dulwich-life" }
           
         ],
         "cards": [
           {
             "heading": "WORLDWISE ALUMNI NETWORK",
-            "url": "world/worldwise-alumni-network",
+            "url": "/world/worldwise-alumni-network",
             "imageKey": "wan",
             "imageAlt": "Worldwise Alumni Network",
             "description": "Our 8,000-strong Worldwise Alumni Network connects graduates around the world, fostering lifelong relationships, professional growth, and a shared commitment to positive impact.",
@@ -86,7 +86,7 @@
           },
           {
             "heading": " International Experiences",
-            "url": "world/worldwise-events",
+            "url": "/world/worldwise-events",
             "imageKey": "we",
             "imageAlt": "International Experiences",
             "description": "Worldwise Events bring our global community together through collaborative learning with leading practitioners and educators, connecting theory with real-world impact.",
@@ -103,7 +103,7 @@
         "cards": [
           {
             "heading": "ACADEMIC EXCELLENCE",
-            "url": "wise/academic-results",
+            "url": "/wise/academic-results",
             "imageKey": "excel",
             "imageAlt": "Academic Excellence",
             "description": "Dulwich Colleges and high schools continue to deliver exceptional outcomes, with our campuses recognised among the best IB schools in their country and region.",
@@ -112,7 +112,7 @@
 
           {
             "heading": "University Matriculation",
-            "url": "wise/university-matriculation",
+            "url": "/wise/university-matriculation",
             "imageKey": "matric",
             "imageAlt": "University Matriculation",
             "description": "Each year, Dulwich graduates matriculate to leading universities worldwide, reflecting their academic excellence, global outlook, and diverse ambitions.",
@@ -120,7 +120,7 @@
           },
           {
             "heading": "University & Careers Counselling",
-            "url": "wise/university-and-careers-counselling",
+            "url": "/wise/university-and-careers-counselling",
             "imageKey": "uni",
             "imageAlt": "uni",
             "description": "We begin our unique university and careers counselling programme in Year 7, and introduce students to age-appropriate university and careers topics until they graduate. Our students are well prepared to leave Dulwich as Worldwise graduates.",
