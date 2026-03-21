@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.bf485e62.css",
-    "main.js": "/static/js/main.a580cc90.js",
+    "main.js": "/static/js/main.3735c500.js",
     "static/js/919.128a2a0c.chunk.js": "/static/js/919.128a2a0c.chunk.js",
     "static/media/EiMAdshootforThailandatDCSG-Sun-138.jpg": "/static/media/EiMAdshootforThailandatDCSG-Sun-138.4274e6cda593da2aac16.jpg",
     "static/media/student stories.jpg": "/static/media/student stories.9fcff4952c31203a27a0.jpg",
@@ -110,11 +110,11 @@
     "static/media/ico-star2.svg": "/static/media/ico-star2.fcd8cb15ce58b9e9ebeb676ca3ffc6ca.svg",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "main.bf485e62.css.map": "/static/css/main.bf485e62.css.map",
-    "main.a580cc90.js.map": "/static/js/main.a580cc90.js.map",
+    "main.3735c500.js.map": "/static/js/main.3735c500.js.map",
     "919.128a2a0c.chunk.js.map": "/static/js/919.128a2a0c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.bf485e62.css",
-    "static/js/main.a580cc90.js"
+    "static/js/main.3735c500.js"
   ]
 }
