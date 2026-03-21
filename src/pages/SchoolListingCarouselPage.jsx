@@ -16,7 +16,7 @@ import ssDehongImg from '../assets/schoollist/ss-dehong.webp';
 import ssBeijingImg from '../assets/schoollist/ss-beijing.jpeg';
 import ssXianImg from '../assets/schoollist/ss-xian.webp';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 export default function SchoolListingCarouselPage({ title = "Find a School" }) {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -71,10 +71,11 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
 
   // Helper function to get local image for a school
   const getSchoolImage = (school) => {
-    if (!school.name) return null;
+    const schoolName = school.full_title || school.name;
+    if (!schoolName) return null;
 
     // Try local image map first
-    const localImage = schoolImageMap[school.name];
+    const localImage = schoolImageMap[schoolName];
     if (localImage) return localImage;
 
     // Use API image URL if available
@@ -105,7 +106,7 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
         if (data.success && data.data) {
           // Transform API data to match carousel format
           const transformedSchools = data.data.map(school => ({
-            name: school.title || school.name,
+            name: school.full_title || school.title || school.name,
             location: school.location,
             students: school.students_count || school.students,
             ages: school.ages,
@@ -224,11 +225,11 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
   }, [N]);
 
   return (
-    <div className="min-h-screen">
+    <div>
       {/* Carousel */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-8">
         {/* Title section with max-width 1120px */}
-        <div className="max-w-[1120px] mx-auto mb-12">
+        <div className="max-w-[1120px] mx-auto">
           <h1 className="text-left text-4xl md:text-5xl lg:text-6xl font-bold text-[#9E1422]">
             {title}
           </h1>
@@ -244,7 +245,7 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
             <>
               <div
                 ref={scrollContainerRef}
-                className="w-full overflow-x-auto scroll-smooth hide-scrollbar pb-8 mb-12 snap-x snap-mandatory"
+                className="w-full overflow-x-auto scroll-smooth hide-scrollbar pb-8 mb-4 snap-x snap-mandatory"
               >
                 <div className="flex flex-row flex-nowrap gap-6 pr-16 ">
                   {loopedSchools.map((school, idx) => (

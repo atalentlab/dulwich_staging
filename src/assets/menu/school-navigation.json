@@ -89,7 +89,6 @@
                 "title": "From Head of College",
                 "url": "/why-dulwich/our-college/from-head-of-college",
                 "schools": [
-                  "bangkok",
                   "beijing",
                   "shanghai-pudong",
                   "shanghai-puxi",
@@ -124,14 +123,16 @@
                 "url": "/why-dulwich/our-college/vision-and-values",
                 "excludeSchools": [
                   "seoul",
-                  "suzhou-high-school"
+                  "suzhou-high-school",
+                  "hengqin-high-school"
                 ]
               },
               {
                 "title": "Vision & Values",
                 "url": "/why-dulwich/our-school/vision-and-values",
                 "schools": [
-                  "suzhou-high-school"
+                  "suzhou-high-school",
+                  "hengqin-high-school"
                 ]
               },
                {
@@ -548,21 +549,21 @@
                 "title": "International Baccalaureate",
                 "url": "/learning/core-curriculum/international-baccalaureate",
                 "schools": [
-                  "beijing",
-                  "shanghai-puxi",
-                  "suzhou",
                   "shanghai-pudong",
                   "seoul"
                 ]
               },
-              
               {
-                "title": "Three-year Pathway",
-                "url": "/learning/core-curriculum/three-year-pathway",
+                "title": "International Baccalaureate",
+                "url": "/learning/core-curriculum/international-baccalaureate-diploma-programme",
                 "schools": [
-                  "hengqin-high-school"
+                  "beijing",
+                  "shanghai-puxi",
+                  "suzhou"
                 ]
               },
+              
+             
               {
                 "title": "Pre-A Level Programme",
                 "url": "/learning/core-curriculum/pre-alevel-programme",
@@ -581,10 +582,18 @@
               },
               {
                 "title": "Boarding Programme",
+                "url": "/learning/core-curriculum/boarding-programme-25",
+                "schools": [
+                  "suzhou-high-school"
+                  
+                ]
+              },
+              {
+                "title": "Boarding Programme",
                 "url": "/learning/core-curriculum/boarding",
                 "schools": [
-                  "suzhou-high-school",
                   "hengqin-high-school"
+                  
                 ]
               },
               {
@@ -650,8 +659,8 @@
                 ]
               },
               {
-                "title": "Enrichment Activities",
-                "url": "/holistic-education/enrichment",
+                "title": "Co-Curricular Activities",
+                "url": "/learning/holistic-education/co-curricular-activities",
                 "schools": [
                   "hengqin-high-school"
                 ]
@@ -733,13 +742,7 @@
                   "suzhou-high-school"
                 ]
               },
-              {
-                "title": "Beyond the Classroom",
-                "url": "/learning/holistic-education/beyond-the-classroom",
-                "schools": [
-                  "hengqin-high-school"
-                ]
-              },
+             
               {
                 "title": "English",
                 "url": "/learning/holistic-education/english",
@@ -754,11 +757,17 @@
                   "suzhou-high-school",
                   "hengqin-high-school",
                   "shanghai-pudong",
-                  "singapore",
-                  "bangkok",
                   "shanghai-puxi",
                   "seoul",
                   "suzhou"
+                ]
+              },
+              {
+                "title": "Visual & Performing Arts",
+                "url": "/learning/holistic-education/visual-and-performing-arts",
+                "schools": [
+                  "bangkok",
+                  "singapore"
                 ]
               },
               {
@@ -1022,8 +1031,8 @@
                 ]
               },
               {
-                "title": "College Calendar",
-                "url": "/community/life-at-dulwich/college-calendar",
+                "title": "School Calendar",
+                "url": "/community/life-at-dulwich/school-calendar",
                 "schools": [
                   "singapore"
                 ]
@@ -1046,7 +1055,15 @@
                 "title": "Careers",
                 "url": "/community/life-at-dulwich/careers",
                 "excludeSchools": [
-                  "singapore"
+                  "singapore",
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "Careers",
+                "url": "/community/life-at-dulwich/working-at-dulwich",
+                "schools": [
+                  "bangkok"
                 ]
               },
               {
@@ -1155,7 +1172,7 @@
               },
               {
                 "title": "One to One Consultation",
-                "url": "/admissions/consultation",
+                "url": "https://dhsz.openapply.cn/roi?c_campaign=2369",
                 "schools": [
                   "suzhou-high-school"
                 ]
@@ -1170,17 +1187,31 @@
               },
               {
                 "title": "Entrance Assessment",
-                "url": "/admissions/entrance-assessment",
+                "url": "https://dhsz.openapply.cn/apply/forms/22963?c_campaign=2056",
                 "schools": [
-                  "suzhou-high-school",
+                  "suzhou-high-school"
+                  
+                ]
+              },
+              {
+                "title": "Entrance Examination",
+                "url": "/admissions/apply/entrance-exam",
+                "schools": [
                   "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Assessment Guide",
+                "url": " https://book.yunzhan365.com/bpiog/lrxy/mobile/index.html",
+                "schools": [
+                  "suzhou-high-school"
+                  
                 ]
               },
               {
                 "title": "Assessment Guide",
                 "url": "/admissions/assessment-guide",
                 "schools": [
-                  "suzhou-high-school",
                   "hengqin-high-school"
                 ]
               },
@@ -1194,7 +1225,19 @@
               },
               {
                 "title": "FAQs",
-                "url": "/admissions/apply/frequently-asked-questions"
+                "url": "/admissions/apply/frequently-asked-questions",
+                "excludeSchools": [
+                 "suzhou",
+                 "shanghai-puxi"
+                ]
+              },
+              {
+                "title": "FAQs",
+                "url": "/admissions/apply/faqs",
+                "schools": [
+                  "suzhou",
+                  "shanghai-puxi"
+                ]
               },
               {
                 "title": "Scholarships",
@@ -1272,9 +1315,8 @@
   },
   "zh": {
     "topBar": {
-      "parentPortal": "家长平台",
-      "schoolCalendar": "学校日历",
-       "schoolCalendarLnk": "/community/life-at-dulwich/school-calendar"
+      "parentPortal": "家长门户",
+      "schoolCalendar": "学校日历"
     },
     "siteMapLabel": "查看完整网站地图",
     "searchPlaceholder": "搜索",
@@ -1363,7 +1405,7 @@
                 "title": "校长寄语",
                 "url": "/zh/why-dulwich/our-college/from-head-of-college",
                 "schools": [
-                  "bangkok",
+       
                   "beijing",
                   "shanghai-pudong",
                   "shanghai-puxi",
@@ -1380,14 +1422,14 @@
                 ]
               },
               {
-                "title": "院长致辞",
+                "title": "总监寄语",
                 "url": "/zh/why-dulwich/our-school/from-our-director-of-school",
                 "schools": [
                   "suzhou-high-school"
                 ]
               },
               {
-                "title": "院长致辞",
+                "title": "校长寄语",
                 "url": "/zh/why-dulwich/our-school/from-head-of-school",
                 "schools": [
                   "hengqin-high-school"
@@ -1690,7 +1732,20 @@
                   "beijing",
                   "suzhou-high-school",
                   "hengqin-high-school",
-                  "seoul"
+                  "seoul",
+                  "suzhou",
+                  "shanghai-pudong",
+                  "shanghai-puxi"
+                ]
+              },
+              {
+                "title": "可持续发展与全球公民意识",
+                "url": "/zh/learning/holistic-education/sustainability-and-global-citizenship",
+                "image": "sustainability",
+                "schools": [
+                  "suzhou",
+                  "shanghai-pudong",
+                  "shanghai-puxi"
                 ]
               }
             ]
@@ -1753,21 +1808,21 @@
                 "title": "IB 课程",
                 "url": "/zh/learning/core-curriculum/international-baccalaureate",
                 "schools": [
-                  "beijing",
-                  "shanghai-puxi",
-                  "suzhou",
                   "shanghai-pudong",
                   "seoul"
                 ]
               },
-              
               {
-                "title": "Three-year Pathway",
-                "url": "/zh/holistic-education/three-year-pathway",
+                "title": "IB 课程",
+                "url": "/zh/learning/core-curriculum/international-baccalaureate-diploma-programme",
                 "schools": [
-                  "hengqin-high-school"
+                  "beijing",
+                  "shanghai-puxi",
+                  "suzhou"
                 ]
               },
+              
+             
                {
                 "title": "IGCSE 课程",
                 "url": "/zh/learning/core-curriculum/igcse-programme",
@@ -1795,10 +1850,18 @@
               },
               {
                 "title": "住宿项目",
+                "url": "/zh/learning/core-curriculum/boarding-programme-25",
+                "schools": [
+                  "suzhou-high-school"
+                  
+                ]
+              },
+              {
+                "title": "住宿项目",
                 "url": "/zh/learning/core-curriculum/boarding",
                 "schools": [
-                  "suzhou-high-school",
                   "hengqin-high-school"
+                  
                 ]
               },
               {
@@ -1950,13 +2013,7 @@
                   "suzhou-high-school"
                 ]
               },
-              {
-                "title": "Beyond the Classroom",
-                "url": "/zh/holistic-education/beyond-the-classroom",
-                "schools": [
-                  "hengqin-high-school"
-                ]
-              },
+              
               {
                 "title": "英语语言",
                 "url": "/zh/learning/holistic-education/english",
@@ -2143,7 +2200,8 @@
                 "excludeSchools": [
                   "bangkok",
                   "suzhou",
-                  "suzhou-high-school"
+                  "suzhou-high-school",
+                  "shanghai-puxi"
                 ]
               },
               {
@@ -2152,7 +2210,8 @@
                 "schools": [
                  
                   "suzhou",
-                  "suzhou-high-school"
+                  "suzhou-high-school",
+                  "shanghai-puxi"
                 ]
               },
               {
@@ -2324,7 +2383,7 @@
               },
               {
                 "title": "One to One Consultation",
-                "url": "/zh/admissions/consultation",
+                "url": "https://dhsz.openapply.cn/roi?c_campaign=2369",
                 "schools": [
                   "suzhou-high-school"
                 ]
@@ -2339,21 +2398,21 @@
               },
               {
                 "title": "Entrance Assessment",
-                "url": "/zh/admissions/entrance-assessment",
+                "url": "https://dhsz.openapply.cn/apply/forms/22963?c_campaign=2056",
                 "schools": [
                   "suzhou-high-school"
                 ]
               },
               {
-                "title": "Entrance Assessment",
-                "url": "/zh/admissions/entrance-assessment",
+                "title": "入学考试",
+                "url": "/zh/admissions/apply/entrance-exam",
                 "schools": [
                   "hengqin-high-school"
                 ]
               },
               {
                 "title": "Assessment Guide",
-                "url": "/zh/admissions/assessment-guide",
+                "url": " https://book.yunzhan365.com/bpiog/lrxy/mobile/index.html",
                 "schools": [
                   "suzhou-high-school"
                 ]
@@ -2375,7 +2434,19 @@
               },
               {
                 "title": "常见问题",
-                "url": "/zh/admissions/apply/frequently-asked-questions"
+                "url": "/zh/admissions/apply/frequently-asked-questions",
+                "excludeSchools":[
+                  "suzhou",
+                  "shanghai-puxi"
+                ]
+              },
+              {
+                "title": "常见问题",
+                "url": "/zh/admissions/apply/faqs",
+                "schools":[
+                  "suzhou",
+                  "shanghai-puxi"
+                ]
               },
               {
                 "title": "奖学金",

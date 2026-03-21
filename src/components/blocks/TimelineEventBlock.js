@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './TimelineEventBlock.css';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 /**
  * TimelineEventBlock Component

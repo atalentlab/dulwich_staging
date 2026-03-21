@@ -3,7 +3,7 @@
  * Handles article list and article details
  */
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 /**
  * Fetches article details by slug
@@ -165,71 +165,61 @@ export const fetchArticleTags = async (locale = 'en', school) => {
  * @param {string} params.school - The school slug (e.g., 'singapore', 'beijing')
  * @returns {Promise<Object>} All articles
  */
+// In-flight request cache — prevents duplicate API calls from StrictMode / multiple instances
+const _pendingArticleRequests = {};
+
 export const fetchAllArticles = async ({
   slug = 'dulwich-life',
   locale = 'en',
   school = null,
-  limit = 10,
-  page_no = 1,
+  limit = 6,
   tags = []
 } = {}) => {
-  try {
-    // Use the article endpoint with slug to get all articles
-    let url = `${API_BASE_URL}/api/article?slug=${slug}`;
+  // dulwich-life always fetches 24; all other slugs use provided limit (default 6)
+  const resolvedLimit = slug === 'dulwich-life' ? 24 : limit;
 
-    if (locale) {
-      url += `&locale=${locale}`;
-    }
-
-    if (school) {
-      url += `&school=${school}`;
-    }
-
-    // Add pagination
-    url += `&limit=${limit}&page_no=${page_no}`;
-
-    // Add tags if present
-    if (tags && tags.length > 0) {
-      tags.forEach(tagId => {
-        url += `&tags[]=${tagId}`;
-      });
-    }
-
-    console.log('Fetching all articles from:', url);
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const rawData = await response.json();
-
-    console.log('Articles API Response:', rawData);
-
-    if (rawData.success && rawData.data) {
-      const articles = rawData.data.articles || rawData.data || [];
-      const tags = rawData.data.tags || [];
-      const main = rawData.data.main || null;
-
-      return {
-        articles: articles,
-        tags: tags,
-        total: articles.length,
-        main: main
-      };
-    }
-
-    throw new Error('Invalid API response format');
-  } catch (error) {
-    console.error('Error fetching all articles:', error);
-    throw error;
+  let url = `${API_BASE_URL}/api/article?slug=${slug}`;
+  if (locale) url += `&locale=${locale}`;
+  if (school) url += `&school=${school}`;
+  url += `&limit=${resolvedLimit}&page_no=1`;
+  if (tags && tags.length > 0) {
+    tags.forEach(tagId => { url += `&tags[]=${tagId}`; });
   }
+
+  // Return existing in-flight promise if same request is already pending
+  if (_pendingArticleRequests[url]) {
+    return _pendingArticleRequests[url];
+  }
+
+  const promise = (async () => {
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const rawData = await response.json();
+
+      if (rawData.success && rawData.data) {
+        const articles = rawData.data.articles || rawData.data || [];
+        const tags = rawData.data.tags || [];
+        const main = rawData.data.main || null;
+        return { articles, tags, total: articles.length, main };
+      }
+
+      throw new Error('Invalid API response format');
+    } finally {
+      // Remove from cache once resolved or rejected
+      delete _pendingArticleRequests[url];
+    }
+  })();
+
+  _pendingArticleRequests[url] = promise;
+  return promise;
 };
 
 /**

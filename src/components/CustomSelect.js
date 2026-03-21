@@ -27,7 +27,7 @@ function CustomSelect({
 
   // Predefined school options matching your image
   const schoolOptions = [
-    { value: 'beijing', label: 'Dulwich College Beijing', isDisabled: disabledOptions.includes('beijing') },
+    { value: 'beijing', label: ' Beijing', isDisabled: disabledOptions.includes('beijing') },
     { value: 'shanghai-pudong', label: 'Dulwich College Shanghai Pudong', isDisabled: disabledOptions.includes('shanghai-pudong') },
     { value: 'shanghai-puxi', label: 'Dulwich College Shanghai Puxi', isDisabled: disabledOptions.includes('shanghai-puxi') },
     { value: 'suzhou', label: 'Dulwich College Suzhou', isDisabled: disabledOptions.includes('suzhou') },

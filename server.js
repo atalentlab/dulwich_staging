@@ -21,7 +21,7 @@ const app = express();
 app.set('trust proxy', true);
 
 const BUILD_PATH   = path.join(__dirname, 'build');
-const API_BASE     = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE     = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 const SITE_URL     = process.env.SITE_URL || '';  // e.g. https://www.dulwich-frontend.atalent.xyz
 const OG_CACHE_DIR = path.join(__dirname, 'og-cache');
 
@@ -144,7 +144,7 @@ const ARTICLE_SECTIONS = new Set(['dulwich-life', 'article']);
 const SUPPORTED_LOCALES = new Set(['zh', 'en', 'cn']);
 
 const getArticleSlugFromPath = (pathname) => {
-  const segs = pathname.replace(/^\\/|\\/$/g, '').split('/');
+  const segs = (pathname || '').replace(/^\/|\/$/g, '').split('/'); 
   let idx = 0;
   if (SUPPORTED_LOCALES.has(segs[0]?.toLowerCase())) idx = 1;
   if (ARTICLE_SECTIONS.has(segs[idx]?.toLowerCase()) && segs[idx + 1]) {
@@ -261,6 +261,47 @@ app.use('/og-cache', express.static(OG_CACHE_DIR, {
   maxAge: '24h',
   setHeaders: (res) => res.set('Access-Control-Allow-Origin', '*'),
 }));
+
+/**
+ * /proxy-fetch — Proxy endpoint to fetch remote assets (like PDF/images)
+ * specifically to bypass CORS when generating ZIP files on the frontend.
+ */
+app.get('/proxy-fetch', async (req, res) => {
+  const { url } = req.query;
+  if (!url) return res.status(400).send('URL is required');
+
+  try {
+    const targetUrl = new URL(url);
+    
+    // Safety: Only allow specific trusted domains
+    const ALLOWED_PROXY_HOSTS = [
+      ...ALLOWED_IMAGE_HOSTS,
+      'dulwich.blob.core.chinacloudapi.cn',
+      'dulwich-azure-prod.oss-cn-shanghai.aliyuncs.com',
+      'cms.dulwich.org'
+    ];
+
+    if (!ALLOWED_PROXY_HOSTS.some(h => targetUrl.hostname.endsWith(h))) {
+      return res.status(403).send('Domain not allowed for proxy');
+    }
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Target returned ${response.status}`);
+
+    const contentType = response.headers.get('content-type');
+    if (contentType) res.setHeader('Content-Type', contentType);
+    
+    // Add CORS headers so the frontend can read the blob
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Stream the body
+    const arrayBuffer = await response.arrayBuffer();
+    res.send(Buffer.from(arrayBuffer));
+  } catch (err) {
+    console.error('[proxy-fetch] Error:', err.message);
+    res.status(500).send('Failed to proxy request');
+  }
+});
 
 // ─── /og-image-gen — on-demand generation (also checks disk cache) ───────────
 app.get('/og-image-gen', async (req, res) => {

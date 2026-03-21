@@ -5,8 +5,8 @@ import eimLogo from '../../../assets/images/eim-logo-blue.svg';
 import { getSchoolUrl, getCurrentSchool } from '../../../utils/schoolDetection';
 import { useMainMenu } from '../../../hooks/useMainMenu';
 import { useSchoolInfo } from '../../../hooks/useSchoolInfo';
-import { useSchools } from '../../../hooks/useSchools';
 import schoolFooterNavData from '../../../assets/menu/school-footer-navigation.json';
+import { useSchools } from '../../../hooks/useSchools';
 
 // Import school logos from logo_white folder as fallback
 import singaporeLogo from '../../../assets/images/logo_white/singapore.svg';
@@ -160,8 +160,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   // Fetch school information from API
   const { schoolInfo, isLoading: isSchoolInfoLoading } = useSchoolInfo(currentSchoolSlug, locale);
 
-  // Use cached schools hook instead of fetching directly
-  const { schools: fetchedSchools } = useSchools(locale);
+  // Get schools using React Query hook (ensures fresh fetch)
+  const { schools: fetchedSchools, isLoading: schoolsLoading } = useSchools(locale);
 
   // State for the left dropdown - default to localised "Please select"
   const [selectedOption, setSelectedOption] = useState(t.pleaseSelect);
@@ -171,10 +171,12 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   // State for QR code modals
   const [activeModal, setActiveModal] = useState(null);
   const [isModalClosing, setIsModalClosing] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
   const handleOpenModal = (modalType) => {
     setActiveModal(modalType);
     setIsModalClosing(false);
+    setImageLoading(true);
   };
 
   const handleCloseModal = () => {
@@ -192,8 +194,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
     );
   }, [t.pleaseSelect]);
 
-  // Schools are now fetched via useSchools hook (cached with React Query)
-  // No need for manual fetching - the hook handles it automatically
+  // Schools are now provided by SchoolsContext (no duplicate API calls)
 
   // State for dropdown open/close (desktop)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -242,12 +243,17 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
 
   // Get safeguarding text from API
   const safeguardingHtml = schoolInfo?.footer_rs_copy || null;
-
+  const menuTitle = schoolInfo?.menu_title || null;
   // Get contact info from API
-  const contactEmail = schoolInfo?.addresses?.contact_email || 'info@dulwich.org';
-  const contactPhone = schoolInfo?.addresses?.telephone || '';
-  const contactAddress = schoolInfo?.addresses?.address || '';
-  const localizedAddress = schoolInfo?.addresses?.localized_address || '';
+  const addresses = Array.isArray(schoolInfo?.addresses) ? schoolInfo.addresses : [];
+  const primaryAddress = addresses[0] || {};
+  const contactEmail = primaryAddress?.contact_email || 'info@dulwich.org';
+  const contactPhone = primaryAddress?.telephone || '';
+  const contactAddress = primaryAddress?.address || '';
+  const localizedAddress = primaryAddress?.localized_address || '';
+
+  // Get all additional addresses (skip the first one as it's the primary)
+  const additionalAddresses = addresses.slice(1);
 
   // Load Tree-Nation widget for supported schools
   useEffect(() => {
@@ -299,11 +305,14 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
     return url && (url.startsWith('http://') || url.startsWith('https://'));
   };
 
+  // Extract quick links from API response
+  const quickLinks = useMemo(() => schoolInfo?.quick_links || [], [schoolInfo]);
+
   // Update display name based on selected school or current URL
   useEffect(() => {
     const currentSchoolSlug = getCurrentSchool();
-    // Use fetchedSchools from useSchools hook (cached), fallback to availableSchools from props
-    const schoolsToUse = fetchedSchools && fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
+    // Use fetchedSchools from API, fallback to availableSchools from props
+    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
 
     if (currentSchoolSlug && schoolsToUse) {
       const currentSchoolData = schoolsToUse.find(s => s.slug === currentSchoolSlug);
@@ -329,8 +338,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   const selectOptions = useMemo(() => {
     const options = [t.pleaseSelect];
 
-    // Use fetchedSchools from useSchools hook (cached), fallback to availableSchools from props
-    const schoolsToUse = fetchedSchools && fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
+    // Use fetchedSchools from API, fallback to availableSchools from props
+    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
 
     if (schoolsToUse && schoolsToUse.length > 0) {
       const schoolOptions = schoolsToUse.map(school => school.title);
@@ -343,8 +352,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   // Create a mapping for school data lookup
   const schoolDataMap = useMemo(() => {
     const map = {};
-    // Use fetchedSchools from useSchools hook (cached), fallback to availableSchools from props
-    const schoolsToUse = fetchedSchools && fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
+    // Use fetchedSchools from API, fallback to availableSchools from props
+    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
 
     if (schoolsToUse && schoolsToUse.length > 0) {
       schoolsToUse.forEach(school => {
@@ -353,6 +362,39 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
     }
     return map;
   }, [fetchedSchools, availableSchools]);
+
+  // Compute the current school title for the dropdown value
+  const currentSchoolTitle = useMemo(() => {
+    // Use fetchedSchools from API, fallback to availableSchools from props
+    const schoolsToUse = (fetchedSchools && fetchedSchools.length > 0) ? fetchedSchools : availableSchools;
+
+    // Prioritize current school from subdomain slug — most accurate indicator
+    if (currentSchoolSlug && schoolsToUse && schoolsToUse.length > 0) {
+      const current = schoolsToUse.find(s =>
+        (s.slug && s.slug.toLowerCase() === currentSchoolSlug.toLowerCase()) ||
+        (s.title && s.title.toLowerCase() === currentSchoolSlug.toLowerCase())
+      );
+      if (current) return current.title;
+    }
+
+    // Fall back to explicitly selected school prop (but skip International defaults)
+    if (selectedSchool && selectedSchool !== 'Dulwich International College' && selectedSchool !== 'International' && schoolsToUse && schoolsToUse.length > 0) {
+      const found = schoolsToUse.find(school =>
+        school.title === selectedSchool ||
+        `Dulwich College ${school.title}` === selectedSchool ||
+        (school.slug && school.slug.toLowerCase() === selectedSchool.toLowerCase())
+      );
+      if (found) return found.title;
+    }
+
+    // If we have a selectedOption from manual selection, use it as fallback
+    if (selectedOption && selectedOption !== t.pleaseSelect) {
+      return selectedOption;
+    }
+
+    // Default to "Please select"
+    return t.pleaseSelect;
+  }, [selectedSchool, fetchedSchools, availableSchools, currentSchoolSlug, selectedOption, t.pleaseSelect, t.international, menuTitle]);
 
   // Handle selection change
   const handleSelectChange = (schoolName) => {
@@ -384,7 +426,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
     // Redirect to school URL
     if (schoolName === t.international) {
       // Redirect to static international site
-      window.location.href = 'https://www.dulwich-frontend.atalent.xyz/';
+      window.location.href = 'https://www.dulwich.org/';
     } else {
       const schoolData = schoolDataMap[schoolName];
       if (schoolData) {
@@ -447,17 +489,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
             </label>
             <div className="w-full md:w-60 lg:w-64">
               <CustomDropdown
-                value={(() => {
-                  // Check if a school is selected
-                  if (selectedSchool && availableSchools) {
-                    const found = availableSchools.find(school =>
-                      `Dulwich College ${school.title}` === selectedSchool
-                    );
-                    if (found) return found.title;
-                  }
-                  // Default to localised "Please select"
-                  return t.pleaseSelect;
-                })()}
+                value={currentSchoolTitle}
                 options={selectOptions}
                 onChange={handleSelectChange}
                 isOpen={isDropdownOpen}
@@ -472,12 +504,12 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
 
       {/* Main Content - Grid */}
       <div className="">
-        <div className="max-w-[1120px] mx-auto px-4 py-7 md:py-14">
+        <div className="max-w-[1120px] mx-auto px-4 py-4 md:py-5">
           <div className="grid text-left grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-14">
 
             {/* Column 1 - General Enquiries (Singapore) or Contact Info (Others) */}
             {currentSchoolSlug === 'singapore' ? (
-              <div className="space-y-2.5">
+              <div className="col-span-2 lg:col-span-1 space-y-2.5">
                 <h3 className="text-[14px] md:text-[16px] font-bold tracking-wide text-[#FFFFFF]">{t.generalEnquiries}</h3>
                 <div className="space-y-2.5">
                   <div>
@@ -501,10 +533,28 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                       )}
                     </div>
                   )}
+                  {/* Display all additional addresses */}
+                  {additionalAddresses.map((addr, index) =>
+                    addr.address ? (
+                      <div key={addr.id || index} className="mt-4">
+                        <h4 className="text-[14px] md:text-[16px] font-bold text-white mb-2">
+                          {addr.title || `Address ${index + 2}`}
+                        </h4>
+                        <p className="text-[14px] text-[#FDFCF8] leading-[24px] whitespace-pre-line">
+                          {isChineseVersion && addr.localized_address ? addr.localized_address : addr.address}
+                        </p>
+                        {addr.telephone && (
+                          <p className="text-[14px] text-[#FDFCF8] leading-[24px] mt-2">
+                            T: {addr.telephone}
+                          </p>
+                        )}
+                      </div>
+                    ) : null
+                  )}
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="col-span-2 lg:col-span-1 space-y-4">
                 <h3 className="text-[14px] md:text-[16px] font-bold tracking-wide text-[#FFFFFF]">{t.generalEnquiries}</h3>
                 <div>
                   <a
@@ -527,94 +577,101 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                     )}
                   </div>
                 )}
-                {currentSchoolSlug !== 'beijing' && schoolInfo?.addresses?.kindergarten_address && (
-                  <div className="mt-4">
-                    <h4 className="text-[14px] md:text-[16px] font-bold text-white mb-2">{t.kindergarten || 'Kindergarten'}</h4>
-                    <p className="text-[14px] text-[#FDFCF8] leading-[24px] whitespace-pre-line">
-                      {schoolInfo.addresses.kindergarten_address}
-                    </p>
-                    {schoolInfo?.addresses?.kindergarten_telephone && (
-                      <p className="text-[14px] text-[#FDFCF8] leading-[24px] mt-2">
-                        T: {schoolInfo.addresses.kindergarten_telephone}
+                {/* Display all additional addresses */}
+                {additionalAddresses.map((addr, index) =>
+                  addr.address ? (
+                    <div key={addr.id || index} className="mt-4">
+                      <h4 className="text-[14px] md:text-[16px] font-bold text-white mb-2">
+                        {addr.title || `Address ${index + 2}`}
+                      </h4>
+                      <p className="text-[14px] text-[#FDFCF8] leading-[24px] whitespace-pre-line">
+                        {isChineseVersion && addr.localized_address ? addr.localized_address : addr.address}
                       </p>
-                    )}
-                  </div>
+                      {addr.telephone && (
+                        <p className="text-[14px] text-[#FDFCF8] leading-[24px] mt-2">
+                          T: {addr.telephone}
+                        </p>
+                      )}
+                    </div>
+                  ) : null
                 )}
 
-                {/* Admissions Section */}
-                <div className="mt-6">
-                  <h4 className="text-[14px] md:text-[16px] font-bold text-white mb-2">{t.admissions}</h4>
-                  <a
-                    href="/admissions/apply-now"
-                    className="text-[14px] text-[#FDFCF8] leading-[24px] font-normal hover:text-[#D30013] transition-colors block"
-                  >
-                    {t.applyNow}
-                  </a>
-                </div>
-
                 {/* Visit Us Section */}
-                <div className="mt-4">
+                {/* <div className="mt-4">
                   <h4 className="text-[14px] md:text-[16px] font-bold text-white mb-2">{t.visitUs}</h4>
-                  <a
-                    href="/admissions/book-a-tour"
+                <a href={isChineseVersion ? "/zh/admissions/apply-now" : "/admissions/apply-now"}
                     className="text-[14px] text-[#FDFCF8] leading-[24px] font-normal hover:text-[#D30013] transition-colors block"
                   >
                     {t.bookATour}
                   </a>
-                </div>
+                </div> */}
               </div>
             )}
 
             {/* Column 2 - Quick Links */}
-            <div className="space-y-3">
+            <div className="col-span-1 space-y-3">
               <h3 className="text-[14px] md:text-[16px] font-bold tracking-wide text-[#FFFFFF]">{t.quickLinks}</h3>
               <ul className="space-y-3">
-                <li>
-                  <a
-                    href="/admissions/careers"
-                    className="text-[14px] text-[#FDFCF8] leading-[48px] md:leading-[40px] sm:leading-[32px] font-normal hover:text-[#D30013] transition-colors inline-block"
-                  >
-                    {t.careers}
-                  </a>
-                </li>
-               
-                <li>
-                  <a
-                    href="/admissions/contact"
-                    className="text-[14px] text-[#FDFCF8] leading-[48px] md:leading-[40px] sm:leading-[32px] font-normal hover:text-[#D30013] transition-colors inline-block"
-                  >
-                    {t.contactSchool}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/our-college/safeguarding"
-                    className="text-[14px] text-[#FDFCF8] leading-[48px] md:leading-[40px] sm:leading-[32px] font-normal hover:text-[#D30013] transition-colors inline-block"
-                  >
-                    {t.safeguarding}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/privacy-policy"
-                    className="text-[14px] text-[#FDFCF8] leading-[48px] md:leading-[40px] sm:leading-[32px] font-normal hover:text-[#D30013] transition-colors inline-block"
-                  >
-                    {t.privacyPolicy}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/sitemap"
-                    className="text-[14px] text-[#FDFCF8] leading-[48px] md:leading-[40px] sm:leading-[32px] font-normal hover:text-[#D30013] transition-colors inline-block"
-                  >
-                    {t.siteMap}
-                  </a>
-                </li>
+                {quickLinks && quickLinks.length > 0 ? (
+                  quickLinks.map((link) => (
+                    <li key={link.id}>
+                      <a
+                        href={link.url || link.cta_link}
+                        target={link.cta_type === 'external' ? '_blank' : '_self'}
+                        rel={link.cta_type === 'external' ? 'noopener noreferrer' : ''}
+                        className="text-[14px] text-[#FDFCF8] leading-[48px] md:leading-[40px] sm:leading-[32px] font-normal hover:text-[#D30013] transition-colors inline-block"
+                      >
+                        {isChineseVersion && link.cta_text?.toLowerCase() === 'read more' ? '阅读更多' : link.cta_text}
+                      </a>
+                    </li>
+                  ))
+                ) : (
+                  <>
+                    <li>
+                    <a href={isChineseVersion ? "/zh/community/life-at-dulwich/careers" : "/community/life-at-dulwich/careers"}
+                        className="text-[14px] text-[#FDFCF8] leading-[48px] md:leading-[40px] sm:leading-[32px] font-normal hover:text-[#D30013] transition-colors inline-block"
+                      >
+                        {t.careers}
+                      </a>
+                    </li>
+                   
+                    {/* <li>
+                      <a
+                        href="/admissions/contact"
+                        className="text-[14px] text-[#FDFCF8] leading-[48px] md:leading-[40px] sm:leading-[32px] font-normal hover:text-[#D30013] transition-colors inline-block"
+                      >
+                        {t.contactSchool}
+                      </a>
+                    </li> */}
+                    <li>
+                    <a href={isChineseVersion ? "/zh/our-college/safeguarding" : "/our-college/safeguarding"}
+                   
+                        className="text-[14px] text-[#FDFCF8] leading-[48px] md:leading-[40px] sm:leading-[32px] font-normal hover:text-[#D30013] transition-colors inline-block"
+                      >
+                        {t.safeguarding}
+                      </a>
+                    </li>
+                    <li>
+                    <a href={isChineseVersion ? "/zh/privacy-policy" : "/privacy-policy"}
+                        className="text-[14px] text-[#FDFCF8] leading-[48px] md:leading-[40px] sm:leading-[32px] font-normal hover:text-[#D30013] transition-colors inline-block"
+                      >
+                        {t.privacyPolicy}
+                      </a>
+                    </li>
+                    <li>
+                    <a href={isChineseVersion ? "/zh/sitemap" : "/sitemap"}
+                        className="text-[14px] text-[#FDFCF8] leading-[48px] md:leading-[40px] sm:leading-[32px] font-normal hover:text-[#D30013] transition-colors inline-block"
+                      >
+                        {t.siteMap}
+                      </a>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
 
             {/* Column 3 - External Links */}
-            <div className="space-y-3">
+            <div className="col-span-1 space-y-3">
               <h3 className="text-[14px] md:text-[16px] font-bold tracking-wide text-[#FFFFFF]">{t.externalLinks}</h3>
               <ul className="space-y-3 mb-8">
                 {/* Parent Portal - School-specific or hidden */}
@@ -630,15 +687,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                     </a>
                   </li>
                 )}
-                <li>
-                  <a
-                    href="/find-a-school"
-                    rel="noopener noreferrer"
-                    className="text-[14px] text-[#FDFCF8] leading-[48px] md:leading-[40px] sm:leading-[32px] font-normal hover:text-[#D30013] transition-colors inline-block"
-                  >
-                    {t.foundingSchool}
-                  </a>
-                </li>
+               
                 <li>
                   <a
                     href="https://www.eimglobal.com/?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools"
@@ -784,12 +833,12 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
           <div className="block md:hidden mb-8">
             <h3 className="text-base font-bold mb-3 text-white text-left">{t.ourSchools}</h3>
             <CustomDropdown
-              value={selectedOption}
+              value={currentSchoolTitle}
               options={selectOptions}
               onChange={handleSelectChange}
               isOpen={isMobileDropdownOpen}
               setIsOpen={setIsMobileDropdownOpen}
-              placeholder={t.pleaseSelect}
+              placeholder={menuTitle}
             />
           </div>
 
@@ -891,7 +940,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
           {/* Safeguarding Notice */}
           <div className=" text-[16px] text-left text-[#FFFFFF] mb-8">
             {safeguardingHtml ? (
-              <div className="leading-relaxed flex">
+              <div className="leading-relaxed md:flex">
                 <strong className="text-white font-bold">{t.safeguardingTitle}</strong>{' '}
               &nbsp;
                 <span
@@ -931,8 +980,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
           )}
 
           {/* Copyright and EiM Logo */}
-          <div className="pt-0 border-t border-[#4a4545] mb-[100px] mt-[50px] md:mb-0">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mt-[20px]">
+          <div className="pt-0 border-t border-[#4a4545] mb-[150px] mt-[20px] md:mb-0">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mt-[30px]">
               {/* Copyright - Left */}
               <a
                 href='https://beian.miit.gov.cn/#/Integrated/index'
@@ -1010,15 +1059,25 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
             </button>
 
             {/* QR Code Image */}
-            <div className="p-8 md:p-12">
+            <div className="p-8 md:p-12 relative min-h-[200px] flex items-center justify-center">
+              {/* Loading Spinner */}
+              {imageLoading && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-t-4 border-[#D30013]"></div>
+                </div>
+              )}
+
+              {/* QR Code Image */}
               <img
                 src={activeModal === 'wechat' ? wechatQRCode : redNoteQRCode}
                 alt={activeModal === 'wechat' ? 'WeChat QR Code' : 'RedNote QR Code'}
-                className="w-full h-auto"
+                className={`w-full h-auto transition-opacity duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+                onLoad={() => setImageLoading(false)}
+                onError={() => setImageLoading(false)}
                 style={{
                   animation: isModalClosing
                     ? 'fadeOut 0.2s ease-out'
-                    : 'fadeIn 0.4s ease-out 0.1s backwards'
+                    : !imageLoading ? 'fadeIn 0.4s ease-out' : 'none'
                 }}
               />
             </div>

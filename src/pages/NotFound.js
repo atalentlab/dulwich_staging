@@ -49,7 +49,7 @@ function NotFound() {
   React.useEffect(() => {
     const fetchSchools = async () => {
       try {
-        const baseUrl = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+        const baseUrl = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
         const response = await fetch(`${baseUrl}/api/schools`);
         if (response.ok) {
           const data = await response.json();
@@ -125,7 +125,7 @@ function NotFound() {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
-              to="/"
+              to={isChineseVersion ? '/zh/' : '/'}
               className="inline-flex items-center justify-center px-6 py-3 bg-[#D30013] text-white font-semibold rounded-lg hover:bg-[#B8000F] transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               <svg

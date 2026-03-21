@@ -36,6 +36,9 @@ export const fetchSchoolPageBySlug = async (slug, school, locale) => {
       throw new Error('School identifier is required. Expected subdomain format: beijing.dulwich.loc');
     }
 
+    // CMS suffix for school API calls
+    const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+
     // Determine if it's a homepage request
     const normalizedSlug =
       typeof slug === 'string' ? slug.replace(/^\/+|\/+$/g, '') : slug;
@@ -52,7 +55,7 @@ export const fetchSchoolPageBySlug = async (slug, school, locale) => {
       const params = new URLSearchParams();
       if (locale) params.append('locale', locale);
       // For this specific endpoint, 'slug' param holds the school name
-      params.append('slug', detectedSchool);
+      params.append('slug', `${detectedSchool}${cmsSuffix}`);
       url = `${API_BASE_URL}/api/school/home?${params.toString()}`;
     } else {
       // Other pages - use /api/school/page
@@ -60,7 +63,7 @@ export const fetchSchoolPageBySlug = async (slug, school, locale) => {
       const params = new URLSearchParams();
       if (locale) params.append('locale', locale);
       params.append('slug', normalizedSlug);
-      params.append('school', detectedSchool);
+      params.append('school', `${detectedSchool}${cmsSuffix}`);
       url = `${API_BASE_URL}/api/school/page?${params.toString()}`;
     }
 
@@ -196,6 +199,9 @@ export const fetchSchoolHomepage = async (school, locale) => {
       throw new Error('School identifier is required');
     }
 
+    // CMS suffix for school API calls
+    const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+
     let url = `${API_BASE_URL}/api/school/homepage?`;
 
     // Add locale parameter if provided
@@ -203,8 +209,8 @@ export const fetchSchoolHomepage = async (school, locale) => {
       url += `locale=${locale}&`;
     }
 
-    // Add school parameter
-    url += `school=${detectedSchool}`;
+    // Add school parameter with CMS suffix
+    url += `school=${detectedSchool}${cmsSuffix}`;
 
     console.log('🔍 Fetching school homepage from:', url);
 
@@ -256,6 +262,9 @@ export const fetchSchoolInfo = async (school, locale) => {
       throw new Error('School identifier is required');
     }
 
+    // CMS suffix for school API calls
+    const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+
     let url = `${API_BASE_URL}/api/school_info?`;
 
     // Add locale parameter if provided
@@ -263,8 +272,8 @@ export const fetchSchoolInfo = async (school, locale) => {
       url += `locale=${locale}&`;
     }
 
-    // Add school parameter
-    url += `school=${detectedSchool}`;
+    // Add school parameter with CMS suffix
+    url += `school=${detectedSchool}${cmsSuffix}`;
 
     console.log('🔍 Fetching school info from:', url);
 
@@ -327,13 +336,16 @@ export const fetchMainMenu = async (school, locale) => {
       throw new Error('School identifier is required for main menu');
     }
 
+    // CMS suffix for school API calls
+    const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+
     // Use the central API domain
     const params = new URLSearchParams();
 
     if (locale) {
       params.append('locale', locale);
     }
-    params.append('school', detectedSchool);
+    params.append('school', `${detectedSchool}${cmsSuffix}`);
 
     const url = `${API_BASE_URL}/api/mainmenu?${params.toString()}`;
 

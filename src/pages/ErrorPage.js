@@ -118,7 +118,7 @@ function ErrorPage({
   React.useEffect(() => {
     const fetchSchools = async () => {
       try {
-        const baseUrl = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+        const baseUrl = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
         const response = await fetch(`${baseUrl}/api/schools`);
         if (response.ok) {
           const data = await response.json();

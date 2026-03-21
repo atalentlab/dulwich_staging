@@ -57,7 +57,15 @@ const ScrollSpyLayout = ({
       }
     };
 
+    let articlesBlockSeen = false;
+
     (blocks || []).forEach(block => {
+      // Only keep the first articles block — skip duplicates from CMS
+      if (block.type === 'articles') {
+        if (articlesBlockSeen) return;
+        articlesBlockSeen = true;
+      }
+
       if (block.type === 'testimonial') {
         flushCurriculam(); flushOpenday(); flushQuote();
         collectionGroup.push(block);
@@ -300,6 +308,7 @@ const ScrollSpyLayout = ({
       />
     </>
   );
+  
 };
 
 export default ScrollSpyLayout;

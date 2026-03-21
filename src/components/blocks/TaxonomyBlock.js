@@ -4,7 +4,7 @@ import { MoveDiagonal } from 'lucide-react';
 import Icon from '../Icon';
 import Icon1 from '../Icon';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 /**
  * TaxonomyBlock Component
@@ -170,13 +170,29 @@ const TaxonomyBlock = ({ content }) => {
       const response = await fetch(
         `${API_BASE_URL}/api/get_schools_by_taxonomy?taxonomy_id=${taxonomy}&locale=${locale}`
       );
+
+      // Handle 404 or other HTTP errors
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.warn(`[TaxonomyBlock] Schools endpoint not found (404) for taxonomy ${taxonomy}`);
+          // Fallback: Use schools from context or empty array
+          setSchools([]);
+          return;
+        }
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
       const data = await response.json();
 
       if (data.success && data.data && data.data.schools) {
         setSchools(data.data.schools);
+      } else {
+        // API returned success but no schools data
+        setSchools([]);
       }
     } catch (error) {
-      console.error('Error fetching schools:', error);
+      console.error('[TaxonomyBlock] Error fetching schools:', error.message);
+      setSchools([]);
     }
   };
 
@@ -192,7 +208,21 @@ const TaxonomyBlock = ({ content }) => {
       if (filter && filter !== 'All') {
         url += `&school_id=${filter}`;
       }
+
       const response = await fetch(url);
+
+      // Handle 404 or other HTTP errors
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.warn(`[TaxonomyBlock] Terms endpoint not found (404) for taxonomy ${taxonomy}`);
+          setAllTerms([]);
+          setLoading(false);
+          setLoadingMore(false);
+          return;
+        }
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
       const data = await response.json();
 
       const fetched = (data.success && data.data && data.data.terms) ? data.data.terms : [];
@@ -438,7 +468,7 @@ const TaxonomyBlock = ({ content }) => {
                     href={term.slug ? `/${term.slug}` : '#'}
                     className="group inline-flex items-center gap-2 px-4 py-2 bg-[#D30013] text-white rounded-md font-semibold text-sm hover:bg-[#B01810] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 w-fit"
                   >
-                    Read More
+                    {isChineseVersion ? '阅读更多' : 'Read More'}
                     <svg
                       className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
                       fill="none"

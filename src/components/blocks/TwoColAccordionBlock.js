@@ -1,6 +1,6 @@
 import React from 'react';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 /**
  * TwoColAccordionBlock Component
@@ -41,7 +41,7 @@ const TwoColAccordionBlock = ({ content }) => {
             return (
               <div
                 key={index}
-                className="bg-white shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden group"
+                className="bg-white rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 overflow-hidden group relative"
               >
                 {/* Image */}
                 {item.image && (
@@ -72,10 +72,10 @@ const TwoColAccordionBlock = ({ content }) => {
                   {/* CTA Link */}
                   {item.cta && (
                     <a
-                      href={item.cta_name || '#'}
-                      className="inline-flex items-center text-red-600 font-semibold hover:text-red-700 transition-colors group/link"
+                      href={item.cta}
+                      className="inline-flex items-center text-red-600 font-semibold hover:text-red-700 transition-colors group/link absolute bottom-[20px]"
                     >
-                      {item.cta}
+                      {item.cta_name}
                       <svg
                         className="w-5 h-5 ml-2 transition-transform duration-200 group-hover/link:translate-x-1"
                         fill="none"

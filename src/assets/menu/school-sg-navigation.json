@@ -153,7 +153,7 @@
             "id": "life-at-dulwich",
             "heading": "LIFE AT DULWICH",
             "links": [
-              { "title": "College Calendar", "url": "/our-college/academic-year-calendar" },
+              { "title": "School Calendar", "url": "/community/life-at-dulwich/school-calendar" },
               { "title": "Latest News",      "url": "/dulwich-life" },
               { "title": "Work at Dulwich", "url": "/working-at-dulwich" }
             ]
@@ -329,7 +329,7 @@
           {
             "heading": "LIFE AT DULWICH",
             "links": [
-              { "title": "College Calendar", "url": "/our-college/academic-year-calendar" },
+              { "title": "School Calendar", "url": "/community/life-at-dulwich/school-calendar" },
               { "title": "Latest News",      "url": "/dulwich-life" },
               { "title": "Work at Dulwich", "url": "/working-at-dulwich" }
             ]

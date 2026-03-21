@@ -76,7 +76,9 @@ const TemplateBlock = ({ content }) => {
     const loadTags = async () => {
       if (template === 'network-news' || template === 'school-news') {
         try {
-          const schoolParam = currentSchoolSlug || null;
+          // Add CMS suffix to school parameter if present
+          const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+          const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
 
           // Fetch school-specific tags and global tags in parallel
           const [schoolTags, globalTags] = await Promise.all([
@@ -195,47 +197,26 @@ const TemplateBlock = ({ content }) => {
           let mainData = null;
           let responseTags = [];
 
-          console.log('Starting initial fetch of articles...');
+          // Add CMS suffix to school parameter if present
+          const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+          const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
 
-          const schoolParam = currentSchoolSlug || null;
+          // Single fetch — service returns 24 for dulwich-life slug
+          const response = await fetchAllArticles({
+            slug: 'dulwich-life',
+            locale: locale,
+            school: schoolParam,
+            tags: selectedTags,
+          });
 
-          for (let page = 1; page <= 3; page++) {
-            const response = await fetchAllArticles({
-              slug: 'dulwich-life',
-              locale: locale,
-              school: schoolParam,
-              limit: 10, // 10 articles per page
-              page_no: page,
-              tags: selectedTags
-            });
-
-            const newArticles = response.articles || [];
-
-            // Get main data and tags from first response
-            if (page === 1) {
-              mainData = response.main || null;
-              responseTags = response.tags || [];
-              console.log('Fetched Main Data:', mainData);
-            }
-
-            if (newArticles.length > 0) {
-              allArticlesData.push(...newArticles);
-              console.log(`Page ${page}: Added ${newArticles.length} articles`);
-            }
-
-            // Stop if we got less than expected (no more pages)
-            if (newArticles.length < 10) {
-              console.log(`Stopping at page ${page} - no more articles`);
-              break;
-            }
-          }
-
-          console.log('✅ Total articles fetched:', allArticlesData.length);
+          allArticlesData.push(...(response.articles || []));
+          mainData = response.main || null;
+          responseTags = response.tags || [];
 
           const newArticles = allArticlesData;
           const main = mainData;
           setMaindata(main);
-          setPageNo(3); // We've fetched 3 pages
+          setPageNo(1);
 
           // Merge tags from articles response into tags state to cover any missing ones
           if (responseTags.length > 0) {
@@ -285,7 +266,9 @@ const TemplateBlock = ({ content }) => {
     const nextPage = pageNo + 1;
 
     try {
-      const schoolParam = currentSchoolSlug || null;
+      // Add CMS suffix to school parameter if present
+      const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+      const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
 
       const response = await fetchAllArticles({
         slug: 'dulwich-life',
@@ -500,7 +483,7 @@ const TemplateBlock = ({ content }) => {
           {/* News Grid */}
           {articles.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 transition-shadow duration-300 ">
                 {articles.map((item, index) => {
                   // Use listing_image if available, fallback to image
                   const articleImage = item.listing_image || item.image;
@@ -552,7 +535,7 @@ const TemplateBlock = ({ content }) => {
                             })()}
                             className="inline-block border border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-semibold px-4 py-2 text-sm transition-colors duration-200 rounded-lg shadow"
                           >
-                            Read More
+                            {locale === 'zh' ? '阅读更多' : 'Read More'}
                           </a>
                         </div>
                       </div>

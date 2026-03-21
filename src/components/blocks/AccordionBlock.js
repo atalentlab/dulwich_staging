@@ -184,7 +184,7 @@ if (style === '3') {
           >
             {/* Image */}
             {content.image && (
-              <div className="w-full sm:w-32 md:w-40 h-48 sm:h-auto flex-shrink-0 relative z-10">
+              <div className="w-full md:min-w-[200px] sm:w-32 md:w-40 h-48 sm:h-auto flex-shrink-0 relative z-10">
                 <img
                   src={content.image}
                   alt={title}

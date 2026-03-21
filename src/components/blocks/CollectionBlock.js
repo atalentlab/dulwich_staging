@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Slider from 'react-slick';
 import '../../styles/HistorySlider.css';
 import 'slick-carousel/slick/slick.css';
@@ -8,6 +9,8 @@ import Icon from '../Icon';
 const EASE = 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)'; // used only for snap-back
 
 const CollectionBlock = ({ content }) => {
+  const location = useLocation();
+  const isChineseVersion = location.pathname.startsWith('/zh/') || location.pathname === '/zh';
   const sliderRef    = useRef(null);
   const containerRef = useRef(null);
   const drag         = useRef({ active: false });
@@ -367,7 +370,7 @@ const CollectionBlock = ({ content }) => {
                         href={slide.buttonUrl}
                         className="mt-auto inline-block w-fit border border-[#D30013] text-[#D30013] text-[12px] xl:text-[0.95rem] py-2 px-[22px] xl:py-2.5 xl:px-5 rounded no-underline transition-all duration-200 hover:bg-[#D30013] hover:text-white"
                       >
-                        {slide.buttonText}
+                        {isChineseVersion && slide.buttonText?.toLowerCase() === 'read more' ? '阅读更多' : slide.buttonText}
                       </a>
                     )}
                   </div>

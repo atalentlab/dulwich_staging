@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import AnimatedBannerText from '../common/AnimatedBannerText';
 
 /**
@@ -6,12 +7,15 @@ import AnimatedBannerText from '../common/AnimatedBannerText';
  * Displays hero/banner section with title, subtitle, and CTA
  */
 const BannerBlock = ({ content, sectionRefs, isVisible }) => {
+  const location = useLocation();
+  const isChineseVersion = location.pathname.startsWith('/zh/') || location.pathname === '/zh';
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Map API fields to component variables
   const title = content.title;
   const link = content.link;
   const backgroundImage = content.header_image || content.backgroundImage;
+  const coverImage = content.cover_image;
   const ctaText = content.link_copy || content.ctaText;
   const ctaLink = content.link || content.ctaLink;
   const pageLayoutType = content.page_layout_type || content.pageLayoutType;
@@ -56,9 +60,11 @@ const BannerBlock = ({ content, sectionRefs, isVisible }) => {
 
       // Play as soon as enough data is buffered
       const handleCanPlay = () => {
-        videoRef.current.play().catch(err => {
-          console.log('Autoplay prevented:', err);
-        });
+        if (videoRef.current) {
+          videoRef.current.play().catch(err => {
+            console.log('Autoplay prevented:', err);
+          });
+        }
       };
 
       videoRef.current.addEventListener('canplay', handleCanPlay);
@@ -118,7 +124,7 @@ const BannerBlock = ({ content, sectionRefs, isVisible }) => {
         >
           <div className="text-left max-w-[1120px] m-0">
             {!hidePageTitle && (
-              <h1 className="text-5xl md:text-6xl mt-[180px] text-[#9E1422] font-bold mb-4">{title}</h1>
+              <h1 className="text-5xl md:text-6xl mt-[180px] text-[#9E1422] font-bold mb-4 px-4">{title}</h1>
             )}
           </div>
         </section>
@@ -129,7 +135,13 @@ const BannerBlock = ({ content, sectionRefs, isVisible }) => {
       <section
         id="hero"
 
-        className={`relative mt-[70px] lg:mt-[8%] overflow-hidden transition-all duration-1000 min-h-[300px] xs:min-h-[400px] sm:min-h-[500px] md:min-h-[600px] lg:min-h-[calc(100svh-8rem)]`}
+        className={`relative mt-[60px]
+sm:mt-[7%]
+md:mt-[7%]
+lg:mt-[10%]
+xl:mt-[9%]
+2xl:mt-[7%]
+min-[1920px]:mt-[7%] overflow-hidden transition-all duration-1000`}
         style={{
           position: 'relative',
           width: '100%'
@@ -157,24 +169,68 @@ const BannerBlock = ({ content, sectionRefs, isVisible }) => {
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40"></div>
           </div>
         ) : isVideoPlaying && hasValidVideo ? (
-          <div className="absolute inset-0 w-full h-full max-[1400px]:mt-[38px]">
-            <video
-              ref={videoRef}
-              className="absolute inset-0 w-full h-full object-cover"
-              autoPlay
-              muted
-              playsInline
-              loop
-              preload="auto"
-              loading="eager"
-            >
-              <source src={videoUrl || "https://assets.dulwich.org/pages/live-worldwide-cut-no-audio.mp4"} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
+          <>
+            {/* Mobile: Show cover image instead of video */}
+            {coverImage && (
+              <div
+                className="lg:hidden absolute inset-0"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundImage: `url(${coverImage})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center center',
+                  backgroundRepeat: 'no-repeat',
+                  width: '100%',
+                  height: '100%'
+                }}
+              >
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40"></div>
+              </div>
+            )}
+
+            {/* Desktop: Show video */}
+            <div className="hidden lg:block absolute inset-0 w-full h-full">
+              <video
+                ref={videoRef}
+                className="absolute w-full h-auto object-contain"
+                autoPlay
+                muted
+                playsInline
+                loop
+                preload="auto"
+                loading="eager"
+              >
+                <source src={videoUrl} type="video/mp4" />
+              </video>
+            </div>
+          </>
         ) : null}
 
-        <div className="dulwich-full-width m-auto relative z-10 flex justify-start h-full px-4 xs:px-6 sm:px-8 lg:px-12 min-h-[500px] xs:min-h-[500px] sm:min-h-[500px] md:min-h-[600px] lg:min-h-[calc(100svh-8rem)]">
+<div
+  className="
+  dulwich-full-width
+  m-auto
+  relative
+  z-10
+  flex
+  justify-start
+  px-4 xs:px-6 sm:px-8 lg:px-12
+
+  min-h-[300px]
+  sm:min-h-[400px]
+  md:min-h-[550px]
+  lg:min-h-[680px]
+  xl:min-h-[750px]
+  2xl:min-h-[900px]
+  min-[1700px]:min-h-[950px]
+  min-[1920px]:min-h-[1000px]
+"
+>
           {/* Left Side Text Content */}
           <div className="max-w-[1120px] m-auto text-center md:text-left">
             {/* Main Heading with Animated Text */}
@@ -200,7 +256,7 @@ const BannerBlock = ({ content, sectionRefs, isVisible }) => {
                 }}
                 onClick={() => window.location.href = ctaLink}
               >
-                {ctaText}
+                {isChineseVersion && ctaText?.toLowerCase() === 'read more' ? '阅读更多' : ctaText}
               </button>
             )}
           </div>
@@ -283,7 +339,7 @@ const BannerBlock = ({ content, sectionRefs, isVisible }) => {
       >
         <div className="text-left max-w-[1120px] m-0">
           {!hidePageTitle && (
-            <h1 className="text-5xl md:text-6xl mt-[180px] text-[#9E1422] font-bold mb-4">{title}</h1>
+            <h1 className="text-5xl md:text-6xl mt-[100px] md:mt-[180px] text-[#9E1422] font-bold mb-4 text-left px-4">{title}</h1>
           )}
         </div>
       </section>
@@ -323,26 +379,44 @@ const BannerBlock = ({ content, sectionRefs, isVisible }) => {
           <div className="absolute inset-0 bg-black/10"></div>
         </div>
       ) : isVideoPlaying && hasValidVideo ? (
-        <div className="absolute inset-0 w-full h-full">
-          <video
-            ref={videoRef}
-            className="absolute inset-0 w-full h-full object-cover"
-            autoPlay
-            muted
-            playsInline
-            loop
-            preload="auto"
-            loading="eager"
-          >
-            <source src={videoUrl || "https://assets.dulwich.org/pages/live-worldwide-cut-no-audio.mp4"} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
+        <>
+          {/* Mobile: Show cover image instead of video */}
+          {coverImage && (
+            <div
+              className="lg:hidden absolute inset-0 overflow-hidden"
+              style={{
+                background: `#000000 url(${coverImage}) no-repeat center center`,
+                backgroundSize: 'cover',
+                width: '100%',
+                height: '100%'
+              }}
+            >
+              {/* Overlay for better text readability */}
+              <div className="absolute inset-0 bg-black/10"></div>
+            </div>
+          )}
+
+          {/* Desktop: Show video */}
+          <div className="hidden lg:block absolute inset-0 w-full h-auto">
+            <video
+              ref={videoRef}
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              muted
+              playsInline
+              loop
+              preload="metadata"
+              poster={coverImage}
+            >
+              <source src={videoUrl} type="video/mp4" />
+            </video>
+          </div>
+        </>
       ) : null}
 
       {/* <div className="relative z-10 text-center text-white px-4 w-full max-w-[1120px] mx-auto flex flex-col justify-center min-h-[500px] xs:min-h-[500px] sm:min-h-[500px] md:min-h-[600px] lg:min-h-[756px]"> */}
       <div className='
-  relative z-10 text-center text-white px-4 max-w-[1120px] mx-auto
+  relative z-10 text-center text-white px-4 max-w-[1120px] mx-auto mt-[60px] lg:mt-0
   flex flex-col justify-center w-full h-full min-h-[500px] md:min-h-[unset]
 '>
         {!hidePageTitle && (

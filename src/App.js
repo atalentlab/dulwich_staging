@@ -1,13 +1,9 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import Home from './pages/Home';
-import Homesg from './pages/Homesg';
 import EventsPage from './pages/EventsPage';
 import DataGrid from './pages/DataGrid';
-import HomePage from './pages/HomePage';
 import TestPage from './pages/TestPage';
-import TestPagesg from './pages/TestPagesg';
 import TextBlockDemo from './pages/TextBlockDemo';
 import LiveWorldWiseGridPage from './pages/LiveWorldWiseGridPage';
 import DynamicPageRenderer from './components/DynamicPageRenderer';
@@ -36,6 +32,14 @@ import './App.css';
 // };
 
 function App() {
+  const location = useLocation();
+
+  // Update HTML lang attribute based on current path
+  useEffect(() => {
+    const isChineseVersion = location.pathname.startsWith('/zh/') || location.pathname === '/zh';
+    document.documentElement.lang = isChineseVersion ? 'zh' : 'en';
+  }, [location.pathname]);
+
   return (
     <SmoothScrolling>
       <div className="App">
@@ -45,7 +49,7 @@ function App() {
           <Route path="/events" element={<EventsPage />} />
           <Route path="/datagrid" element={<DataGrid />} />
           <Route path="/static-blocks" element={<TestPage />} />
-          <Route path="/landing-page-poor" element={<Home />} />
+      
           <Route path="/text-block-demo" element={<TextBlockDemo />} />
           <Route path="/live-world-wise-test" element={<LiveWorldWiseGridPage />} />
 

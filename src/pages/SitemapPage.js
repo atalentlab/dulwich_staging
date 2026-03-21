@@ -7,7 +7,7 @@ import InternationalPageHeader from '../components/layout/PageHeader';
 import InternationalPageFooter from '../components/layout/PageFooter';
 import icoStar2 from '../assets/images/ico-star2.svg';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 // Recursive component to render nested menu items
 const MenuItem = ({ item, level = 0 }) => {
@@ -104,7 +104,7 @@ function SitemapPage() {
   useEffect(() => {
     const fetchSchools = async () => {
       try {
-        const baseUrl = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+        const baseUrl = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
         const res = await fetch(`${baseUrl}/api/schools`);
         if (!res.ok) return;
         const data = await res.json();
@@ -134,7 +134,7 @@ function SitemapPage() {
 
         if (isSchool && detectedSchool) {
           // School site - pass school parameter
-          apiUrl += `?school=${detectedSchool}&locale=${locale}`;
+          apiUrl += `?school=${detectedSchool}-cms&locale=${locale}`;
         } else {
           // International site - only pass locale
           apiUrl += `?locale=${locale}`;

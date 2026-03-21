@@ -22,7 +22,7 @@ function SchoolSelector({
   setSelectedSchoolSlug,
   className = 'w-full md:w-56',
   showLabel = true,
-  placeholder = 'Please Select',
+  placeholder = 'selectedSchool',
   persistToLocalStorage = true
 }) {
   // Handle selection change

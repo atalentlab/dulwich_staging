@@ -18,7 +18,7 @@ import sitemapIcon from '../../assets/images/sitemap.png';
 import { getCurrentSchool } from '../../utils/schoolDetection';
 import rawNavigationData from '../../assets/menu/header-navigation.json';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 const imageMap = {
   el: elImage,
@@ -35,7 +35,7 @@ const imageMap = {
   'co-curricular': curriculumImage,
 };
 
-function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSelectedSchoolSlug, setChatOpen, chatOpen, pageLayoutType }) {
+function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, setChatOpen, chatOpen, pageLayoutType }) {
   // ── All Hooks MUST be called unconditionally at the top ───────────────────
   const location = useLocation();
   const navigate = useNavigate();
@@ -53,6 +53,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
   const [currentSearchPage, setCurrentSearchPage] = useState(1);
   const mobileSearchRef = React.useRef(null);
   const mobileMenuScrollRef = React.useRef(null);
+  const [schoolsList, setSchoolsList] = useState([]);
 
   // Pick locale data — updates whenever isChineseVersion changes
   const nav = isChineseVersion ? rawNavigationData.zh : rawNavigationData.en;
@@ -66,6 +67,28 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
     setIsChineseVersion(isChinese);
     setActiveLanguage(isChinese ? '中文' : 'EN');
   }, [location.pathname]);
+
+  // Always fetch schools from API with the current locale
+  useEffect(() => {
+    const controller = new AbortController();
+    (async () => {
+      try {
+        const baseUrl = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+        const currentLocale = isChineseVersion ? 'zh' : 'en';
+        const response = await fetch(`${baseUrl}/api/schools?locale=${currentLocale}`, {
+          signal: controller.signal,
+        });
+        const json = await response.json();
+        const nextSchools = json?.success && Array.isArray(json?.data) ? json.data : [];
+        setSchoolsList(nextSchools);
+      } catch (err) {
+        if (err?.name === 'AbortError') return;
+        setSchoolsList([]);
+      }
+    })();
+
+    return () => controller.abort();
+  }, [isChineseVersion]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -197,13 +220,13 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                   src="/images/crest-logo.svg"
                   alt="Dulwich College"
                   className="h-12 w-[30px] hover:scale-110 cursor-pointer transition-all duration-200"
-                  onClick={() => window.location.href = '/'}
+                  onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
                 />
                 <img
                   src={logo}
                   alt="Dulwich College International"
                   className="h-12 w-[305px] cursor-pointer transition-all duration-200"
-                  onClick={() => window.location.href = '/'}
+                  onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
                 />
               </div>
             </div>
@@ -218,13 +241,13 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                 src="/images/crest-logo.svg"
                 alt="Dulwich College"
                 className="h-12 w-auto cursor-pointer pr-3"
-                onClick={() => window.location.href = '/'}
+                onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
               />
               <img
                 src={logo}
                 alt="Dulwich College International"
                 className="w-[220px] cursor-pointer"
-                onClick={() => window.location.href = '/'}
+                onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
               />
             </div>
           </div>
@@ -540,13 +563,13 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                       src="/images/crest-logo.svg"
                       alt="Dulwich College"
                       className="transition-all duration-200 ease-out h-12 w-[30px] hover:scale-110 cursor-pointer"
-                      onClick={() => window.location.href = '/'}
+                      onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
                     />
                     <img
                       src={logo}
                       alt="Dulwich College International"
                       className="h-12 w-[305px] transition-all duration-500 ease-out cursor-pointer"
-                      onClick={() => window.location.href = '/'}
+                      onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
                     />
                   </div>
 
@@ -590,7 +613,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                         src="/images/crest-logo.svg"
                         alt="Dulwich College"
                         className="transition-all duration-200 ease-out h-12 w-12 hover:scale-110 cursor-pointer"
-                        onClick={() => window.location.href = '/'}
+                        onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
                       />
                     </div>
                   )}
@@ -764,17 +787,17 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                   </button>
                   </a> */}
 
-                  <a href="/find-a-school">
-                    <button
-                      className="group flex items-center gap-2 px-5 py-3.5 text-sm text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg active:scale-95"
-                      style={{ backgroundColor: '#D30013' }}
-                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#B8000F'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#D30013'; }}
-                    >
-                      {isChineseVersion ? '查找学校' : 'Find a School'}
-                      <Icon icon="graduation-cap" size={16} color="white" className="font-medium transition-transform duration-300 group-hover:translate-x-1" />
-                    </button>
-                  </a>
+<a href={isChineseVersion ? "/zh/find-a-school" : "/find-a-school"}>
+  <button
+    className="group flex items-center gap-2 px-5 py-3.5 text-sm text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg active:scale-95"
+    style={{ backgroundColor: '#D30013' }}
+    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#B8000F'; }}
+    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#D30013'; }}
+  >
+    {isChineseVersion ? '查找学校' : 'Find a School'}
+    <Icon icon="Find-a-School_White" size={18} color="white" className="pb-[2px]"/>
+  </button>
+</a>
                 </div>
               </div>
             </div>
@@ -809,13 +832,13 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
               src="/images/crest-logo.svg"
               alt="Dulwich College"
               className="h-10 w-auto cursor-pointer pr-4"
-              onClick={() => window.location.href = '/'}
+              onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
             />
                <img
               src={logo}
               alt="Dulwich College"
               className="w-[220px] cursor-pointer"
-              onClick={() => window.location.href = '/'}
+              onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
             />
       </div>
 
@@ -835,27 +858,28 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
         <div className="grid grid-cols-3 h-16">
           {/* ai ask replaced */}
-          <a href='/admissions/visit-us'
+          <a href={isChineseVersion ? "/zh/admissions" : "/admissions"} 
             // onClick={() => setChatOpen && setChatOpen(true)}
             className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors"
           >
             {/* <Icon icon="Icon-AI" size={20} color="#D30013" /> */}
             
-             <Icon icon="map2" size={20} color="#3C3C3B" />
-            <span className="text-[10px] text-[#3C3C3B]">VISIT US</span>
+             <Icon icon="Admissions" size={20} color="#D30013" />
+            <span className="text-[10px] text-[#3C3C3B]"> {isChineseVersion ? '招生' : 'Admissions'}</span>
           </a>
 
           {/* ENQUIRE */}
-          <a href='#' className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
-            <Icon icon="Icon_Email" size={20} color="#374151" />
-            <span className="text-[10px] text-[#3C3C3B]">ENQUIRE</span>
+          <a href={isChineseVersion ? "/zh/working-at-dulwich" : "/working-at-dulwich"} className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
+            <Icon icon="Careers" size={20} color="#D30013" />
+            <span className="text-[10px] text-[#3C3C3B]"> {isChineseVersion ? '职业发展' : 'Careers'}</span>
           </a>
 
           {/* APPLY */}
-          <button className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
-            <Icon icon="Icon-Arrow" size={20} color="#D30013" />
-            <span className="text-[10px] text-[#3C3C3B]">APPLY</span>
-          </button>
+          <a href={isChineseVersion ? "/zh/find-a-school" : "/find-a-school"} className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
+          <Icon icon="Find-a-School_Red" size={18} color="red" className="transition-transform duration-300 group-hover:translate-x-1" />
+            <span className="text-[10px] text-[#3C3C3B]"> {isChineseVersion ? '查找学校' : 'Find a School'}</span>
+          </a>
+
         </div>
       </nav>
 
@@ -880,7 +904,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
             {/* Menu Header */}
             <div className="bg-white px-3 py-4 flex items-center justify-between flex-shrink-0">
               <a
-                href="/"
+                href={isChineseVersion ? '/zh/' : '/'}
                 className="flex items-center gap-0 text-[#3C3C3B]] hover:text-[#D30013] transition-colors"
               >
                 <div className="w-11 h-8 bg-white flex items-center justify-center">
@@ -1025,8 +1049,8 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                   );
                 })}
 
-                {/* Schools Dropdown - Always show when availableSchools is available */}
-                {availableSchools && availableSchools.length > 0 && (
+                {/* Schools Dropdown - Show when schools are loaded (from prop or API) */}
+                {schoolsList && schoolsList.length > 0 && (
                   <>
                     <button
                       onClick={() => setOpenMobileSection(openMobileSection === 'schools' ? null : 'schools')}
@@ -1045,11 +1069,11 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                           animation: 'slideInFromTop 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
                         }}
                       >
-                        {availableSchools.map((school) => (
+                        {schoolsList.map((school) => (
                           <button
                             key={school.id}
                             onClick={() => {
-                              const schoolName = `Dulwich College ${school.title}`;
+                              const schoolName = `${school.title}`;
                               if (setSelectedSchool) setSelectedSchool(schoolName);
                               if (setSelectedSchoolSlug) setSelectedSchoolSlug(school.slug);
                               // Redirect to school URL if available
@@ -1060,14 +1084,14 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                               setMobileMenuOpen(false);
                             }}
                             className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 ${
-                              selectedSchool === `Dulwich College ${school.title}`
+                              selectedSchool === `${school.title}`
                                 ? 'bg-white font-semibold text-[#D30013] scale-[1.02]'
                                 : 'hover:bg-white hover:scale-[1.02] text-[#4B5563]'
                             }`}
                           >
                             <div className="flex items-center justify-between">
-                              <span>Dulwich College {school.title}</span>
-                              {selectedSchool === `Dulwich College ${school.title}` && (
+                              <span> {school.title}</span>
+                              {selectedSchool === `${school.title}` && (
                                 <span className="text-[#D30013] text-lg">✓</span>
                               )}
                             </div>

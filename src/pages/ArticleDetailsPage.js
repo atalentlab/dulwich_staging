@@ -2,17 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import PageHeader from '../components/layout/school/PageHeader';
 import PageFooter from '../components/layout/PageFooter';
-import useArticleBySlug from '../hooks/useArticleBySlug';
+import { useArticleDetailsBySlug } from '../hooks/useArticleDetailsBySlug';
 import Loading from '../components/common/Loading';
+import { getCurrentSchool } from '../utils/schoolDetection';
 
 function ArticleDetailsPage() {
-  const { slug } = useParams();
+  const { slug: paramSlug } = useParams();
   const location = useLocation();
   const [chatOpen, setChatOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState('Dulwich College International');
   const [selectedSchoolSlug, setSelectedSchoolSlug] = useState('');
   const [availableSchools, setAvailableSchools] = useState([]);
   const [tagsOpen, setTagsOpen] = useState(false);
+
+  // Parse query parameters from URL
+  const searchParams = new URLSearchParams(location.search);
+  const querySlug = searchParams.get('slug');
+  const queryLocale = searchParams.get('locale');
+  const querySchool = searchParams.get('school');
 
   // Supported locales
   const supportedLocales = ['zh', 'en', 'cn'];
@@ -47,9 +54,18 @@ function ArticleDetailsPage() {
 
   // Extract locale and slug from URL
   const { locale: urlLocale } = parseUrl(location.pathname);
-  const locale = urlLocale || 'en';
 
-  const { data: article, isLoading, error } = useArticleBySlug(slug, locale);
+  // Priority: query params > URL params > parsed URL > defaults
+  const slug = querySlug || paramSlug;
+  const locale = queryLocale || urlLocale || 'en';
+
+  // Detect school from subdomain or query params
+  const detectedSchool = getCurrentSchool();
+  // Add -cms suffix if detecting from subdomain (API expects format like "beijing-cms")
+  const schoolWithSuffix = detectedSchool ? `${detectedSchool}-cms` : null;
+  const school = querySchool || schoolWithSuffix;
+
+  const { data: article, isLoading, error } = useArticleDetailsBySlug(slug, locale, school);
 
   // Fetch schools
   useEffect(() => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import mapStaticImage from '../../assets/images/map-static.png';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 // Parse DMS (e.g. "11°05'43.8") or decimal string to decimal degrees
 function parseCoord(val) {

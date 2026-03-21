@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MoveDiagonal, Camera, X } from 'lucide-react';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 /**
  * AlbumBlock Component

@@ -3,6 +3,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useArticleDetailsBySlug } from '../../hooks/useArticleDetailsBySlug';
 import { getCurrentSchool, isSchoolSite } from '../../utils/schoolDetection';
 import useSEO from '../../hooks/useSEO';
+import { useSchools } from '../../contexts/SchoolsContext';
 import BlockRenderer from '../blocks/BlockRenderer';
 import Loading from '../common/Loading';
 import SchoolPageHeader from '../layout/school/PageHeader';
@@ -16,10 +17,12 @@ const ArticlePageRenderer = ({ slug: propSlug, locale: propLocale }) => {
   const params = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  // Use schools from context instead of fetching
+  const { schools: availableSchools, loading: schoolsLoading } = useSchools();
+
   const [chatOpen, setChatOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState('Dulwich College International');
   const [selectedSchoolSlug, setSelectedSchoolSlug] = useState('');
-  const [availableSchools, setAvailableSchools] = useState([]);
   const [tagsOpen, setTagsOpen] = useState(false);
 
   // Supported locales
@@ -63,11 +66,12 @@ const ArticlePageRenderer = ({ slug: propSlug, locale: propLocale }) => {
   const locale = propLocale || urlLocale || 'en';
 
   // Detect school from subdomain (e.g., 'singapore' from singapore.localhost:3000)
-  const school = getCurrentSchool();
+  const detectedSchool = getCurrentSchool();
+  // Add -cms suffix (API expects format like "beijing-cms")
+  const school = detectedSchool ? `${detectedSchool}-cms` : null;
 
   // Determine if this is a school site or international site
   const isSchool = isSchoolSite();
-  const detectedSchool = getCurrentSchool();
 
   // Select appropriate header and footer components
   const PageHeader = isSchool ? SchoolPageHeader : InternationalPageHeader;
@@ -88,66 +92,7 @@ const ArticlePageRenderer = ({ slug: propSlug, locale: propLocale }) => {
     og_image:         article?.listing_image    || article?.featured_image,
   });
 
-  // Fetch schools for header
-  useEffect(() => {
-    const fetchSchools = async () => {
-      try {
-        const baseUrl = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
-        const response = await fetch(`${baseUrl}/api/schools?locale=${locale}`, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch schools');
-        }
-
-        const data = await response.json();
-        const schoolsList = data.data || data.schools || data;
-
-        if (Array.isArray(schoolsList)) {
-          // Process schools to handle duplicates and add International
-          const processedSchools = [];
-
-          // Add International as first option (if not already in list)
-          const hasInternational = schoolsList.some(s => s.slug === 'international');
-          if (!hasInternational) {
-            processedSchools.push({
-              id: -1,
-              title: 'International',
-              slug: 'international',
-              url: window.location.origin
-            });
-          }
-
-          // Process each school
-          schoolsList.forEach(school => {
-            const processedSchool = { ...school };
-
-            // Skip "Suzhou High School" - user wants only main Suzhou
-            if (school.slug === 'suzhou-high-school') {
-              return; // Skip this school
-            }
-
-            // Handle "International School" - rename to "International"
-            if (school.slug === 'international') {
-              processedSchool.title = 'International';
-            }
-
-            processedSchools.push(processedSchool);
-          });
-
-          setAvailableSchools(processedSchools);
-        }
-      } catch (error) {
-        console.error('Error fetching schools:', error);
-      }
-    };
-
-    fetchSchools();
-  }, [locale]);
+  // Schools are now fetched from context (no duplicate API calls)
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -234,12 +179,12 @@ const ArticlePageRenderer = ({ slug: propSlug, locale: propLocale }) => {
           {/* Article Header */}
           <header className="mb-8 mt-[20px] md:mt-[8rem] mx-auto">
             <div className="gap-8">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl text-left font-black text-[#9E1422] leading mb-5 sm:mb-6 lg:mb-7">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl text-left font-black text-[#9E1422] leading mb-5 sm:mb-6 lg:mb-10">
                {article.title}
             </h1>
-            <h1 className="text-2xl sm:text-3xl lg:text-[36px] text-left font-black text-[#3C3737] leading mb-5 sm:mb-6 lg:mb-6">
+            {/* <h1 className="text-2xl sm:text-3xl lg:text-[36px] text-left font-black text-[#3C3737] leading mb- sm:mb-6 lg:mb-6">
             {article.intro}  
-            </h1>
+            </h1> */}
 
             <div className='flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-0'>
               {/* Left Column - Article Info */}

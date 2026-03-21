@@ -2,9 +2,10 @@
   "en": {
     "topBar": {
       "admissions": { "label": "Admissions", "url": "/admissions" },
-      "careers": { "label": "Careers", "url": "/careers" }
+      "careers": { "label": "Careers", "url": "/working-at-dulwich" }
     },
     "siteMapLabel": "See Full Site Map",
+    "scList": "Schools",
     "desktopNav": [
       {
         "id": "about",
@@ -12,8 +13,8 @@
         "links": [
           { "title": "Our Origins", "url": "/about-dulwich/our-origins" },
           { "title": "Vision & Values", "url": "/about-dulwich/vision-and-values" },
-          { "title": "School Locations", "url": "/find-a-school" },
-          { "title": "Offerings", "url": "/about-dulwich/offering" }
+          { "title": "School Locations", "url": "/about-dulwich/school-locations" },
+          { "title": "Offerings", "url": "/about-dulwich/offerings" }
          
         ],
         "cards": [
@@ -44,7 +45,8 @@
           { "title": "Sports", "url": "/live/sports" },
           { "title": "STEM", "url": "/live/stem-se21" },
           { "title": "Mandarin", "url": "/live/mandarin" },
-          { "title": "Sustainability & Global Citizenship", "url": "/about-dulwich/sustainability-and-global-citizenship" }
+          { "title": "Sustainability & Global Citizenship", "url": "/live/sustainability-and-global-citizenship" },
+          { "title": "Ignite: Switzerland", "url": "/live/ignite-switzerland-programme" }
           
         ],
         "cards": [
@@ -72,7 +74,8 @@
         "links": [
           { "title": "Family of Schools", "url": "/world/one-family-of-schools" },
           { "title": "Global Partnership", "url": "/world/global-partnerships" },
-          { "title": "Dulwich Life", "url": "dulwich-life" }
+          { "title": "EIMx", "url": "/world/eimx-summer-camps" },
+          { "title": "Dulwich Life", "url": "/dulwich-life" }
           
         ],
         "cards": [
@@ -85,12 +88,12 @@
             "buttonText": "Worldwise Alumni Network"
           },
           {
-            "heading": " International Experiences",
+            "heading": "Worldwise Events",
             "url": "/world/worldwise-events",
             "imageKey": "we",
-            "imageAlt": "International Experiences",
+            "imageAlt": "Worldwise Events",
             "description": "Worldwise Events bring our global community together through collaborative learning with leading practitioners and educators, connecting theory with real-world impact.",
-            "buttonText": " International Experiences"
+            "buttonText": " Worldwise Events"
           }
         ]
       },
@@ -150,8 +153,8 @@
         "links": [
           { "title": "Our Origins", "url": "/about-dulwich/our-origins" },
           { "title": "Vision & Values", "url": "/about-dulwich/vision-and-values" },
-          { "title": "School Locations", "url": "/find-a-school" },
-          { "title": "Offerings", "url": "/about-dulwich/offering" }
+          { "title": "School Locations", "url": "/about-dulwich/school-locations" },
+          { "title": "Offerings", "url": "/about-dulwich/offerings" }
         ]
           }
         ]
@@ -178,7 +181,8 @@
           { "title": "Sports", "url": "/live/sports" },
           { "title": "STEM", "url": "/live/stem-se21" },
           { "title": "Mandarin", "url": "/live/mandarin" },
-          { "title": "Sustainability & Global Citizenship", "url": "/about-dulwich/sustainability-and-global-citizenship" }
+          { "title": "Sustainability & Global Citizenship", "url": "/live/sustainability-and-global-citizenship" },
+          { "title": "Ignite: Switzerland", "url": "/live/ignite-switzerland-programme" }
         ]
           }
         ]
@@ -194,7 +198,7 @@
             "style": "highlighted",
             "links": [
               { "title": "Worldwise Alumni Network", "url": "/world/worldwise-alumni-network", "image": "wan" },
-              { "title": " International Experiences", "url": "/world/worldwise-events", "image": "we" }
+              { "title": "Worldwise Events", "url": "/world/worldwise-events", "image": "we" }
             ]
           },
           {
@@ -203,7 +207,10 @@
             "links": [
               { "title": "Family of Schools", "url": "/world/one-family-of-schools" },
               { "title": "Global Partnership", "url": "/world/global-partnerships" },
+               { "title": "EIMx", "url": "/world/eimx-summer-camps" },
               { "title": "Dulwich Life", "url": "/dulwich-life" }
+             
+
             ]
           }
         ]
@@ -229,17 +236,18 @@
     ],
     "mobileExtraLinks": [
       { "label": "Full Site Map", "href": "/sitemap" },
-  
-      { "label": "School Calendar", "href": "/community/life-at-dulwich/school-calendar" }
+      { "label": "Admissions", "href": "/admissions" },
+      { "label": "Careers", "href": "/working-at-dulwich"}
     ]
   },
 
   "zh": {
     "topBar": {
       "admissions": { "label": "招生", "url": "/zh/admissions" },
-      "careers": { "label": "职业机会", "url": "/zh/careers" }
+      "careers": { "label": "职业机会", "url": "/zh/working-at-dulwich" }
     },
     "siteMapLabel": "查看完整网站地图",
+    "scList": "学校",
   "desktopNav": [
       {
         "id": "about",
@@ -247,8 +255,8 @@
         "links":[
           { "title": "起源", "url": "/zh/about-dulwich/our-origins" },
           { "title": "愿景与价值观", "url": "/zh/about-dulwich/vision-and-values" },
-          { "title": "查找学校", "url": "/zh/find-a-school" },
-          { "title": "课程体系", "url": "/zh/about-dulwich/offering" }
+          { "title": "查找学校", "url": "/zh/about-dulwich/school-locations" },
+          { "title": "课程体系", "url": "/zh/about-dulwich/offerings" }
          
         ],
         "cards":[
@@ -279,7 +287,8 @@
           { "title": "运动", "url": "/zh/live/sports" },
           { "title": "STEM", "url": "/zh/live/stem-se21" },
           { "title": "中文课程", "url": "/zh/live/mandarin" },
-          { "title": "可持续发展与全球公民意识", "url": "/zh/about-dulwich/sustainability-and-global-citizenship" }
+          { "title": "可持续发展与全球公民意识", "url": "/zh/live/sustainability-and-global-citizenship" },
+          { "title": "Ignite: Switzerland", "url": "/zh/live/ignite-switzerland-programme" }
           
         ],
         "cards":[
@@ -307,6 +316,7 @@
         "links":[
           { "title": "德威大家庭", "url": "/zh/world/one-family-of-schools" },
           { "title": "全球战略合作", "url": "/zh/world/global-partnerships" },
+          { "title": "EIMx", "url": "/zh/world/eimx-summer-camps" },
           { "title": "德威聚焦", "url": "/zh/dulwich-life" }
           
         ],
@@ -385,8 +395,8 @@
         "links":[
           { "title": "起源", "url": "/zh/about-dulwich/our-origins" },
           { "title": "愿景与价值观", "url": "/zh/about-dulwich/vision-and-values" },
-          { "title": "学校位置", "url": "/zh/find-a-school" },
-          { "title": "课程介绍", "url": "/zh/about-dulwich/offering" }
+          { "title": "查找学校", "url": "/zh/about-dulwich/school-locations" },
+          { "title": "课程介绍", "url": "/zh/about-dulwich/offerings" }
         ]
           }
         ]
@@ -413,7 +423,8 @@
           { "title": "运动", "url": "/zh/live/sports" },
           { "title": "STEM", "url": "/zh/live/stem-se21" },
           { "title": "中文课程", "url": "/zh/live/mandarin" },
-          { "title": "可持续发展与全球公民意识", "url": "/zh/about-dulwich/sustainability-and-global-citizenship" }
+          { "title": "可持续发展与全球公民意识", "url": "/zh/live/sustainability-and-global-citizenship" },
+          { "title": "Ignite: Switzerland", "url": "/zh/live/ignite-switzerland-programme" }
         ]
           }
         ]
@@ -438,6 +449,7 @@
             "links":[
               { "title": "德威大家庭", "url": "/zh/world/one-family-of-schools" },
               { "title": "全球战略合作", "url": "/zh/world/global-partnerships" },
+              { "title": "EIMx", "url": "/zh/world/eimx-summer-camps" },
               { "title": "德威聚焦", "url": "/zh/dulwich-life" }
             ]
           }
@@ -464,7 +476,9 @@
     ],
  
     "mobileExtraLinks": [
-      { "label": "完整网站地图", "href": "/sitemap" }
+      { "label": "完整网站地图", "href": "/sitemap" },
+       { "label": "招生", "href": "/zh/admissions" },
+       { "label": "职业机会", "href": "/zh/working-at-dulwich" }
  
     ]
   }

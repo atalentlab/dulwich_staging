@@ -37,7 +37,7 @@ const CookiePolicyPage = () => {
   useEffect(() => {
     const fetchSchools = async () => {
       try {
-        const baseUrl = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+        const baseUrl = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
         const res = await fetch(`${baseUrl}/api/schools`);
         if (!res.ok) return;
         const data = await res.json();

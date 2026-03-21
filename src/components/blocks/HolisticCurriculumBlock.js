@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 const HolisticCurriculumBlock = ({ content }) => {
   const {
@@ -32,7 +32,7 @@ const HolisticCurriculumBlock = ({ content }) => {
     // Strip out common base URLs to get relative path
     const urlPatterns = [
       `${API_BASE_URL}/`,
-      'https://www.dulwich-frontend.atalent.xyz/',
+      '/',
       /https:\/\/[^.]+\.dulwich-frontend\.atalent\.xyz\//,
       /https:\/\/[^.]+\.dulwich\.atalent\.xyz\//,
     ];
@@ -286,7 +286,7 @@ const HolisticCurriculumBlock = ({ content }) => {
       `}</style>
 
       <div
-        className={`holistic-container relative w-full max-w-[1600px] mx-auto cursor-pointer overflow-hidden rounded-lg mt-8 mb-8 ${
+        className={`holistic-container relative w-full max-w-[1600px] mx-auto cursor-pointer overflow-hidden rounded-lg mt-14 mb-2 ${
           isOverlayVisible ? 'expanding' : ''
         }`}
         style={{

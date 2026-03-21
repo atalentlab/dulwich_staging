@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?485t9i');
-  src:  url('fonts/icomoon.eot?485t9i#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?485t9i') format('truetype'),
-    url('fonts/icomoon.woff?485t9i') format('woff'),
-    url('fonts/icomoon.svg?485t9i#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?hqfoxx');
+  src:  url('fonts/icomoon.eot?hqfoxx#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?hqfoxx') format('truetype'),
+    url('fonts/icomoon.woff?hqfoxx') format('woff'),
+    url('fonts/icomoon.svg?hqfoxx#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -207,6 +207,25 @@
 }
 .icon-DCI-Icon_Curriculum-Pre_ALevel:before {
   content: "\e93e";
+}
+.icon-Find-a-School_White:before {
+  content: "\e93f";
+  color: #fff;
+}
+.icon-Careers:before {
+  content: "\e940";
+  color: #d30013;
+}
+.icon-Find-a-School_Red:before {
+  content: "\e941";
+  color: #d30013;
+}
+.icon-Admissions:before {
+  content: "\e942";
+  color: #d30013;
+}
+.icon-X_logo_2023:before {
+  content: "\e943";
 }
 .icon-images:before {
   content: "\e930";

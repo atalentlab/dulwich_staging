@@ -25,6 +25,7 @@ import { getCurrentSchool, getSchoolUrl } from '../../../utils/schoolDetection';
 import schoolPortals from '../../../assets/config/schoolPortals.json';
 import schoolNavData from '../../../assets/menu/school-navigation.json';
 import sitemapIcon from '../../../assets/images/sitemap.png';
+
 // ─── School-specific card images ─────────────────────────────────────────────
 // Seoul
 import seoulAcademicResults from '../../../assets/images/seoul/academic results.jpg';
@@ -78,6 +79,7 @@ import hengqinStudentStories from '../../../assets/images/hengqin-high-school/st
 import hengqinSustainability from '../../../assets/images/hengqin-high-school/sustainability and global citizenship.JPG';
 import hengqinUniversityMatriculation from '../../../assets/images/hengqin-high-school/university matriculation.JPG';
 import hengqinVisitUs from '../../../assets/images/hengqin-high-school/visit us.jpg';
+import hengqinStudentLeadership from '../../../assets/images/hengqin-high-school/Student Leadership.jpg';
 // Shanghai Pudong
 import pudongHowToApply from '../../../assets/images/shanghai-pudong/how to apply.jpg';
 import pudongMeetOurParents from '../../../assets/images/shanghai-pudong/meet our parents.jpg';
@@ -94,7 +96,6 @@ import puxiUniversityMatriculation from '../../../assets/images/shanghai-puxi/un
 import puxiVisitUs from '../../../assets/images/shanghai-puxi/visit us.jpg';
 import puxiWellbeing from '../../../assets/images/shanghai-puxi/wellbeing.jpg';
 // ─────────────────────────────────────────────────────────────────────────────
-const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 // Image mapping for highlighted cards in mobile menu
 const imageMap = {
@@ -102,21 +103,21 @@ const imageMap = {
   'why-university': whyUniversity,
   'university-m': UniversityM,
   'co-curricular': excelImage,
-  curriculum: excelImage,
+  'curriculum': excelImage,
   // Unified keys (match schoolCardImages and JSON image fields)
   'academic-results': WhyAcademicResults,
   'the-greenhouse': whyUniversity,
-  'university-matriculation': UniversityM,
-  wellbeing: Learningwel,
+  'university-matriculation': whyUniversity,
+  'wellbeing': Learningwel,
   'student-leadership': excelImage,
   'university-careers': UniversityM,
   'worldwise-events': UniversityM,
-  sustainability: Learningwel,
+  'sustainability': Learningwel,
   'founding-families': mmpImage,
   'meet-our-parents': mmpImage,
   'student-stories': communityStudentstories,
   'alumni-stories': communityStudentstories,
-  'how-to-apply': admissionsImage,
+  'how-to-apply': excelImage,
   'visit-us': admissionsImage,
 };
 
@@ -180,6 +181,7 @@ const schoolCardImages = {
     'student-stories': hengqinStudentStories,
     'how-to-apply': hengqinHowToApply,
     'visit-us': hengqinVisitUs,
+    'student-leadership': hengqinStudentLeadership,
   },
   'shanghai-pudong': {
     'wellbeing': pudongWellbeing,
@@ -200,42 +202,7 @@ const schoolCardImages = {
   },
 };
 
-// Helper function to get the current school logo
-const getSchoolLogo = () => {
-  const currentSchool = getCurrentSchool();
-  const logoMap = {
-    'singapore': sing,
-    'suzhou': suzhou,
-    'suzhou-high-school': suzhouHighSchool,
-    'hengqin-high-school': hengqinHighSchool,
-    'seoul': seoul,
-    'shanghai-puxi': puxi,
-    'shanghai-pudong': pudong,
-    'bangkok': bangkok,
-    'beijing': beijing,
-  };
-  return logoMap[currentSchool] || suzhou; // default to suzhou if not found
-};
-
-// Helper function to get school display name
-const getSchoolDisplayName = () => {
-  const currentSchool = getCurrentSchool();
-  const nameMap = {
-    'singapore': 'Dulwich College Singapore',
-    'suzhou': 'Dulwich College Suzhou',
-    'suzhou-high-school': 'Dulwich College Suzhou High School',
-    'hengqin-high-school': 'Dulwich College Hengqin High School',
-    'seoul': 'Dulwich College Seoul',
-    'shanghai-puxi': 'Dulwich College Shanghai Puxi',
-    'shanghai-pudong': 'Dulwich College Shanghai Pudong',
-    'bangkok': 'Dulwich College Bangkok',
-    'beijing': 'Dulwich College Beijing',
-  };
-  return nameMap[currentSchool] || 'Dulwich College';
-};
-
-function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSelectedSchoolSlug, setChatOpen, chatOpen, headerScrolled, pageLayoutType }) {
-  // ── All Hooks MUST be called unconditionally at the top ───────────────────
+function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSelectedSchoolSlug, setChatOpen, chatOpen, headerScrolled }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
@@ -244,6 +211,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
   const [openMobileSection, setOpenMobileSection] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isChineseVersion, setIsChineseVersion] = useState(false);
+  const [schoolsList, setSchoolsList] = useState(Array.isArray(availableSchools) ? availableSchools : []);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -252,8 +220,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
   const [currentSearchPage, setCurrentSearchPage] = useState(1);
   const mobileSearchRef = React.useRef(null);
   const mobileMenuScrollRef = React.useRef(null);
-
-  // ── All useEffect hooks MUST be called before any conditional returns ─────
+  const calendarHref =
 
   // Check if current URL has zh/ prefix
   useEffect(() => {
@@ -263,26 +230,83 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
     setActiveLanguage(isChinese ? '中文' : 'EN');
   }, [location.pathname]);
 
-  // Auto-select school based on current subdomain (when availableSchools is loaded)
+  // Keep local list in sync when parent provides it
   useEffect(() => {
-    if (!availableSchools || availableSchools.length === 0) return;
+    if (Array.isArray(availableSchools) && availableSchools.length > 0) {
+      setSchoolsList(availableSchools);
+    }
+  }, [availableSchools]);
+
+  // Fetch schools here if none were provided via props
+  useEffect(() => {
+    if (Array.isArray(availableSchools) && availableSchools.length > 0) return;
+
+    const controller = new AbortController();
+    (async () => {
+      try {
+        const baseUrl = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+        const currentLocale = isChineseVersion ? 'zh' : 'en';
+        const response = await fetch(`${baseUrl}/api/schools?locale=${currentLocale}`, {
+          signal: controller.signal,
+        });
+        const json = await response.json();
+        const nextSchools = json?.success && Array.isArray(json?.data) ? json.data : [];
+        setSchoolsList(nextSchools);
+      } catch (err) {
+        if (err?.name === 'AbortError') return;
+        setSchoolsList([]);
+      }
+    })();
+
+    return () => controller.abort();
+  }, [availableSchools, isChineseVersion]);
+
+  // Auto-select school based on current subdomain (when schools are loaded)
+  useEffect(() => {
+    if (!schoolsList || schoolsList.length === 0) return;
     if (!setSelectedSchool || !setSelectedSchoolSlug) return;
 
     const currentSchoolSlug = getCurrentSchool();
     if (!currentSchoolSlug) return;
 
-    const matched = availableSchools.find(
+    const matched = schoolsList.find(
       (s) => (s?.slug || '').toLowerCase() === currentSchoolSlug.toLowerCase()
     );
     if (!matched) return;
 
-    const expectedName = `Dulwich College ${matched.title}`;
+    const expectedName = `${matched.title}`;
     // Avoid pointless state updates
     if (selectedSchool !== expectedName) {
       setSelectedSchool(expectedName);
       setSelectedSchoolSlug(matched.slug);
     }
-  }, [availableSchools, selectedSchool, setSelectedSchool, setSelectedSchoolSlug]);
+  }, [schoolsList, selectedSchool, setSelectedSchool, setSelectedSchoolSlug]);
+
+  const redirectToSchool = (school) => {
+    const schoolSlug = typeof school === 'string' ? school : school?.slug;
+
+    // Use school URL directly from API response if available (without appending current path)
+    if (typeof school === 'object' && school?.url) {
+      // Clean up escaped forward slashes if present
+      const cleanUrl = school.url.replace(/\\\//g, '/');
+      window.location.assign(cleanUrl);
+    } else {
+      // Fallback to utility function if URL not available
+      window.location.assign(getSchoolUrl(schoolSlug, ''));
+    }
+  };
+
+  const handleSchoolSelect = (school) => {
+    const schoolName = `${school.title}`;
+    setSelectedSchool?.(schoolName);
+    setSelectedSchoolSlug?.(school.slug);
+
+    const currentSchoolSlug = getCurrentSchool() || '';
+    const nextSlug = school.slug || '';
+    if (currentSchoolSlug !== nextSlug) {
+      redirectToSchool(school);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -299,6 +323,9 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
       window.removeEventListener('scroll', handleScroll);
     };
   }, [scrolled]);
+
+  // Use headerScrolled prop if provided, otherwise fall back to internal scrolled state
+  const isScrolled = headerScrolled !== undefined ? headerScrolled : scrolled;
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -341,142 +368,6 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
       document.body.style.height = '';
     };
   }, [chatOpen]);
-
-  // Prevent body scroll when search modal is open and reset page number
-  useEffect(() => {
-    if (showSearchResults) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.height = '100%';
-    } else {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.height = '';
-      setCurrentSearchPage(1); // Reset page when modal closes
-    }
-    return () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.height = '';
-    };
-  }, [showSearchResults]);
-
-  // Scroll search input into view when focused on mobile
-  useEffect(() => {
-    if (isSearchFocused && mobileSearchRef.current && mobileMenuScrollRef.current) {
-      // Use requestAnimationFrame for better timing
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          const searchElement = mobileSearchRef.current;
-          const scrollContainer = mobileMenuScrollRef.current;
-
-          if (searchElement && scrollContainer) {
-            // Get the position of the search element
-            const searchRect = searchElement.getBoundingClientRect();
-            const containerRect = scrollContainer.getBoundingClientRect();
-
-            // Calculate how much to scroll
-            const scrollOffset = searchElement.offsetTop - containerRect.top - 80; // 80px from top for better visibility
-
-            scrollContainer.scrollTo({
-              top: scrollOffset,
-              behavior: 'smooth'
-            });
-          }
-        }, 400); // Increased delay to allow keyboard to fully appear
-      });
-    }
-  }, [isSearchFocused]);
-
-  // ── Layout Type 4: Minimal Header with Logo Only ──────────────────────────
-  // Debug logging and robust type conversion (same as international PageHeader)
-  const normalizedLayoutType = pageLayoutType !== undefined && pageLayoutType !== null
-    ? parseInt(pageLayoutType, 10)
-    : null;
-
-  // Debug logging - always show in development
-  if (process.env.NODE_ENV === 'development') {
-    console.log('School PageHeader - pageLayoutType:', pageLayoutType, 'Type:', typeof pageLayoutType, 'Normalized:', normalizedLayoutType);
-  }
-
-  if (normalizedLayoutType === 4) {
-    const schoolLogo = getSchoolLogo();
-    const schoolName = getSchoolDisplayName();
-
-    console.log('✅ Rendering MINIMAL header for school:', schoolName);
-
-    return (
-      <>
-        {/* DESKTOP MINIMAL HEADER */}
-        <header className="hidden lg:block fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-          <div className="px-4 py-4">
-            <div className="max-w-[1120px] mx-auto flex items-left justify-left">
-              <img
-                src={schoolLogo}
-                alt={schoolName}
-                className="h-12 w-[270px] cursor-pointer hover:scale-105 transition-all duration-200"
-                onClick={() => window.location.href = '/'}
-              />
-            </div>
-          </div>
-        </header>
-
-        {/* MOBILE MINIMAL HEADER */}
-        <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-          <div className="px-4 py-3">
-            <div className="flex items-left justify-left">
-              <img
-                src={schoolLogo}
-                alt={schoolName}
-                className="h-10 w-[220px] cursor-pointer"
-                onClick={() => window.location.href = '/'}
-              />
-            </div>
-          </div>
-        </header>
-      </>
-    );
-  }
-
-  // ── Normal Header (all other layout types) ────────────────────────────────
-
-  const redirectToSchool = (school) => {
-    const schoolSlug = typeof school === 'string' ? school : school?.slug;
-
-    // "International" / main site: redirect to static link
-    if (!schoolSlug || schoolSlug === 'international') {
-      window.location.assign('https://www.dulwich-prod.atalent.xyz/');
-      return;
-    }
-
-    // Use school URL directly from API response if available (without appending current path)
-    if (typeof school === 'object' && school?.url) {
-      // Clean up escaped forward slashes if present
-      const cleanUrl = school.url.replace(/\\\//g, '/');
-      window.location.assign(cleanUrl);
-    } else {
-      // Fallback to utility function if URL not available
-      window.location.assign(getSchoolUrl(schoolSlug, ''));
-    }
-  };
-
-  const handleSchoolSelect = (school) => {
-    const schoolName = `Dulwich College ${school.title}`;
-    setSelectedSchool?.(schoolName);
-    setSelectedSchoolSlug?.(school.slug);
-
-    const currentSchoolSlug = getCurrentSchool() || '';
-    const nextSlug = school.slug || '';
-    if (currentSchoolSlug !== nextSlug) {
-      redirectToSchool(school);
-    }
-  };
-
-  // Use headerScrolled prop if provided, otherwise fall back to internal scrolled state
-  const isScrolled = headerScrolled !== undefined ? headerScrolled : scrolled;
 
   // Language toggle function
   const toggleLanguage = (e) => {
@@ -574,7 +465,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
         searchParams.append('page', pageNumber.toString());
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/search?${searchParams.toString()}`);
+      const response = await fetch(`https://www.dulwich.atalent.xyz/api/search?${searchParams.toString()}`);
       const data = await response.json();
       setSearchResults(data);
     } catch (error) {
@@ -590,8 +481,56 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
     handleSearch(null, pageNumber);
   };
 
+  // Prevent body scroll when search modal is open and reset page number
+  useEffect(() => {
+    if (showSearchResults) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.height = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+      setCurrentSearchPage(1); // Reset page when modal closes
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    };
+  }, [showSearchResults]);
+
+  // Scroll search input into view when focused on mobile
+  useEffect(() => {
+    if (isSearchFocused && mobileSearchRef.current && mobileMenuScrollRef.current) {
+      // Use requestAnimationFrame for better timing
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const searchElement = mobileSearchRef.current;
+          const scrollContainer = mobileMenuScrollRef.current;
+
+          if (searchElement && scrollContainer) {
+            // Get the position of the search element
+            const searchRect = searchElement.getBoundingClientRect();
+            const containerRect = scrollContainer.getBoundingClientRect();
+
+            // Calculate how much to scroll
+            const scrollOffset = searchElement.offsetTop - containerRect.top - 80; // 80px from top for better visibility
+
+            scrollContainer.scrollTo({
+              top: scrollOffset,
+              behavior: 'smooth'
+            });
+          }
+        }, 400); // Increased delay to allow keyboard to fully appear
+      });
+    }
+  }, [isSearchFocused]);
   const school = getCurrentSchool();
-  const parentPortalUrl = schoolPortals[school] || '#';
+  const parentPortalUrl = schoolPortals[school];
 
   return (
     <>
@@ -830,17 +769,19 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                   <Icon icon="Icon_Email" size={20} className="transition-transform duration-300" />
                 </button>
 
-                <a href="/admissions/apply-now">
-                  <button
-                    className="group flex items-center gap-2 px-4 py-3.5 text-sm font-medium text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg active:scale-95"
-                    style={{ backgroundColor: '#D30013' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#B8000F'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#D30013'; }}
-                  >
-                    Apply Now
-                    <Icon icon="Icon-Arrow" size={18} color="white" className="transition-transform duration-300 group-hover:translate-x-1" />
-                  </button>
-                </a>
+                {getCurrentSchool() !== 'seoul' && (
+                  <a href="/admissions/apply-now">
+                    <button
+                      className="group flex items-center gap-2 px-4 py-3.5 text-sm font-medium text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg active:scale-95"
+                      style={{ backgroundColor: '#D30013' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#B8000F'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#D30013'; }}
+                    >
+                      Apply Now
+                      <Icon icon="Icon-Arrow" size={18} color="white" className="transition-transform duration-300 group-hover:translate-x-1" />
+                    </button>
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -858,8 +799,8 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                   {
   getCurrentSchool() === 'singapore' ? (
     <a
-      href="https://singapore.dulwich-prod.atalent.xyz/"
-      target="_blank"
+      href="https://singapore.dulwich.org/"
+    
       rel="noopener noreferrer"
     >
       <img
@@ -869,9 +810,10 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
       />
     </a>
   ) : getCurrentSchool() === 'suzhou' ? (
-    <a
-      href="https://suzhou.dulwich-prod.atalent.xyz/"
-      target="_blank"
+          <a href={isChineseVersion 
+        ? "/zh"
+        : "/"}
+     
       rel="noopener noreferrer"
     >
       <img
@@ -882,8 +824,10 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
     </a>
   ) : getCurrentSchool() === 'suzhou-high-school' ? (
     <a
-      href="https://suzhou-high-school.dulwich-prod.atalent.xyz/"
-      target="_blank"
+      href={isChineseVersion 
+        ? "/zh"
+        : "/"}
+
       rel="noopener noreferrer"
     >
       <img
@@ -893,11 +837,12 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
       />
     </a>
   ) : getCurrentSchool() === 'hengqin-high-school' ? (
-    <a
-      href="https://hengqin-high-school.dulwich-prod.atalent.xyz/"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+
+        <a href={isChineseVersion 
+        ? "/zh"
+        : "/"}
+     
+      rel="noopener noreferrer">
       <img
         src={hengqinHighSchool}
         alt="Dulwich College Hengqin High School"
@@ -906,8 +851,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
     </a>
   ) : getCurrentSchool() === 'seoul' ? (
     <a
-      href="https://seoul.dulwich-prod.atalent.xyz/"
-      target="_blank"
+      href="/"
       rel="noopener noreferrer"
     >
       <img
@@ -917,11 +861,13 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
       />
     </a>
   ) : getCurrentSchool() === 'shanghai-puxi' ? (
-    <a
-      href="https://shanghai-puxi.dulwich-prod.atalent.xyz/"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+
+         <a href={isChineseVersion 
+        ? "/zh"
+        : "/"}
+      
+      rel="noopener noreferrer">
+      
       <img
         src={puxi}
         alt="Dulwich College Shanghai Puxi"
@@ -929,11 +875,11 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
       />
     </a>
   ): getCurrentSchool() === 'shanghai-pudong' ? (
-    <a
-      href="https://shanghai-pudong.dulwich-prod.atalent.xyz/"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+       <a href={isChineseVersion 
+        ? "/zh"
+        : "/"}
+      
+      rel="noopener noreferrer">
       <img
         src={pudong}
         alt="Dulwich College Shanghai Pudong"
@@ -942,10 +888,11 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
     </a>
   ): getCurrentSchool() === 'bangkok' ? (
     <a
-      href="https://bangkok.dulwich-prod.atalent.xyz/"
-      target="_blank"
+      href="/"
+      
       rel="noopener noreferrer"
     >
+       
       <img
         src={bangkok}
         alt="Dulwich College Bangkok"
@@ -953,11 +900,11 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
       />
     </a>
   ): getCurrentSchool() === 'beijing' ? (
-    <a
-      href="https://beijing.dulwich-prod.atalent.xyz/"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+       <a href={isChineseVersion 
+        ? "/zh"
+        : "/"}
+     
+      rel="noopener noreferrer">
       <img
         src={beijing}
         alt="Dulwich College Beijing"
@@ -970,15 +917,33 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
 
                   {/* Top Right Links */}
                   <div className="flex items-center gap-6 text-sm text-[#3C3C3B]">
-                    {parentPortalUrl && parentPortalUrl !== '#' && (
-                      <a href={parentPortalUrl} target="_blank" rel="noopener noreferrer" className="hover:text-red-600 transition-colors parent-portal"
-                      style={{ color: '#3C3C3B', lineHeight: '2.2', borderRight: '1px solid #E3D9D1', paddingRight: '30px' }}>
-                      {nav.topBar.parentPortal}                    </a>
-                    )}
-
-                    <a href={isChineseVersion ? "/zh/community/life-at-dulwich/school-calendar" : "/community/life-at-dulwich/school-calendar"} className="hover:text-red-600 transition-colors" style={{ color: '#3C3C3B'}}>
-                      {nav.topBar.schoolCalendar}
-                    </a>
+                  {school !== "bangkok" && school !== "hengqin-high-school" && (
+  <a
+    href={parentPortalUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="hover:text-red-600 transition-colors parent-portal text-left"
+    style={{
+      color: "#3C3C3B",
+      lineHeight: "2.2",
+      borderRight: "1px solid #E3D9D1",
+      paddingRight: "30px",
+    }}
+  >
+    {nav.topBar.parentPortal}
+  </a>
+)}
+                  <a
+                    href={
+                      getCurrentSchool() === 'singapore'
+                        ? (isChineseVersion ? "/zh/community/life-at-dulwich/school-calendar" : "/community/life-at-dulwich/school-calendar")
+                        : (isChineseVersion ? "/zh/community/life-at-dulwich/school-calendar" : "/community/life-at-dulwich/school-calendar")
+                    }
+                    className="hover:text-red-600 transition-colors"
+                    style={{ color: "#3C3C3B" }}
+                  >
+                    {isChineseVersion ? "学校日历" : "School Calendar"}
+                  </a>
                     {/* Hide language switcher for Singapore, Bangkok, and Seoul */}
                     {!['singapore', 'bangkok', 'seoul'].includes(getCurrentSchool()) && (
                       <a href="#" onClick={toggleLanguage} className="hover:text-red-800 font-extrabold transition-colors">
@@ -1097,7 +1062,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
 
                               {/* Bottom Section */}
                               <div className="pt-6 border-t col-span-2 border-[#EAE8E4] flex items-center justify-between">
-                                <a href="/sitemap" className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                              <a href={isChineseVersion ? "/zh/sitemap" : "/sitemap"} className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
                                   {nav.siteMapLabel}
                                 </a>
                                 <form onSubmit={handleSearch} className="relative w-[50%]">
@@ -1231,7 +1196,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
 
                               {/* Bottom Section */}
                               <div className="pt-6 border-t col-span-2 border-[#EAE8E4] flex items-center justify-between">
-                                <a href="/sitemap" className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                <a href={isChineseVersion ? "/zh/sitemap" : "/sitemap"}  className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
                                   {nav.siteMapLabel}
                                 </a>
                                 <form onSubmit={handleSearch} className="relative w-[50%]">
@@ -1351,7 +1316,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
 
                               {/* Bottom Section */}
                               <div className="pt-6 border-t col-span-2 border-[#EAE8E4] flex items-center justify-between">
-                                <a href="/sitemap" className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                <a href={isChineseVersion ? "/zh/sitemap" : "/sitemap"}  className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
                                   {nav.siteMapLabel}
                                 </a>
                                 <form onSubmit={handleSearch} className="relative w-[50%]">
@@ -1447,7 +1412,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
 
                               {/* Bottom Section */}
                               <div className="pt-6 border-t col-span-2 border-[#EAE8E4] flex items-center justify-between">
-                                <a href="/sitemap" className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                <a href={isChineseVersion ? "/zh/sitemap" : "/sitemap"}  className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
                                   {nav.siteMapLabel}
                                 </a>
                                 <form onSubmit={handleSearch} className="relative w-[50%]">
@@ -1517,9 +1482,9 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                       />
                     )}
                   </div>
+                   
 
-<a href={isChineseVersion ? "/zh/admissions/enquire" : "/admissions/enquire"}>
-
+                  <a href={getCurrentSchool() === 'suzhou-high-school' ? "https://dhsz.openapply.cn/roi?c_campaign=2369" :getCurrentSchool() === 'hengqin-high-school' ? "https://dulwichzhuhai.mike-x.com/GVBeZ":getCurrentSchool() === 'beijing' ? "https://dulwichbeijing.openapply.cn/roi?c_campaign=1962":getCurrentSchool() === 'bangkok' ? "/admissions/enquire-more-about-dulwich" :  (isChineseVersion ? "/zh/admissions/enquire" : "/admissions/enquire")}>
                   <button
                     className="group flex items-center gap-2 px-4 py-3 text-sm font-medium border rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
                     style={{ color: '#D30013', borderColor: '#D30013' }}
@@ -1530,17 +1495,25 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                     <Icon icon="Icon_Email" size={20} className="transition-transform duration-300" />
                   </button>
                   </a>
-                  <a href="/admissions/apply-now">
-                  <button
-                    className="group flex items-center gap-2 px-4 py-3.5 text-sm font-medium text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg active:scale-95"
-                    style={{ backgroundColor: '#D30013' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#B8000F'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#D30013'; }}
-                  >
-                    {nav.buttons.applyNow}
-                    <Icon icon="Icon-Arrow" size={18} color="white" className="transition-transform duration-300 group-hover:translate-x-1" />
-                  </button>
-                  </a>
+                  {getCurrentSchool() !== 'seoul' && (
+                 <a href={getCurrentSchool() === 'suzhou-high-school'
+                   ? " https://dhsz.openapply.cn/apply/forms/22963?c_campaign=2056"
+                   :getCurrentSchool() === 'beijing'
+                   ? "  https://dulwichbeijing.openapply.cn/apply/forms/19779?c_campaign=1963"
+                   :getCurrentSchool() === 'hengqin-high-school'
+                   ? "https://dulwichzhuhai.mike-x.com/zVFgO"
+                   :  (isChineseVersion ? "/zh/admissions/apply-now" : "/admissions/apply-now")}>
+                      <button
+                        className="group flex items-center gap-2 px-4 py-3.5 text-sm font-medium text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg active:scale-95"
+                        style={{ backgroundColor: '#D30013' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#B8000F'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#D30013'; }}
+                      >
+                        {nav.buttons.applyNow}
+                        <Icon icon="Icon-Arrow" size={18} color="white" className="transition-transform duration-300 group-hover:translate-x-1" />
+                      </button>
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -1577,7 +1550,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
               {/* School Logo based on current school */}
               {getCurrentSchool() === 'singapore' ? (
                 <a
-                  href="https://singapore.dulwich-prod.atalent.xyz/"
+                  href="https://singapore.dulwich.org/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -1589,8 +1562,8 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                 </a>
               ) : getCurrentSchool() === 'suzhou' ? (
                 <a
-                  href="https://suzhou.dulwich-prod.atalent.xyz/"
-                  target="_blank"
+                  href="/"
+                
                   rel="noopener noreferrer"
                 >
                   <img
@@ -1601,8 +1574,8 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                 </a>
               ) : getCurrentSchool() === 'suzhou-high-school' ? (
                 <a
-                  href="https://suzhou-high-school.dulwich-prod.atalent.xyz/"
-                  target="_blank"
+                  href="/"
+               
                   rel="noopener noreferrer"
                 >
                   <img
@@ -1612,9 +1585,10 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                   />
                 </a>
               ) : getCurrentSchool() === 'hengqin-high-school' ? (
-                <a
-                  href="https://hengqin-high-school.dulwich-prod.atalent.xyz/"
-                  target="_blank"
+                <a href={isChineseVersion 
+                  ? "/zh"
+                  : "/"}
+                
                   rel="noopener noreferrer"
                 >
                   <img
@@ -1625,8 +1599,8 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                 </a>
               ) : getCurrentSchool() === 'seoul' ? (
                 <a
-                  href="https://seoul.dulwich-prod.atalent.xyz/"
-                  target="_blank"
+                  href="/"
+                 
                   rel="noopener noreferrer"
                 >
                   <img
@@ -1637,8 +1611,8 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                 </a>
               ) : getCurrentSchool() === 'shanghai-puxi' ? (
                 <a
-                  href="https://shanghai-puxi.dulwich-prod.atalent.xyz/"
-                  target="_blank"
+                  href="/"
+                 
                   rel="noopener noreferrer"
                 >
                   <img
@@ -1649,20 +1623,20 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                 </a>
               ) : getCurrentSchool() === 'shanghai-pudong' ? (
                 <a
-                  href="https://shanghai-pudong.dulwich-prod.atalent.xyz/"
-                  target="_blank"
+                  href="/"
+                
                   rel="noopener noreferrer"
                 >
                   <img
                     src={pudong}
                     alt="Dulwich College Shanghai Pudong"
-                    className="w-[220px] cursor-pointer transition-all duration-500 ease-out hover:scale-105"
+                    className="w-[250px] cursor-pointer transition-all duration-500 ease-out hover:scale-105"
                   />
                 </a>
               ) : getCurrentSchool() === 'bangkok' ? (
                 <a
-                  href="https://bangkok.dulwich-prod.atalent.xyz/"
-                  target="_blank"
+                  href="/"
+                 
                   rel="noopener noreferrer"
                 >
                   <img
@@ -1673,8 +1647,8 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                 </a>
               ) : getCurrentSchool() === 'beijing' ? (
                 <a
-                  href="https://beijing.dulwich-prod.atalent.xyz/"
-                  target="_blank"
+                  href="/"
+                 
                   rel="noopener noreferrer"
                 >
                   <img
@@ -1702,25 +1676,25 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
         <div className="grid grid-cols-3 h-16">
           {/* VISIT US */}
-          <a
-            href='/admissions/visit-us'
+          <a href={isChineseVersion ? "/zh/admissions/visit/visit-us" : "/admissions/visit/visit-us"} 
             className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors"
           >
-            <Icon icon="map2" size={20} color="#3C3C3B" />
-            <span className="text-[10px] text-[#3C3C3B]">VISIT US</span>
+            <Icon icon="map2" size={20} color="#D30013" />
+            <span className="text-[10px] text-[#3C3C3B]">{isChineseVersion ? '校园参观' : 'VISIT US'}</span>
           </a>
 
           {/* ENQUIRE */}
-          <a href='#' className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
-            <Icon icon="Icon_Email" size={20} color="#374151" />
-            <span className="text-[10px] text-[#3C3C3B]">ENQUIRE</span>
+          <a href={getCurrentSchool() === 'suzhou-high-school' ? "https://dhsz.openapply.cn/roi?c_campaign=2369" :getCurrentSchool() === 'hengqin-high-school' ? "https://dulwichzhuhai.mike-x.com/GVBeZ" :getCurrentSchool() === 'beijing' ? "https://dulwichbeijing.openapply.cn/roi?c_campaign=1962":getCurrentSchool() === 'bangkok' ? "/admissions/enquire-more-about-dulwich" :  (isChineseVersion ? "/zh/admissions/enquire" : "/admissions/enquire")} className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
+            <Icon icon="Icon_Email" size={20} color="#D30013" />
+            <span className="text-[10px] text-[#3C3C3B]">{isChineseVersion ? '咨询' : 'ENQUIRE'}</span>
           </a>
 
           {/* APPLY */}
-          <button className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
-            <Icon icon="Icon-Arrow" size={20} color="#D30013" />
-            <span className="text-[10px] text-[#3C3C3B]">APPLY</span>
-          </button>
+  
+            <a href={getCurrentSchool() === 'hengqin-high-school' ? "https://dulwichzhuhai.mike-x.com/zVFgO" :getCurrentSchool() === 'beijing' ? "https://dulwichbeijing.openapply.cn/apply/forms/19779?c_campaign=1963"  : (isChineseVersion ? "/zh/admissions/apply-now" : "/admissions/apply-now") } className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
+             <Icon icon="Admissions" size={20} color="#D30013" />
+            <span className="text-[10px] text-[#3C3C3B]"> {isChineseVersion ? '上海浦东德威招生申请' : 'Apply Now'}</span>
+          </a>
         </div>
       </nav>
 
@@ -1854,9 +1828,9 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
 
 
 
-                <a href="/sitemap" className="link-item flex items-center gap-3 py-3.5 text-[15px] text-[#3C3C3B] hover:text-[#D30013] hover:pl-2">
+                <a href={isChineseVersion ? "/zh/sitemap" : "/sitemap"} className="link-item flex items-center gap-3 py-3.5 text-[15px] text-[#3C3C3B] hover:text-[#D30013] hover:pl-2">
                   <img src={sitemapIcon} alt="Site Map" className="w-5 h-5" />
-                  <span className='text-[14px] font-medium text-[#3C3C3B]'>Full Site Map</span>
+                  <span className='text-[14px] font-medium text-[#3C3C3B]'>{nav.siteMapLabel}</span>
                 </a>
 
                 <button
@@ -1865,18 +1839,18 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                 >
                   <div className="flex items-center gap-3">
                     <Icon icon="Icon-Menu" size={20} color="#3C3C3B" />
-                    <span className='text-[14px] font-medium text-[#3C3C3B]'>Schools</span>
+                    <span className='text-[14px] font-medium text-[#3C3C3B]'>{isChineseVersion ? "学校" : "Schools"}</span>
                   </div>
                   <ChevronDown className={`chevron-rotate w-5 h-5 text-[#D30013] ${openMobileSection === 'schools' ? 'rotate-180' : 'rotate-0'}`} />
                 </button>
-                {openMobileSection === 'schools' && availableSchools && (
+                {openMobileSection === 'schools' && schoolsList && schoolsList.length > 0 && (
                   <div
                     className="dropdown-content bg-gray-50 rounded-lg p-4 mb-2 space-y-2"
                     style={{
                       animation: 'slideInFromTop 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
                     }}
                   >
-                    {availableSchools.map((school) => (
+                    {schoolsList.map((school) => (
                       <button
                         key={school.id}
                         onClick={() => {
@@ -1884,14 +1858,14 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                           setMobileMenuOpen(false);
                         }}
                         className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 ${
-                          selectedSchool === `Dulwich College ${school.title}`
+                          selectedSchool === `${school.title}`
                             ? 'bg-white font-semibold text-[#D30013] scale-[1.02]'
                             : 'hover:bg-white hover:scale-[1.02] text-[#4B5563]'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span>Dulwich College {school.title}</span>
-                          {selectedSchool === `Dulwich College ${school.title}` && (
+                          <span>{school.title}</span>
+                          {selectedSchool === `${school.title}` && (
                             <span className="text-[#D30013] text-lg">✓</span>
                           )}
                         </div>
@@ -1899,18 +1873,27 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                     ))}
                   </div>
                 )}
+              {school !== "bangkok" && school !== "hengqin-high-school" && (
+                <a
+                  href={parentPortalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-red-600 transition-colors parent-portal text-left flex"
+                  style={{
+                    color: "#3C3C3B",
+                    lineHeight: "2.2",
+                    borderRight: "1px solid #E3D9D1",
+                    paddingRight: "30px",
+                  }}
+                >
+                  {nav.topBar.parentPortal}
+                </a>
+              )}
 
-                {parentPortalUrl && parentPortalUrl !== '#' && (
-                  <a href={parentPortalUrl} target="_blank" rel="noopener noreferrer" className="link-item flex items-center gap-3 py-3 text-[14px] text-[#3C3C3B] hover:text-[#D30013] hover:pl-2 transition-colors">
-                    <Icon icon="Icon_External" size={20} color="#3C3C3B" />
-                    <span className='text-[14px] font-medium text-[#3C3C3B]'>Parent Portal</span>
-                  </a>
-                )}
-
-                <a href={isChineseVersion ? "/zh/community/life-at-dulwich/school-calendar" : "/community/life-at-dulwich/school-calendar"} className="link-item flex items-center gap-3 py-3 text-base text-[#3C3C3B] hover:text-[#D30013] hover:pl-2 transition-colors mb-4">
+                {/* <a href="#calendar" className="link-item flex items-center gap-3 py-3 text-base text-[#3C3C3B] hover:text-[#D30013] hover:pl-2 transition-colors mb-4">
                   <Icon icon="Icon---Download" size={20} color="#3C3C3B" />
                   <span className='text-[14px] font-medium text-[#3C3C3B]'>School Calendar</span>
-                </a>
+                </a> */}
 
                 {/* Search and Language Tabs */}
                 <div
@@ -1927,7 +1910,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                       </div>
                       <input
                         type="text"
-                        placeholder={nav.searchPlaceholder || 'Search'}
+                        placeholder={nav.searchPlaceholder}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onFocus={() => {

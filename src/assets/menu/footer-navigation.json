@@ -10,8 +10,8 @@
         "links": [
           { "title": "Our Origins",           "url": "/about-dulwich/our-origins" },
           { "title": "Vision & Values",        "url": "/about-dulwich/vision-and-values" },
-          { "title": "School Locations",       "url": "/find-a-school" },
-          { "title": "Offerings",              "url": "/about-dulwich/offering" },
+          { "title": "School Locations",       "url": "/about-dulwich/school-locations" },
+          { "title": "Offerings",              "url": "/about-dulwich/offerings" },
           { "title": "Live Worldwise",              "url": "/about-dulwich/live-worldwise" },
           { "title": "Educational Leadership", "url": "/about-dulwich/educational-leadership" }
         ]
@@ -23,9 +23,10 @@
       
           { "title": "Visual & Performing Arts",           "url": "/live/visual-performing-arts" },
           { "title": "Sports",                             "url": "/live/sports" },
-          { "title": "Science & Technology",               "url": "/live/stem-se21" },
+          { "title": "STEM",               "url": "/live/stem-se21" },
           { "title": "Mandarin",                           "url": "/live/mandarin" },
-          { "title": "Sustainability & Global Citizenship","url": "/about-dulwich/sustainability-and-global-citizenship" },
+          { "title": "Sustainability & Global Citizenship","url": "/live/sustainability-and-global-citizenship" },
+          { "title": "Ignite: Switzerland",                 "url": "/live/ignite-switzerland-programme" },
           { "title": "Student Leadership",                 "url": "/live/student-leadership" },
           { "title": "Wellbeing",                          "url": "/live/wellbeing" }
         ]
@@ -34,27 +35,27 @@
         "id": "world",
         "label": "World",
         "links": [
-          { "title": "Global Parnerships",          "url": "/world/global-partnerships" },
-          { "title": "Worldwise Events",            "url": "/world/worldwise-events" },
-          { "title": "Worldwide Alumni Network",  "url": "/world/worldwise-alumni-network" },
           { "title": "Family of Schools",         "url": "/world/one-family-of-schools" },
-          { "title": "Dulwich Life",              "url": "/dulwich-life" }
+          { "title": "Global Parnerships",          "url": "/world/global-partnerships" },
+          { "title": "EIMx", "url": "/world/eimx-summer-camps" },
+          { "title": "Dulwich Life",              "url": "/dulwich-life" },
+          { "title": "Worldwide Alumni Network",  "url": "/world/worldwise-alumni-network" },
+          { "title": "Worldwise Events",            "url": "/world/worldwise-events" }
         ]
       },
       {
         "id": "wise",
         "label": "Wise",
         "links": [
-          { "title": "Academic Excellence",             "url": "/wise/academic-results" },
           { "title": "University & Careers Counselling","url": "/wise/university-and-careers-counselling" },
-          { "title": "University Matriculation",        "url": "/wise/university-matriculation" }
+          { "title": "University Matriculation",        "url": "/wise/university-matriculation" },
+          { "title": "Academic Excellence",             "url": "/wise/academic-results" }
         ],
         "externalLinks": {
           "heading": "External Links",
           "links": [
-         
-            { "title": "Founding School",     "url": "/find-a-school" },
-            { "title": "Education In Motion", "url": "https://www.eimglobal.com/?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" }
+        
+            { "title": "Education In Motion (EiM)", "url": "https://www.eimglobal.com/?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" }
           ]
         }
       }
@@ -79,8 +80,9 @@
         "links": [
           { "title": "起源",         "url": "/zh/about-dulwich/our-origins" },
           { "title": "愿景与价值观",        "url": "/zh/about-dulwich/vision-and-values" },
-          { "title": "查找学校",            "url": "/zh/find-a-school" },
-          { "title": "心怀世界 睿引未来",     "url": "/zh/about-dulwich/live-worldwise" },
+          { "title": "查找学校",       "url": "/zh/about-dulwich/school-locations" },
+          { "title": "课程体系",              "url": "/zh/about-dulwich/offerings" },
+          { "title": "Live Worldwise",    "url": "/zh/about-dulwich/live-worldwise" },
           { "title": "学术领导团队",          "url": "/zh/about-dulwich/educational-leadership" }
         ]
       },
@@ -88,12 +90,12 @@
         "id": "live",
         "label": "Live",
         "links": [
-          { "title": "视觉和表演艺术",         "url": "/zh/live/visual-performing-arts" },
+          { "title": "视觉与表演艺术",         "url": "/zh/live/visual-performing-arts" },
           { "title": "运动",                "url": "/zh/live/sports" },
-          { "title": "STEM / SE21",       "url": "/zh/live/stem-se21" },
-          { "title": "中文",            "url": "/zh/live/mandarin" },
-          { "title": "普通话",               "url": "/zh/holistic-curriculum/mandarin" },
-          { "title": "可持续发展与全球公民意识",   "url": "/zh/about-dulwich/sustainability-and-global-citizenship" },
+          { "title": "STEM",       "url": "/zh/live/stem-se21" },
+          { "title": "中文课程",            "url": "/zh/live/mandarin" },
+          { "title": "可持续发展与全球公民意识",   "url": "/zh/live/sustainability-and-global-citizenship" },
+          { "title": "Ignite: Switzerland",             "url": "/zh/live/ignite-switzerland-programme" },
           { "title": "学生领导力",            "url": "/zh/live/student-leadership" },
           { "title": "身心健康",             "url": "/zh/live/wellbeing" }
         ]
@@ -104,25 +106,26 @@
         "links": [
           { "title": "德威大家庭",          "url": "/zh/world/one-family-of-schools" },
           { "title": "全球战略合作",        "url": "/zh/world/global-partnerships" },
+          { "title": "EIMx", "url": "/zh/world/eimx-summer-camps" },
           { "title": "德威聚焦",            "url": "/zh/dulwich-life" },
-          { "title": "无论何地 与你同在",             "url": "/zh/world/worldwise-alumni-network" },
+          { "title": "智胜全球校友会",             "url": "/zh/world/worldwise-alumni-network" },
           { "title": "智胜全球活动",             "url": "/zh/world/worldwise-events" }
         ]
       },
       {
         "id": "wise",
-        "label": "卓越智慧",
+        "label": "Wise",
         "links": [
-          { "title": "学术卓越",        "url": "/zh/wise/academic-results" },
+          { "title": "升学及就业指导" ,"url": "/zh/wise/university-and-careers-counselling" },
           { "title": "大学升学成果",  "url": "/zh/wise/university-matriculation" },
-          { "title": "大学升学及职业指导" ,"url": "/zh/wise/university-and-careers-counselling" }
+          { "title": "学术卓越",        "url": "/zh/wise/academic-results" }
+         
+          
         ],
         "externalLinks": {
           "heading": "外部链接",
           "links": [
-         
-            { "title": "创始学校", "url": "/find-a-school" },
-            { "title": "动态教育", "url": "https://www.eimglobal.com/?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" }
+            { "title": "屹珈（EiM）国际教育集团", "url": "https://www.eimglobal.com/?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" }
           ]
         }
       }

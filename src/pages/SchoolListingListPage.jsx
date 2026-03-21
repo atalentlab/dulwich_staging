@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import Icon from '../components/Icon';
 import schoolsDataJson from '../data/schoolsData.json';
 import useSEO from '../hooks/useSEO';
@@ -16,75 +16,109 @@ import ssDehongImg from '../assets/schoollist/ss-dehong.webp';
 import ssBeijingImg from '../assets/schoollist/ss-beijing.jpeg';
 import ssXianImg from '../assets/schoollist/ss-xian.webp';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
+
+// Fallback tags when a school has no specific mapping
+// const DEFAULT_TAGS = ['IGCSE', 'IB Diploma'];
 
 // Static CTAs for each school
 const SCHOOL_CTAS = {
   'Dulwich College Bangkok': [
-    { label: 'Visit Website', url: 'https://bangkok.dulwich-prod.atalent.xyz/' }
+    { label: 'Visit Website', url: 'https://bangkok.dulwich.org/' }
   ],
   'Dulwich College Beijing': [
-    { label: 'Visit Website', url: 'https://beijing.dulwich-prod.atalent.xyz/' }
+    { label: 'Visit Website', url: 'https://beijing.dulwich.org/' }
   ],
   'Dulwich College Shanghai Pudong': [
-    { label: 'Visit Website', url: 'https://shanghai-pudong.dulwich-prod.atalent.xyz/' }
+    { label: 'Visit Website', url: 'https://shanghai-pudong.dulwich.org/' }
   ],
   'Dulwich College Shanghai Puxi': [
-    { label: 'Visit Website', url: 'https://shanghai-puxi.dulwich-prod.atalent.xyz/' }
+    { label: 'Visit Website', url: 'https://shanghai-puxi.dulwich.org/' }
   ],
   'Dulwich College Suzhou': [
-    { label: 'Visit Website', url: 'https://suzhou.dulwich-prod.atalent.xyz/' }
+    { label: 'Visit Website', url: 'https://suzhou.dulwich.org/' }
   ],
   'Dulwich College (Singapore)': [
-    { label: 'Visit Website', url: 'https://singapore.dulwich-prod.atalent.xyz/' }
+    { label: 'Visit Website', url: 'https://singapore.dulwich.org/' }
   ],
   'Dulwich College Seoul': [
-    { label: 'Visit Website', url: 'https://seoul.dulwich-prod.atalent.xyz/' }
+    { label: 'Visit Website', url: 'https://singapore.dulwich.org/' }
   ],
   'Dulwich International High School Programme Suzhou': [
-    { label: 'Visit Website', url: 'https://suzhou-high-school.dulwich-prod.atalent.xyz/' }
+    { label: 'Visit Website', url: 'https://suzhou-high-school.dulwich.org/' }
   ],
   'Dulwich International High School Programme Hengqin': [
-    { label: 'Visit Website', url: 'https://hengqin-high-school.dulwich-prod.atalent.xyz/' }
+    { label: 'Visit Website', url: 'https://hengqin-high-school.dulwich.org/' }
   ],
   // Chinese names
   '曼谷德威学院': [
-    { label: '访问网站', url: 'https://bangkok.dulwich-prod.atalent.xyz/' }
+    { label: '访问网站', url: 'https://bangkok.dulwich.org/' }
   ],
   '北京德威学院': [
-    { label: '访问网站', url: 'https://beijing.dulwich-prod.atalent.xyz/' }
+    { label: '访问网站', url: 'https://beijing.dulwich.org/' }
   ],
   '北京德威英国国际学校': [
-    { label: '访问网站', url: 'https://beijing.dulwich-prod.atalent.xyz/' }
+    { label: '访问网站', url: 'https://beijing.dulwich.org/' }
   ],
   '上海浦东德威国际学校': [
-    { label: '访问网站', url: 'https://shanghai-pudong.dulwich-prod.atalent.xyz/' }
+    { label: '访问网站', url: 'https://shanghai-pudong.dulwich.org/' }
   ],
   '上海浦东德威英国国际学校': [
-    { label: '访问网站', url: 'https://shanghai-pudong.dulwich-prod.atalent.xyz/' }
+    { label: '访问网站', url: 'https://shanghai-pudong.dulwich.org/' }
   ],
   '上海浦西德威国际学校': [
-    { label: '访问网站', url: 'https://shanghai-puxi.dulwich-prod.atalent.xyz/' }
+    { label: '访问网站', url: 'https://shanghai-puxi.dulwich.org/' }
   ],
   '苏州德威国际学校': [
-    { label: '访问网站', url: 'https://suzhou.dulwich-prod.atalent.xyz/' }
+    { label: '访问网站', url: 'https://suzhou.dulwich.org/' }
   ],
   '苏州德威学院': [
-    { label: '访问网站', url: 'https://suzhou.dulwich-prod.atalent.xyz/' }
+    { label: '访问网站', url: 'https://suzhou.dulwich.org/' }
   ],
   '德威学院（新加坡）': [
-    { label: '访问网站', url: 'https://singapore.dulwich-prod.atalent.xyz/' }
+    { label: '访问网站', url: 'https://singapore.dulwich.org/' }
   ],
   '德威学院首尔分校': [
-    { label: '访问网站', url: 'https://seoul.dulwich-prod.atalent.xyz/' }
+    { label: '访问网站', url: 'https://singapore.dulwich.org/' }
   ],
   '苏州德威国际高中课程': [
-    { label: '访问网站', url: 'https://suzhou-high-school.dulwich-prod.atalent.xyz/' }
+    { label: '访问网站', url: 'https://suzhou-high-school.dulwich.org/' }
   ],
   '德威国际高中课程横琴分校': [
-    { label: '访问网站', url: 'https://hengqin-high-school.dulwich-prod.atalent.xyz/' }
+    { label: '访问网站', url: 'https://hengqin-high-school.dulwich.org/' }
   ],
 };
+
+// Fallback tags when a school has no specific mapping
+const DEFAULT_TAGS = [];
+
+// Static tags per school (mirrors SCHOOL_CTAS pattern)
+const jsontag = {
+  // International schools
+  'Dulwich College Bangkok': ['IGCSE', 'IB Diploma'],
+  'Dulwich College Beijing': ['IGCSE'],
+  'Dulwich College Shanghai Pudong':  ['IGCSE', 'IB Diploma'],
+  'Dulwich College Shanghai Puxi': ['IGCSE', 'IB Diploma'],
+  'Dulwich College Suzhou': ['IGCSE', 'IB Diploma'],
+  'Dulwich College Singapore':  ['IGCSE', 'IB Diploma'],
+  'Dulwich College Seoul':  ['IGCSE', 'IB Diploma'],
+
+  // High School programmes
+  'Dulwich Int. High School Programme Suzhou': ['IGCSE', 'A Level'],
+  'Dulwich Int. High School Programme Hengqin': ['Pre-A Level', 'A Level'],
+
+  // Chinese names
+
+  '上海德威外籍人员子女学校（浦东）': ['IGCSE', 'IB课程'],
+  '苏州德威外籍人员子女学校':  ['IGCSE', 'IB课程'],
+  '苏州工业园区德威联合书院': ['IGCSE', 'A Level课程'],
+  '横琴德威国际课程高中项目·广东横琴粤澳深度合作区华发容闳高级中学': ['Pre-A Level课程', 'A Level课程'],
+  '北京德威英国国际学校': ['IGCSE'],
+  '上海德威外籍人员子女学校（浦西）':  ['IGCSE', 'IB课程'],
+  '德威学院首尔分校':  ['IGCSE', 'IB课程'],
+  '苏州中学':  ['IGCSE', 'A Level课程'],
+  '德威国际高中课程横琴分校': ['Pre-A Level课程', 'A Level课程'],
+}
 
 /**
  * School Listing List Page
@@ -95,6 +129,83 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
   const locale = isZh ? 'zh' : 'en';
   const localeData = isZh ? schoolsDataJson.zh.listing : schoolsDataJson.listing;
   const staticSchools = localeData.items;
+  const normalizeSchoolName = (name) => {
+    if (typeof name !== 'string') return '';
+    return name
+      .toLowerCase()
+      .replace(/\([^)]*\)/g, '') // remove parenthetical parts e.g. "(Singapore)"
+      // Keep latin letters, digits, and common CJK range; collapse punctuation.
+      .replace(/[^a-z0-9\u4e00-\u9fff]+/g, ' ')
+      .trim()
+      .replace(/\s+/g, ' ');
+  };
+
+  const staticTagsByName = useMemo(() => {
+    const map = new Map();
+    staticSchools.forEach((item) => {
+      if (!item || item.heading) return;
+      if (typeof item.name !== 'string' || item.name.trim() === '') return;
+      if (!Array.isArray(item.tags) || item.tags.length === 0) return;
+      map.set(item.name, item.tags);
+      map.set(normalizeSchoolName(item.name), item.tags);
+    });
+    return map;
+  }, [staticSchools]);
+
+  const jsontagByName = useMemo(() => {
+    const map = new Map();
+    Object.entries(jsontag).forEach(([name, tags]) => {
+      if (typeof name !== 'string' || name.trim() === '') return;
+      if (!Array.isArray(tags) || tags.length === 0) return;
+      map.set(name, tags);
+      map.set(normalizeSchoolName(name), tags);
+    });
+    return map;
+  }, []);
+
+  const jsontagMatchers = useMemo(() => {
+    return Object.entries(jsontag)
+      .filter(([name, tags]) => typeof name === 'string' && name.trim() !== '' && Array.isArray(tags) && tags.length > 0)
+      .map(([name, tags]) => ({ normName: normalizeSchoolName(name), tags }));
+  }, []);
+
+  const normalizeTags = (tags) => {
+    if (Array.isArray(tags)) return tags.filter(Boolean);
+    if (typeof tags === 'string') {
+      // Support either a single tag or comma-separated string.
+      return tags
+        .split(',')
+        .map((t) => t.trim())
+        .filter(Boolean);
+    }
+    return [];
+  };
+
+  const getStaticTagsForSchoolName = (schoolName) => {
+    const fromExact = staticTagsByName.get(schoolName);
+    if (fromExact && fromExact.length) return fromExact;
+    const fromNormalized = staticTagsByName.get(normalizeSchoolName(schoolName));
+    if (fromNormalized && fromNormalized.length) return fromNormalized;
+    return [];
+  };
+
+  const getJsonTagForSchoolName = (schoolName) => {
+    const fromExact = jsontagByName.get(schoolName);
+    if (fromExact && fromExact.length) return fromExact;
+    const normalized = normalizeSchoolName(schoolName);
+    const fromNormalized = jsontagByName.get(normalized);
+    if (fromNormalized && fromNormalized.length) return fromNormalized;
+
+    // Fuzzy fallback: allow extra words in schoolName (e.g. "International School").
+    // Match when normalized schoolName contains the normalized mapping key (or vice versa).
+    const fuzzy = jsontagMatchers.find(({ normName }) => {
+      if (!normName) return false;
+      return normalized.includes(normName) || normName.includes(normalized);
+    });
+    if (fuzzy && Array.isArray(fuzzy.tags) && fuzzy.tags.length > 0) return fuzzy.tags;
+
+    return [];
+  };
 
   // State for dynamic schools from API
   const [dynamicSchools, setDynamicSchools] = useState([]);
@@ -135,10 +246,11 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
 
   // Helper function to get local image for a school
   const getSchoolImage = (school) => {
-    if (!school.name) return null;
+    const schoolName = school.full_title || school.name;
+    if (!schoolName) return null;
 
     // Try local image map first
-    const localImage = schoolImageMap[school.name];
+    const localImage = schoolImageMap[schoolName];
     if (localImage) return localImage;
 
     // Use API image URL if available
@@ -250,7 +362,7 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
         if (data.success && data.data) {
           // Transform API data to match our format
           const transformedSchools = data.data.map(school => {
-            const schoolName = school.title || school.name;
+            const schoolName = school.full_title || school.title || school.name;
 
             // Create dynamic CTA from API URL with localized label
             let ctas = [];
@@ -273,7 +385,16 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
               type: mapTypeToDisplay(school.type),
               image_url: school.image_url,
               ctas: ctas,
-              tags: school.tags || [],
+              // Prefer JSON tags > jsontag mapping > global fallback.
+              tags: (() => {
+                const jsonTags = normalizeTags(getStaticTagsForSchoolName(schoolName));
+                if (jsonTags.length > 0) return jsonTags;
+
+                const mapped = getJsonTagForSchoolName(schoolName);
+                if (Array.isArray(mapped) && mapped.length > 0) return mapped;
+
+                return DEFAULT_TAGS;
+              })(),
               content: school.content || school.description,
             };
           });
@@ -575,7 +696,7 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
               />
 
               {/* Age Filter */}
-              <CustomDropdown
+              {/* <CustomDropdown
                 value={selectedAge}
                 options={ages}
                 onChange={setSelectedAge}
@@ -588,7 +709,7 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
                   }
                 }}
                 placeholder="All Ages"
-              />
+              /> */}
 
               {/* Type Filter */}
               <CustomDropdown
@@ -696,7 +817,7 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
 
                   return (
                     <div key={`section-${sectionIdx}`} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                      {section.items.map((school, idx) => (
+                    {section.items .filter((_, idx) => !(locale === "zh" && (idx === 4 || idx === 5))) .map((school, idx) => (
                         <div
                           key={idx}
                           className="bg-white rounded-lg overflow-hidden border border-[#F2EDE9] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group"
@@ -709,7 +830,7 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
                             <div className="w-full overflow-hidden" style={{ height: '192px' }}>
                               <img
                                 src={getSchoolImage(school)}
-                                alt={school.name}
+                                alt={school.full_title}
                                 className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-500"
                                 onError={(e) => {
                                   e.target.src = '';
@@ -760,28 +881,34 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
                               )}
 
                               {/* Tags */}
-                              {/* {school.tags && school.tags.length > 0 && (
-                                <div className="flex flex-wrap gap-2 mt-2 py-2">
-                                  {school.tags.map((tag, tagIndex) => (
-                                    <span
-                                      key={tagIndex}
-                                      className="px-2 py-0.5 bg-[#F2EDE9] border border-[#F2EDE9] rounded text-xs font-medium text-[#3C3C3B]"
-                                    >
-                                      {tag}
-                                    </span>
-                                  ))}
-                                </div>
-                              )} */}
+                           
+                              {(() => {
+                                const tagsToRender =
+                                  Array.isArray(school.tags) && school.tags.length > 0
+                                    ? school.tags
+                                    : (getJsonTagForSchoolName(school.name).length > 0
+                                        ? getJsonTagForSchoolName(school.name)
+                                        : DEFAULT_TAGS);
 
-                              {/* Content/Description
-                              {school.content && (
+                                return (
+                                  <div className="flex flex-wrap gap-2 mt-2 py-2">
+                                    {tagsToRender.map((tag, index) => (
+                                      <span
+                                        key={`${tag}-${index}`}
+                                        className="px-3 py-1 bg-[#F2EDE9] border border-[#F2EDE9] rounded-md text-xs font-medium text-[#3C3C3B]"
+                                      >
+                                        {tag}
+                                      </span>
+                                    ))}
+                                  </div>
+                                );
+                              })()}
+                              {/* {school.content && (
                                 <p className="text-[#3C3C3B] text-sm font-medium text-left mt-3 leading">
                                   {school.content}
                                 </p>
-                              )} */}
+                              )}  */}
                             </div>
-
-                  
                           </div>
                           <div className='px-6 py-4 h-[80px] bottom border-t bottom-[#F2EDE9]'>
                               {/* CTA Buttons */}
@@ -804,9 +931,171 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
                         </div>
                       ))}
                     </div>
+                    
                   );
                 });
               })()}
+
+
+{isZh && (
+  
+<div >
+  <div className="pt-12 pb-8">
+  <h1 className="font-['Figtree'] text-3xl md:text-[3rem] font-extrabold mb-4 text-left text-[#3C3737]">姊妹学校</h1>
+  <h4 className="text-[16px] mt-8 mb-4 text-left text-[#3C3C3B] font-medium">结合中国课程与IB文凭的双语课程</h4>
+  </div>
+
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+
+{/* Card 1 */}
+<div className="bg-white rounded-lg overflow-hidden border border-[#F2EDE9] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group">
+
+  <div className="w-full overflow-hidden h-[192px]">
+    <img
+      src="https://dulwich.blob.core.chinacloudapi.cn/dulwich-staging/schools/THy0oRquOcodYJwcH04GVK4EQpkUQFii6gooJiV2.jpeg"
+      alt="Suzhou School"
+      className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-500"
+    />
+  </div>
+
+  <div className="px-6 py-4 flex flex-col flex-grow">
+    <h6 className="text-xl text-left font-bold text-[#3C3737] mb-3">
+    苏州工业园区德威联合书院</h6>
+    <div className="flex items-center gap-2 mb-2 text-[#3C3C3B]">
+      <Icon icon="Icon-Pin" size={22} />
+      <span className="text-sm">苏州, 中国
+      </span>
+    </div>
+    <div className="flex items-center gap-2 mb-2 text-[#3C3C3B]">
+     <Icon icon="Icon-Profile_Add" size={22} color="#3C3737" className="flex-shrink-0" />
+                                  <span className="text-sm font-medium">700 学生
+                                  </span>
+                                </div>
+
+                                <div className="flex items-center gap-2 mb-2 text-[#3C3C3B]">
+                                  <Icon icon="Age-Range" size={22} color="#3C3737" className="flex-shrink-0" />
+                                  <span className="text-sm font-medium">年龄 14 to 19
+                                  </span>
+                                </div>
+                         
+
+                        
+                                <div className="flex items-center gap-2 mb-2 text-[#3C3C3B]">
+                                  <Icon icon="Icon-Schools" size={22} color="#3C3737" className="flex-shrink-0" />
+                                  <span className="text-sm font-medium">成立于 2012
+                                  </span>
+                                </div>
+                                <div className="flex flex-wrap gap-2 mt-2 py-2">
+                                 
+                                      <span
+                                       
+                                        className="px-3 py-1 bg-[#F2EDE9] border border-[#F2EDE9] rounded-md text-xs font-medium text-[#3C3C3B]"
+                                      >
+                                        IGCSE
+                                      </span>
+
+                                      <span
+                                       
+                                       className="px-3 py-1 bg-[#F2EDE9] border border-[#F2EDE9] rounded-md text-xs font-medium text-[#3C3C3B]"
+                                     >
+                                       A Level课程
+                                     </span>
+                                  </div>
+                             
+  
+  </div>
+
+  <div className="px-6 py-4 border-t border-[#F2EDE9]">
+    <a
+      href="https://suzhou-high-school.dulwich.org/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block text-center bg-[#D30013] hover:bg-[#B8000F] text-white font-semibold px-4 py-3 rounded-lg"
+    >
+      访问网站
+    </a>
+  </div>
+
+</div>
+
+{/* Card 2 */}
+<div className="bg-white rounded-lg overflow-hidden border border-[#F2EDE9] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group">
+
+  <div className="w-full overflow-hidden h-[192px]">
+    <img
+      src="https://dulwich.blob.core.chinacloudapi.cn/dulwich-staging/schools/z4-20210922-151414-796.jpg"
+      alt="Suzhou School"
+      className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-500"
+    />
+  </div>
+
+  <div className="px-6 py-4 flex flex-col flex-grow">
+    <h6 className="text-xl text-left font-bold text-[#3C3737] mb-3">
+    横琴德威国际课程高中项目·广东横琴粤澳深度合作区华发容闳高级中学
+    </h6>
+    <div className="flex items-center gap-2 mb-2 text-[#3C3C3B]">
+      <Icon icon="Icon-Pin" size={22} />
+      <span className="text-sm">横琴, 中国
+
+      </span>
+    </div>
+    <div className="flex items-center gap-2 mb-2 text-[#3C3C3B]">
+     <Icon icon="Icon-Profile_Add" size={22} color="#3C3737" className="flex-shrink-0" />
+                                  <span className="text-sm font-medium">330 学生
+
+                                  </span>
+                                </div>
+
+                                <div className="flex items-center gap-2 mb-2 text-[#3C3C3B]">
+                                  <Icon icon="Age-Range" size={22} color="#3C3737" className="flex-shrink-0" />
+                                  <span className="text-sm font-medium">年龄 14 to 18
+                                  </span>
+                                </div>
+                         
+
+                        
+                                <div className="flex items-center gap-2 mb-2 text-[#3C3C3B]">
+                                  <Icon icon="Icon-Schools" size={22} color="#3C3737" className="flex-shrink-0" />
+                                  <span className="text-sm font-medium">成立于 2010
+                                  </span>
+                                </div>
+                                <div className="flex flex-wrap gap-2 mt-2 py-2">
+                                 
+                                      <span
+                                       
+                                        className="px-3 py-1 bg-[#F2EDE9] border border-[#F2EDE9] rounded-md text-xs font-medium text-[#3C3C3B]"
+                                      >
+                                        Pre-A Level课程
+
+                                      </span>
+
+                                      <span
+                                       
+                                       className="px-3 py-1 bg-[#F2EDE9] border border-[#F2EDE9] rounded-md text-xs font-medium text-[#3C3C3B]"
+                                     >
+                                       A Level课程
+                                     </span>
+                                  </div>
+                             
+  
+  </div>
+
+  <div className="px-6 py-4 border-t border-[#F2EDE9]">
+    <a
+      href="https://hengqin-high-school.dulwich.org/zh"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block text-center bg-[#D30013] hover:bg-[#B8000F] text-white font-semibold px-4 py-3 rounded-lg"
+    >
+      访问网站
+    </a>
+  </div>
+
+</div>
+
+</div>
+</div>
+    )}
             </>
           )}
         </div>

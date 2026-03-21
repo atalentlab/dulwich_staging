@@ -45,7 +45,7 @@ const PromoNewBlock = ({ content }) => {
   return (
     <section
       data-id={anchorId}
-      className="pl-4 mt-4 mb-4 md:mt-16 md:mb-16"
+      className="pl-4 mt-4 mb-4 md:mt-0 md:mb-10"
     >
       <div className="w-full relative">
         <div className="flex flex-col lg:flex-row gap-0 items-start">

@@ -3,6 +3,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { useSchoolPageBySlug } from '../../hooks/useSchoolPageBySlug';
 import useSEO from '../../hooks/useSEO';
 import useSmoothScroll from '../../hooks/useSmoothScroll';
+import { useSchools } from '../../contexts/SchoolsContext';
 import BlockRenderer from '../blocks/BlockRenderer';
 import BannerBlock from '../blocks/BannerBlock';
 import Loading from '../common/Loading';
@@ -32,10 +33,12 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
   const params = useParams();
   const location = useLocation();
 
+  // Use schools from context instead of fetching
+  const { schools: availableSchools, loading: schoolsLoading } = useSchools();
+
   // State for header/footer props
   const [selectedSchool, setSelectedSchool] = useState('Dulwich International College');
   const [selectedSchoolSlug, setSelectedSchoolSlug] = useState('');
-  const [availableSchools, setAvailableSchools] = useState([]);
   const [chatOpen, setChatOpen] = useState(false);
 
   // Supported locales
@@ -88,57 +91,7 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
   // Only pass locale to API if it's explicitly in the URL
   const locale = propLocale !== undefined ? propLocale : (urlLocale || null);
 
-  // Fetch available schools from API with locale
-  useEffect(() => {
-    const fetchSchoolsList = async () => {
-      try {
-        const baseUrl = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
-        const currentLocale = locale || 'en';
-        const response = await fetch(`${baseUrl}/api/schools?locale=${currentLocale}`);
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch schools');
-        }
-
-        const data = await response.json();
-        const schoolsList = data.data || data.schools || data;
-
-        if (Array.isArray(schoolsList)) {
-          // Process schools to handle duplicates and add International
-          const processedSchools = [];
-
-          // Add International as first option (if not already in list)
-          const hasInternational = schoolsList.some(s => s.slug === 'international');
-          if (!hasInternational) {
-            processedSchools.push({
-              id: -1,
-              title: 'International',
-              slug: 'international',
-              url: window.location.origin
-            });
-          }
-
-          // Process each school
-          schoolsList.forEach(school => {
-            const processedSchool = { ...school };
-
-            // Handle "International School" - rename to "International"
-            if (school.slug === 'international') {
-              processedSchool.title = 'International';
-            }
-
-            processedSchools.push(processedSchool);
-          });
-
-          setAvailableSchools(processedSchools);
-        }
-      } catch (error) {
-        console.error('Error fetching schools:', error);
-      }
-    };
-
-    fetchSchoolsList();
-  }, [locale]);
+  // Schools are now fetched from context (no duplicate API calls)
 
   // Fetch school page data using React Query
   const { data, isLoading, error, isFetching } = useSchoolPageBySlug(pageSlug, school, locale);

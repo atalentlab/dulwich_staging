@@ -18,10 +18,9 @@ const resolveOgImage = (src) => {
 
 const useSEO = ({ meta_title, meta_description, meta_keywords, og_image } = {}) => {
   useEffect(() => {
-    // Update document title
-    if (meta_title) {
-      document.title = meta_title;
-    }
+    // Update document title with fallback (handle both null and string "null")
+    const validTitle = meta_title && meta_title !== 'null' ? meta_title : 'Dulwich International Schools';
+    document.title = validTitle;
 
     // Helper: always set a <meta name="..."> tag (creates if missing, clears if empty)
     const setMetaName = (name, content = '') => {

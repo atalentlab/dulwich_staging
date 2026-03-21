@@ -75,20 +75,20 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
   const NextArrow = ({ onClick }) => (
     <button
       onClick={onClick}
-      className="hidden min-[775px]:block w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center border-2 border-[#F2EDE9] text-[#D30013] hover:border-red-600 hover:text-red-600 bg-[#FAF7F5] hover:bg-red-50 transition-all duration-300 absolute bottom-0 max-[800px]:-bottom-16 right-4 sm:right-8 md:right-12 lg:right-16 z-10"
+      className="hidden min-[775px]:flex w-12 h-12 lg:w-14 lg:h-14 rounded-lg items-center justify-center border-2 border-[#F2EDE9] text-[#D30013] hover:border-[#D30013] hover:text-white hover:bg-[#D30013] bg-[#FAF7F5] transition-all duration-300 absolute bottom-0 max-[800px]:-bottom-16 right-4 sm:right-8 md:right-12 lg:right-16 z-10 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95"
       aria-label="Next slide"
     >
-      <ChevronRight className="w-5 h-5" />
+      <ChevronRight className="w-6 h-6 lg:w-7 lg:h-7" strokeWidth={2.5} />
     </button>
   );
 
   const PrevArrow = ({ onClick }) => (
     <button
       onClick={onClick}
-      className="hidden min-[775px]:block w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center border-2 border-[#F2EDE9] text-[#D30013] hover:border-red-600 hover:text-red-600 bg-[#FAF7F5] hover:bg-red-50 transition-all duration-300 absolute bottom-0 max-[800px]:-bottom-16 right-[4.5rem] sm:right-[5.5rem] md:right-[6.5rem] lg:right-[7.5rem] z-10"
+      className="hidden min-[775px]:flex w-12 h-12 lg:w-14 lg:h-14 rounded-lg items-center justify-center border-2 mr-2 border-[#F2EDE9] text-[#D30013] hover:border-[#D30013] hover:text-white hover:bg-[#D30013] bg-[#FAF7F5] transition-all duration-300 absolute bottom-0 max-[800px]:-bottom-16 right-[4.5rem] sm:right-[5.5rem] md:right-[6.5rem] lg:right-[7.5rem] z-10 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95"
       aria-label="Previous slide"
     >
-      <ChevronLeft className="w-5 h-5" />
+      <ChevronLeft className="w-6 h-6 lg:w-7 lg:h-7" strokeWidth={2.5} />
     </button>
   );
 
@@ -101,6 +101,8 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
     slidesToScroll: 1,
     centerMode: false,
     variableWidth: false,
+    swipeToSlide: true,
+    touchThreshold: 10,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     beforeChange: (current, next) => setCurrentSlide(next),
@@ -132,8 +134,12 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
           dots: false,
           arrows: false,
           variableWidth: false,
-          centerMode: true,
-          centerPadding: '20px',
+          centerMode: false,
+          centerPadding: '0px',
+          infinite: true,
+          swipeToSlide: true,
+          touchThreshold: 10,
+          speed: 400,
         }
       }
     ]
@@ -142,16 +148,10 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
   if (events.length === 0) return null;
 
   return (
-    <section className="bg-white py-16 mt-12 openday-carousel">
-      <div className="w-full relative">
+    <section className="bg-white py-4 md:py-6 lg:py-8 mt-3 md:mt-4 openday-carousel overflow-hidden">
+      <div className="w-full relative overflow-hidden">
         {/* Slider Container */}
-        <div
-          className="w-full pb-8 mb-12"
-          style={{
-            paddingLeft: 'max(1rem, calc((100vw - 1120px) / 2))',
-            paddingRight: '0'
-          }}
-        >
+        <div className="w-full pb-4 md:pb-8 mb-8 md:mb-12 slider-container-padding">
           <Slider ref={sliderRef} {...settings}>
             {events.map((item, idx) => {
               const CardWrapper = item.cta ? 'a' : 'div';
@@ -161,22 +161,22 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
                 rel: item.cta.external ? 'noopener noreferrer' : undefined,
               } : {};
               return (
-                <div key={`${item.id}-${idx}`} className="px-3">
+                <div key={`${item.id}-${idx}`} className="max-[800px]:px-0 px-2 md:px-3">
                   <CardWrapper
                     {...wrapperProps}
-                    className="flex flex-col bg-white rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.10)] hover:shadow-[0_6px_28px_rgba(0,0,0,0.16)] transition-all duration-300 no-underline h-fit overflow-visible"
+                    className="flex flex-col bg-white rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.10)] hover:shadow-[0_6px_28px_rgba(0,0,0,0.16)] transition-all duration-300 transform hover:-translate-y-1 no-underline h-fit overflow-visible w-full"
                   >
                   {/* Image with Badge */}
-                  <div className="relative h-52 w-full flex-shrink-0 overflow-visible pb-3">
+                  <div className="relative h-44 md:h-52 w-full flex-shrink-0 overflow-visible pb-3">
                     <img
                       src={item.image}
                       alt={item.title}
                       className="w-full h-full object-cover rounded-t-lg"
                       onError={(e) => { e.target.src = 'https://assets.dulwich.org/thumbs/articles/fit/600x324/weixin-image-2025-09-16-140743-825.jpg'; }}
                     />
-                    <div className="absolute -bottom-0 left-6 z-10 overflow-visible">
+                    <div className="absolute -bottom-0 left-4 md:left-6 z-10 overflow-visible">
                       <span
-                        className="text-white px-4 py-3.5 my-1 rounded-full z-10 text-[14px] font-medium shadow-l"
+                        className="text-white px-3 md:px-4 py-2.5 md:py-3.5 my-1 rounded-full z-10 text-xs md:text-sm font-medium shadow-lg"
                         style={{ backgroundColor: item.color }}
                       >
                         {item.badge}
@@ -185,29 +185,29 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
                   </div>
 
                   {/* Content */}
-                  <div className="w-full p-6 text-left flex flex-col pb-4 mb-2 bg-white rounded-b-2xl">
+                  <div className="w-full p-4 md:p-6 text-left flex flex-col pb-3 md:pb-4 mb-2 bg-white rounded-b-2xl">
                     <h3
-                      className="text-xl sm:text-2xl font-extrabold mb-2 leading-tight"
+                      className="text-lg md:text-xl lg:text-2xl font-extrabold mb-2 leading-tight"
                       style={{ color: item.color }}
                     >
                       {item.title}
                     </h3>
 
-                    <div className="mb-4">
-                      <p className="text-[#3C3737] font-bold text-[16px] leading-none">{item.dateTime}</p>
-                      <p className="text-[#3C3737] text-[16px]">{item.subtitle}</p>
+                    <div className="mb-3 md:mb-4">
+                      <p className="text-[#3C3737] font-bold text-sm md:text-base leading-tight mb-1">{item.dateTime}</p>
+                      <p className="text-[#3C3737] text-sm md:text-base">{item.subtitle}</p>
                     </div>
 
-                    <ul className="mb-4">
+                    <ul className="mb-3 md:mb-4 space-y-1">
                       {item.details.map((detail, index) => (
-                        <li key={index} className="flex items-start gap-2 text-[#3C3737] text-sm">
+                        <li key={index} className="flex items-start gap-2 text-[#3C3737]">
                           {item.details.length > 1 && (
                             <Check
-                              className="rounded-full text-white mt-1.5 flex-shrink-0 w-2.5 h-2.5 p-0.2"
+                              className="rounded-full text-white mt-1 md:mt-1.5 flex-shrink-0 w-2.5 h-2.5 p-0.2"
                               style={{ backgroundColor: item.color }}
                             />
                           )}
-                          <span className='text-[14px] text-[#3C3737] font-normal leading-[24px]'>{detail}</span>
+                          <span className='text-xs md:text-sm text-[#3C3737] font-normal leading-relaxed'>{detail}</span>
                         </li>
                       ))}
                     </ul>
@@ -215,7 +215,7 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
                     {item.cta && item.ctaText && (
                       <div className="mt-auto">
                         <span
-                          className="border px-6 py-2.5 rounded-lg font-semibold text-[16px] hover:bg-gray-50 transition-all duration-300 inline-block"
+                          className="border-2 px-4 md:px-6 py-2 md:py-2.5 rounded-lg font-semibold text-sm md:text-base hover:bg-gray-50 transition-all duration-300 inline-block"
                           style={{ borderColor: item.color, color: item.color }}
                         >
                           {item.ctaText}
@@ -230,26 +230,26 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
           </Slider>
 
           {/* Mobile Nav Bar - Only visible on mobile (below 800px) */}
-          <div className="max-[800px]:flex hidden items-center justify-between mt-4 px-4">
+          <div className="max-[800px]:flex hidden items-center justify-between mt-8 px-6">
             {/* Left: Prev / Next buttons */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => sliderRef.current?.slickPrev()}
-                className="w-10 h-10 rounded-lg flex items-center justify-center border-2 border-[#F2EDE9] text-[#D30013] hover:border-[#D30013] bg-[#FAF7F5] hover:bg-red-50 transition-all duration-300"
+                className="w-12 h-12 rounded-lg flex items-center justify-center border-2 border-[#F2EDE9] text-[#D30013] hover:border-[#D30013] hover:bg-[#D30013] hover:text-white bg-[#FAF7F5] transition-all duration-300 active:scale-95 shadow-sm"
                 aria-label="Previous slide"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft className="w-6 h-6" strokeWidth={2} />
               </button>
               <button
                 onClick={() => sliderRef.current?.slickNext()}
-                className="w-10 h-10 rounded-lg flex items-center justify-center border-2 border-[#F2EDE9] text-[#D30013] hover:border-[#D30013] bg-[#FAF7F5] hover:bg-red-50 transition-all duration-300"
+                className="w-12 h-12 rounded-lg flex items-center justify-center border-2 border-[#F2EDE9] text-[#D30013] hover:border-[#D30013] hover:bg-[#D30013] hover:text-white bg-[#FAF7F5] transition-all duration-300 active:scale-95 shadow-sm"
                 aria-label="Next slide"
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-6 h-6" strokeWidth={2} />
               </button>
             </div>
             {/* Right: Counter */}
-            <span className="text-[#3C3737] text-sm font-medium border-2 border-[#F2EDE9] bg-[#FAF7F5] rounded-lg px-4 py-2">
+            <span className="text-[#3C3737] text-base font-semibold border-2 border-[#F2EDE9] bg-[#FAF7F5] rounded-lg px-6 py-3 shadow-sm">
               {currentSlide + 1} / {events.length}
             </span>
           </div>
@@ -257,8 +257,22 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
       </div>
 
       <style>{`
+        /* Container padding - responsive */
+        .slider-container-padding {
+          padding-left: max(1rem, calc((100vw - 1120px) / 2));
+          padding-right: 0;
+        }
+
+        @media (max-width: 800px) {
+          .slider-container-padding {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+          }
+        }
+
         .openday-carousel .slick-slide {
           height: auto;
+          transition: transform 0.3s ease;
         }
         .openday-carousel .slick-slide > div {
           height: 100%;
@@ -268,11 +282,23 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
           align-items: stretch;
           margin-left: 14% !important;
           margin-bottom: 20px;
+          transition: transform 0.5s ease;
         }
         .openday-carousel .slick-list {
           margin-left: 0;
           padding-left: 0 !important;
+          overflow-x: hidden;
         }
+
+        /* Smooth card transitions */
+        .openday-carousel .slick-slide > div > div {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .openday-carousel .slick-current {
+          z-index: 1;
+        }
+
         .openday-carousel .slick-dots {
           position: relative;
           bottom: auto;
@@ -297,24 +323,57 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
           }
           .openday-carousel .slick-track {
             margin-left: 0 !important;
-            margin-bottom: 60px;
+            margin-bottom: 40px !important;
+            display: flex !important;
           }
           .openday-carousel .slick-slide {
-            padding: 0;
-            width: 365px !important;
+            padding: 0 16px !important;
+            width: 100vw !important;
+            display: flex !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
+            box-sizing: border-box !important;
           }
           .openday-carousel .slick-slide > div {
-            width: 365px;
-            margin: 0 auto;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
           }
           .openday-carousel .slick-slide > div > div {
-            max-width: 365px;
-            margin: 0 auto;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto !important;
+            padding: 0 !important;
           }
           .openday-carousel .slick-list {
             padding-left: 0 !important;
             padding-right: 0 !important;
-            overflow: visible;
+            overflow: hidden !important;
+            width: 100% !important;
+            margin: 0 !important;
+          }
+          .openday-carousel {
+            overflow: hidden !important;
+            width: 100% !important;
+          }
+        }
+
+        /* Tablet improvements */
+        @media (min-width: 801px) and (max-width: 1024px) {
+          .openday-carousel .slick-track {
+            margin-left: 8% !important;
+          }
+        }
+
+        /* Touch device improvements */
+        @media (hover: none) and (pointer: coarse) {
+          .openday-carousel .slick-slide {
+            cursor: grab;
+          }
+          .openday-carousel .slick-slide:active {
+            cursor: grabbing;
           }
         }
       `}</style>

@@ -128,7 +128,7 @@ const GridLayout = ({ content, propsSchools }) => {
                   <div className="text-left h-64 overflow-hidden">
                     <img
                       src={school.listing_image}
-                      alt={school.full_title || school.title}
+                      alt={school.full_title || school.title || school.name}
                       className={`w-full h-full object-cover transition-transform duration-700 ${
                         visibleCards.has(index) ? 'scale-110' : 'scale-100'
                       } group-hover:scale-110`}
@@ -142,7 +142,7 @@ const GridLayout = ({ content, propsSchools }) => {
                   <div>
                     {/* School Name */}
                     <h3 className="text-2xl font-bold text-gray-800 mb-4 text-left">
-                      {school.full_title || school.title}
+                      {school.full_title || school.title || school.name}
                     </h3>
 
                     {/* Info Items */}

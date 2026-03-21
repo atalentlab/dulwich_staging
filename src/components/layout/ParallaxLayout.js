@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-// DISABLED: Lottie animations causing 403 errors - external files not accessible
-// import lottie from 'lottie-web';
+// import lottie from 'lottie-web'; // DISABLED: External animations returning 403 errors
 import BannerBlock from '../blocks/BannerBlock';
 import BlockRenderer from '../blocks/BlockRenderer';
 import PageFooter from './PageFooter';
@@ -96,23 +95,26 @@ const ParallaxLayout = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // DISABLED: Lottie animations - external files not accessible (403 errors)
-  // Hide animation containers to prevent layout issues
+  // Initialize Lottie animations
   useEffect(() => {
-    // Hide animation containers
-    if (lottieRef1.current) {
-      lottieRef1.current.style.display = 'none';
-    }
-    if (lottieRef2.current) {
-      lottieRef2.current.style.display = 'none';
-    }
-
-    // Original Lottie animation code disabled below:
-    /*
     // Clean up previous animations
     lottieAnimations.current.forEach(anim => anim.destroy());
     lottieAnimations.current = [];
 
+    // DISABLED: External Lottie animations returning 403 errors
+    // Hiding containers to prevent XHR errors in console
+    console.info('[Lottie] Animations disabled - external files not accessible (403 errors)');
+
+    if (lottieRef1.current) {
+      lottieRef1.current.style.display = 'none';
+    }
+
+    if (lottieRef2.current) {
+      lottieRef2.current.style.display = 'none';
+    }
+
+    // ORIGINAL CODE (commented out to prevent 403 errors):
+    /*
     // Animation 1 - Scroll indicator (near banner)
     if (lottieRef1.current) {
       try {
@@ -121,11 +123,16 @@ const ParallaxLayout = ({
           renderer: 'svg',
           loop: true,
           autoplay: true,
-          path: 'https://lottie.host/4db68bbd-31f6-4cd8-b6a3-0c4c6f0d7a13/OT7w7pZIrP.json' // Scroll down animation
+          path: 'https://lottie.host/4db68bbd-31f6-4cd8-b6a3-0c4c6f0d7a13/OT7w7pZIrP.json'
+        });
+        anim1.addEventListener('data_failed', () => {
+          console.warn('[Lottie] Animation 1 failed to load - hiding container');
+          if (lottieRef1.current) lottieRef1.current.style.display = 'none';
         });
         lottieAnimations.current.push(anim1);
       } catch (error) {
         console.warn('Failed to load Lottie animation 1:', error);
+        if (lottieRef1.current) lottieRef1.current.style.display = 'none';
       }
     }
 
@@ -137,19 +144,24 @@ const ParallaxLayout = ({
           renderer: 'svg',
           loop: true,
           autoplay: true,
-          path: 'https://lottie.host/embed/ee628a4a-e5dd-4ff5-aa85-f5d9c8d1eecf/u3RAi7gPBv.json' // Abstract shapes
+          path: 'https://lottie.host/embed/ee628a4a-e5dd-4ff5-aa85-f5d9c8d1eecf/u3RAi7gPBv.json'
+        });
+        anim2.addEventListener('data_failed', () => {
+          console.warn('[Lottie] Animation 2 failed to load - hiding container');
+          if (lottieRef2.current) lottieRef2.current.style.display = 'none';
         });
         lottieAnimations.current.push(anim2);
       } catch (error) {
         console.warn('Failed to load Lottie animation 2:', error);
+        if (lottieRef2.current) lottieRef2.current.style.display = 'none';
       }
     }
+    */
 
     return () => {
       lottieAnimations.current.forEach(anim => anim.destroy());
       lottieAnimations.current = [];
     };
-    */
   }, []);
 
   // Add AOS attributes to banner and content elements (exclude statistics sections)

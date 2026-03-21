@@ -21,121 +21,65 @@ const ArticlesBlock = ({ content }) => {
   // Use slug from content, or detect from URL, or fallback to 'dulwich-life'
   const articleSlug = contentSlug || (isDulwichLifePage ? 'dulwich-life' : location.pathname.split('/').pop());
 
-  // Different initial count based on whether it's dulwich-life page
-  // dulwich-life: show all fetched cards (up to 40), others: show 6 cards
-  const initialDisplayCount = isDulwichLifePage ? 999 : 6;
+  const locale = (location.pathname.startsWith('/zh/') || location.pathname === '/zh') ? 'zh' : 'en';
+  // dulwich-life: 24 (set in service), others: 6
+  const initialDisplayCount = isDulwichLifePage ? 24 : 6;
 
-  const [allArticles, setAllArticles] = useState(staticArticles || []); // All articles
-  const [filteredArticles, setFilteredArticles] = useState(staticArticles || []); // Filtered articles
-  const [displayedCount, setDisplayedCount] = useState(initialDisplayCount); // Initial count based on slug
+  const [allArticles, setAllArticles] = useState(staticArticles || []);
+  const [filteredArticles, setFilteredArticles] = useState(staticArticles || []);
+  const [displayedCount, setDisplayedCount] = useState(initialDisplayCount);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [tags, setTags] = useState([]); // Available tags
-  const [selectedTags, setSelectedTags] = useState([]); // Selected filter tags
+  const [tags, setTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
 
   // Update displayed count when page type changes
   useEffect(() => {
     setDisplayedCount(initialDisplayCount);
-  }, [isDulwichLifePage, initialDisplayCount]);
+  }, [initialDisplayCount]);
 
-  // Fetch all articles and tags from API
+  // Single API call — only on dulwich-life page, page_no=1
   useEffect(() => {
+    if (!isDulwichLifePage) return;
+    if (staticArticles && staticArticles.length > 0) return;
+
+    let cancelled = false;
     const loadData = async () => {
-      // Only fetch if no static articles provided
-      if (!staticArticles || staticArticles.length === 0) {
-        setLoading(true);
-        setError(null);
+      setLoading(true);
+      setError(null);
+      try {
+        const articlesResponse = await fetchAllArticles({
+          slug: articleSlug,
+          locale,
+          school: currentSchoolSlug,
+        });
 
-        try {
-          const allArticlesData = [];
-          let allTagsData = [];
+        if (cancelled) return;
 
-          console.log(`Starting to fetch articles for ${articleSlug}...`);
-          console.log(`Is dulwich-life page: ${isDulwichLifePage}`);
+        const fetchedArticles = articlesResponse.articles || [];
+        setAllArticles(fetchedArticles);
+        setFilteredArticles(fetchedArticles);
 
-          // Different fetch strategy based on page type
-          if (isDulwichLifePage) {
-            // dulwich-life: Fetch 4 pages (40 articles total)
-            for (let page = 1; page <= 4; page++) {
-              console.log(`Fetching dulwich-life page ${page}...`);
-
-              const articlesResponse = await fetchAllArticles({
-                slug: articleSlug,
-                locale: 'en',
-                school: currentSchoolSlug,
-                limit: 10, // 10 articles per page
-                page_no: page
-              });
-
-              console.log(`Page ${page} response:`, articlesResponse);
-
-              if (articlesResponse.articles && articlesResponse.articles.length > 0) {
-                allArticlesData.push(...articlesResponse.articles);
-                console.log(`Added ${articlesResponse.articles.length} articles from page ${page}`);
-              }
-
-              // Get tags from first response
-              if (page === 1 && articlesResponse.tags) {
-                allTagsData = articlesResponse.tags;
-              }
-
-              // Stop if we got less than expected (no more pages)
-              if (!articlesResponse.articles || articlesResponse.articles.length < 10) {
-                console.log(`Stopping at page ${page} - no more articles`);
-                break;
-              }
-            }
-          } else {
-            // Other pages: Fetch only 1 page with 6 articles
-            console.log(`Fetching single page for ${articleSlug} (NOT dulwich-life)...`);
-
-            const articlesResponse = await fetchAllArticles({
-              slug: articleSlug,
-              locale: 'en',
-              school: currentSchoolSlug,
-              limit: 6, // Only 6 articles for other pages
-              page_no: 1
-            });
-
-            console.log('Page 1 response:', articlesResponse);
-
-            if (articlesResponse.articles && articlesResponse.articles.length > 0) {
-              allArticlesData.push(...articlesResponse.articles);
-              console.log(`Added ${articlesResponse.articles.length} articles`);
-            }
-
-            // Get tags from response
-            if (articlesResponse.tags) {
-              allTagsData = articlesResponse.tags;
-            }
-          }
-
-          console.log('✅ Fetched total articles:', allArticlesData.length);
-
-          setAllArticles(allArticlesData);
-          setFilteredArticles(allArticlesData);
-
-          // If tags not in articles response, fetch separately
-          if (!allTagsData || allTagsData.length === 0) {
-            const tagsResponse = await fetchArticleTags('en', currentSchoolSlug);
-            setTags(tagsResponse || []);
-          } else {
-            setTags(allTagsData);
-          }
-        } catch (err) {
-          console.error('Error loading data:', err);
-          setError('Failed to load articles');
-          setAllArticles([]);
-          setFilteredArticles([]);
-          setTags([]);
-        } finally {
-          setLoading(false);
+        if (articlesResponse.tags && articlesResponse.tags.length > 0) {
+          setTags(articlesResponse.tags);
+        } else {
+          const tagsResponse = await fetchArticleTags(locale, currentSchoolSlug);
+          if (!cancelled) setTags(tagsResponse || []);
         }
+      } catch (err) {
+        if (cancelled) return;
+        setError('Failed to load articles');
+        setAllArticles([]);
+        setFilteredArticles([]);
+        setTags([]);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     };
 
     loadData();
-  }, [staticArticles, currentSchoolSlug, articleSlug, isDulwichLifePage]);
+    return () => { cancelled = true; };
+  }, [staticArticles, currentSchoolSlug, articleSlug, locale]);
 
   // Filter articles when tags are selected
   useEffect(() => {
@@ -278,10 +222,10 @@ const ArticlesBlock = ({ content }) => {
                         </p>
                       )}
                       <a
-                        href={article.url || `/article/${article.slug || article.id}`}
+                        href={`${locale === 'zh' ? '/zh' : ''}/dulwich-life?slug=${article.slug || article.id}&locale=${locale}&school=${currentSchoolSlug ? `${currentSchoolSlug}-cms` : 'beijing-cms'}`}
                         className="inline-block border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-semibold px-4 py-2 text-sm rounded transition-colors duration-200"
                       >
-                        Read More
+                        {(location.pathname.startsWith('/zh/') || location.pathname === '/zh') ? '阅读更多' : 'Read More'}
                       </a>
                     </div>
                   </article>

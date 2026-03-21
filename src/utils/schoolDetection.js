@@ -1,14 +1,3 @@
-/**
- * School Detection Utility
- * Detects school from hostname (subdomain)
- *
- * Examples:
- * - beijing.dulwich.loc:3000 → school: "beijing"
- * - shanghai.dulwich.loc:3000 → school: "shanghai"
- * - singapore.atalent.xyz → school: "singapore" (new format)
- * - www.singapore.dulwich-frontend.atalent.xyz → school: "singapore" (old format)
- * - www.atalent.xyz → school: null (main site)
- */
 
 /**
  * Extracts school identifier from hostname

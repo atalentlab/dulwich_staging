@@ -2,7 +2,7 @@ import React from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 /**
  * DownloadSelectBlock Component
@@ -48,13 +48,33 @@ const DownloadSelectBlock = ({ content }) => {
     try {
       // Fetch all files and add to zip
       const filePromises = fileArray.map(async (file) => {
-        const downloadUrl = file['download-select'].startsWith('http')
+        let downloadUrl = file['download-select'].startsWith('http')
           ? file['download-select']
           : `${API_BASE_URL}${file['download-select']}`;
 
-        const response = await fetch(downloadUrl);
+        // Ensure https if possible
+        if (downloadUrl.startsWith('http://')) {
+          downloadUrl = downloadUrl.replace('http://', 'https://');
+        }
+
+        // Use our local proxy to bypass CORS
+        // This hits server.js which fetches the file server-to-server
+        const proxyUrl = `/proxy-fetch?url=${encodeURIComponent(downloadUrl)}`;
+
+        const response = await fetch(proxyUrl);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const blob = await response.blob();
-        const fileName = file.title.endsWith('.pdf') ? file.title : `${file.title}.pdf`;
+        
+        // Ensure proper filename extension
+        let fileName = file.title || 'download';
+        if (!fileName.toLowerCase().endsWith('.pdf') && !fileName.toLowerCase().endsWith('.zip') && !fileName.toLowerCase().endsWith('.jpg') && !fileName.toLowerCase().endsWith('.png')) {
+          fileName = `${fileName}.pdf`;
+        }
+        
         zip.file(fileName, blob);
       });
 
@@ -65,7 +85,7 @@ const DownloadSelectBlock = ({ content }) => {
       saveAs(content, `${ctaTitle || 'downloads'}.zip`);
     } catch (error) {
       console.error('Error creating zip file:', error);
-      alert('Failed to download files. Please try downloading individually.');
+      alert('Failed to download files due to security restrictions. Please try downloading files individually by clicking the download icon next to each file.');
     }
   };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 /**
  * SingleImageBlock Component
@@ -51,7 +51,7 @@ const SingleImageBlock = ({ content }) => {
           <img
             src={imageUrl}
             alt={imageDescription || caption || title || 'Image'}
-            className={`w-full h-auto rounded-lg ${
+            className={`w-full h-auto min-h-[400px] rounded-lg ${
               alignment === 'original' ? 'max-w-[1600px] mx-auto' : ''
             } ${
               alignment === 'cropped' ? 'max-w-[1600px] mx-auto aspect-[1600/650] object-cover' : ''
@@ -119,11 +119,11 @@ const SingleImageBlock = ({ content }) => {
         )}
 
         {/* Image description (fallback if no caption) */}
-        {imageDescription && !caption && (
+        {/* {imageDescription && !caption && (
           <p className="max-w-[1120px] m-auto text-sm text-left px-7 text-[#3C3C3B] mt-6 leading-relaxed">
             {imageDescription}
           </p>
-        )}
+        )} */}
       </div>
     </section>
   );

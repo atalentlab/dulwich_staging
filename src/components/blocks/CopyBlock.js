@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
 // Custom arrow components for the slider (22x44 size)
 const PrevArrow = ({ onClick }) => (
   <button
@@ -49,13 +48,18 @@ const CopyBlock = ({ content }) => {
     'contextual-button-text': contextualButtonTextProp,
     'contextual-button-link': contextualButtonLinkProp,
     'anchor-id': anchorId,
+    
   } = content;
-
+  const isChineseVersion = window.location.pathname.startsWith('/zh');
   // Derive contextual card fields — prefer explicit props, fall back to contextual-link-data
   const contextualImage = contextualImageProp || contextualLinkData?.header_image;
   const contextualTitle = contextualTitleProp || contextualLinkData?.title;
   const contextualDescription = contextualDescriptionProp || contextualLinkData?.intro;
-  const contextualButtonText = contextualButtonTextProp || (contextualLinkData ? 'Read More' : null);
+  const contextualButtonText = contextualButtonTextProp || (
+    contextualLinkData
+      ? isChineseVersion ? '阅读更多' : 'Read More'
+      : null
+  );
   const contextualButtonLink = contextualButtonLinkProp || contextualLinkData?.url;
 
   // Skip no-image placeholders
@@ -227,7 +231,7 @@ const CopyBlock = ({ content }) => {
                     href={contextualButtonLink}
                     className="text-[12px] inline-block border border-[#D30013] text-[#D30013] hover:bg-[#D30013] hover:text-white font-medium px-3 py-2 rounded-lg transition-colors duration-200"
                   >
-                    {contextualButtonText || 'Check Eligibility'}
+                    {contextualButtonText}
                   </a>
                 )}
               </div>

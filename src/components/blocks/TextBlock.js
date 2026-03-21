@@ -48,8 +48,7 @@ const TextBlock = ({ content }) => {
   return (
     <section
       data-id={anchorId}
-      className="pb-14 pt-20 px-4"
-    >
+      className="pb-4 pt-4 md:pb-12 md:pt-12 px-4">
       <div className="max-w-[1120px] mx-auto text-left">
         {/* Eyebrow */}
         {eyebrow && (

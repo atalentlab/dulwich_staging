@@ -1,17 +1,16 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Icon from '../Icon';
+import eimLogo from '../../assets/images/eim-logo-blue.svg';
 import wechatQRCode from '../../assets/images/Wechat_QRcode.webp';
 import redNoteQRCode from '../../assets/images/rednote.webp';
 import { getSchoolUrl } from '../../utils/schoolDetection';
 import footerNavData from '../../assets/menu/footer-navigation.json';
 import dcLogoWhite from '../../assets/images/logo_white/dci-group-logo-white.svg';
 import dcLogo from '../../assets/images/article-logo.svg';
-import { fetchSchools } from '../../api/schoolPageService';
-
 
 // Custom Dropdown Component
-const CustomDropdown = ({ value, options, onChange, isOpen, setIsOpen, placeholder }) => {
+const CustomDropdown = ({ value, options, onChange, isOpen, setIsOpen }) => {
   const [isClosing, setIsClosing] = useState(false);
 
   const handleClose = () => {
@@ -94,7 +93,7 @@ const CustomDropdown = ({ value, options, onChange, isOpen, setIsOpen, placehold
   );
 };
 
-function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, setSelectedSchool, setSelectedSchoolSlug }) {
+function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelectedSchoolSlug }) {
   // Detect language from URL (same pattern as PageHeader)
   const location = useLocation();
   const isChineseVersion = location.pathname.startsWith('/zh/') || location.pathname === '/zh';
@@ -106,8 +105,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   const worldCol = nav.columns[2];
   const wiseCol  = nav.columns[3];
 
-  // State for fetched schools from API
-  const [fetchedSchools, setFetchedSchools] = useState([]);
+  // Local state for schools
+  const [schoolsList, setSchoolsList] = useState([]);
 
   // State for the left dropdown — initially shows "Please select" placeholder
   const [selectedOption, setSelectedOption] = useState(nav.pleaseSelect);
@@ -121,27 +120,32 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
     });
   }, [nav.international, nav.pleaseSelect]);
 
-  // Fetch schools from API based on locale
+  // Always fetch schools from API with the current locale
   useEffect(() => {
-    const loadSchools = async () => {
+    const controller = new AbortController();
+    (async () => {
       try {
-        const locale = isChineseVersion ? 'zh' : 'en';
-        console.log('🔍 PageFooter - Fetching schools with locale:', locale);
-        console.log('🔍 PageFooter - Current pathname:', location.pathname);
-        console.log('🔍 PageFooter - isChineseVersion:', isChineseVersion);
-
-        const schoolsList = await fetchSchools(locale);
-        console.log('🔍 PageFooter - Fetched schools:', schoolsList);
-
-        if (Array.isArray(schoolsList)) {
-          setFetchedSchools(schoolsList);
-        }
-      } catch (error) {
-        console.error('Error fetching schools in footer:', error);
+        const baseUrl = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+        const currentLocale = isChineseVersion ? 'zh' : 'en';
+        const response = await fetch(`${baseUrl}/api/schools?locale=${currentLocale}`, {
+          signal: controller.signal,
+        });
+        const json = await response.json();
+        const rawSchools = json?.success && Array.isArray(json?.data) ? json.data : [];
+        // Ensure International option exists
+        const hasInternational = rawSchools.some(s => s.slug === 'international');
+        const processed = hasInternational ? rawSchools : [
+          { id: -1, title: 'International', slug: 'international', url: process.env.REACT_APP_BASE_URL || 'https://www.dulwich-frontend.atalent.xyz/' },
+          ...rawSchools,
+        ];
+        setSchoolsList(processed);
+      } catch (err) {
+        if (err?.name === 'AbortError') return;
+        setSchoolsList([]);
       }
-    };
+    })();
 
-    loadSchools();
+    return () => controller.abort();
   }, [isChineseVersion]);
 
   // State for dropdown open/close (desktop)
@@ -150,16 +154,38 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   // State for dropdown open/close (mobile)
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
 
+  // Compute the current school title for the dropdown value
+  const currentSchoolTitle = useMemo(() => {
+    if (selectedSchool && schoolsList.length > 0) {
+      const found = schoolsList.find(school =>
+        school.title === selectedSchool || 
+        `Dulwich College ${school.title}` === selectedSchool ||
+        school.slug === (typeof selectedSchool === 'string' && selectedSchool.toLowerCase())
+      );
+      if (found) return found.slug === 'international' ? nav.international : found.title;
+      if (selectedSchool === 'International' || selectedSchool === 'International School' || selectedSchool === 'Dulwich International College') {
+        return nav.international;
+      }
+    }
+    // If we have a selectedOption from manual selection, use it as fallback
+    if (selectedOption && selectedOption !== nav.pleaseSelect) {
+      return selectedOption;
+    }
+    return nav.international;
+  }, [selectedSchool, schoolsList, nav.international, selectedOption, nav.pleaseSelect]);
+
   // State for social icon hover
   const [hoveredIcon, setHoveredIcon] = useState(null);
 
   // State for QR code modals
   const [activeModal, setActiveModal] = useState(null);
   const [isModalClosing, setIsModalClosing] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
   const handleOpenModal = (modalType) => {
     setActiveModal(modalType);
     setIsModalClosing(false);
+    setImageLoading(true);
   };
 
   const handleCloseModal = () => {
@@ -170,34 +196,30 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
     }, 300);
   };
 
-  // Generate options from fetchedSchools with localised "International" as first option
+  // Generate options from schoolsList (from API / context / props) with localised "International" as first option
   const selectOptions = useMemo(() => {
     const options = [nav.international];
 
-    // Use fetchedSchools from API, fallback to availableSchools from props
-    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
-
-    if (schoolsToUse && schoolsToUse.length > 0) {
-      const schoolOptions = schoolsToUse.map(school => school.title);
+    if (schoolsList && schoolsList.length > 0) {
+      const schoolOptions = schoolsList
+        .filter(school => school.slug !== 'international')
+        .map(school => school.title);
       return [...options, ...schoolOptions];
     }
 
     return options;
-  }, [fetchedSchools, availableSchools, nav.international]);
+  }, [schoolsList, nav.international]);
 
   // Create a mapping for school data lookup
   const schoolDataMap = useMemo(() => {
     const map = {};
-    // Use fetchedSchools from API, fallback to availableSchools from props
-    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
-
-    if (schoolsToUse && schoolsToUse.length > 0) {
-      schoolsToUse.forEach(school => {
+    if (schoolsList && schoolsList.length > 0) {
+      schoolsList.forEach(school => {
         map[school.title] = school;
       });
     }
     return map;
-  }, [fetchedSchools, availableSchools]);
+  }, [schoolsList]);
 
   // Handle selection change
   const handleSelectChange = (schoolName) => {
@@ -213,17 +235,23 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
       } else {
         const schoolData = schoolDataMap[schoolName];
         if (schoolData) {
-          setSelectedSchool(`Dulwich College ${schoolName}`);
+          setSelectedSchool(schoolName);
           setSelectedSchoolSlug(schoolData.slug);
           localStorage.setItem('selectedSchoolSlug', schoolData.slug);
-          localStorage.setItem('selectedSchoolName', `Dulwich College ${schoolName}`);
+          localStorage.setItem('selectedSchoolName', schoolName);
         }
       }
     }
 
     // Redirect to school URL
     if (schoolName === nav.international) {
-      window.location.href = 'https://www.dulwich-frontend.atalent.xyz/';
+      const internationalData = schoolsList.find(s => s.slug === 'international');
+      if (internationalData?.url) {
+        window.location.href = internationalData.url.replace(/\\\//g, '/');
+      } else {
+        const baseUrl = process.env.REACT_APP_BASE_URL || 'https://www.dulwich-frontend.atalent.xyz/';
+        window.location.href = isChineseVersion ? `${baseUrl}zh/` : baseUrl;
+      }
       return;
     } else {
       const schoolData = schoolDataMap[schoolName];
@@ -247,11 +275,11 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
       <div className="max-w-[1120px] mx-auto px-4 py-14">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           {/* Left - Logo and Brand */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-2 md:gap-8">
             <img
               src={dcLogo}
               alt="Dulwich College"
-              className="h-[64px] w-[100%]"
+              className="h-[50px] md:h-[64px] w-[80%] md:w-[100%]"
               onError={(e) => {
                 e.target.style.display = '';
               }}
@@ -259,7 +287,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
          <img
               src={dcLogoWhite}
               alt="Dulwich College"
-              className="w-[100%]"
+              className="w-[230px] md:w-[400px]"
               onError={(e) => {
                 e.target.style.display = 'none';
               }}
@@ -273,16 +301,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
             </label>
             <div className="w-full md:w-56">
               <CustomDropdown
-                value={(() => {
-                  if (selectedSchool && availableSchools) {
-                    const found = availableSchools.find(school =>
-                      `Dulwich College ${school.title}` === selectedSchool
-                    );
-                    if (found) return found.title;
-                    if (selectedSchool === 'International') return nav.international;
-                  }
-                  return nav.pleaseSelect;
-                })()}
+                value={currentSchoolTitle}
                 options={selectOptions}
                 onChange={handleSelectChange}
                 isOpen={isDropdownOpen}
@@ -379,7 +398,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
           <div className="block md:hidden mb-6">
             <h3 className="text-sm text-left font-semibold mb-3 text-white">{nav.ourSchools}</h3>
             <CustomDropdown
-              value={selectedOption}
+              value={currentSchoolTitle}
               options={selectOptions}
               onChange={handleSelectChange}
               isOpen={isMobileDropdownOpen}
@@ -426,11 +445,11 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                 <a
                   href="https://x.com/in_dulwich"
                   className="transition-all duration-300"
-                  aria-label="Instagram"
-                  onMouseEnter={() => setHoveredIcon('instagram')}
+                  aria-label="x"
+                  onMouseEnter={() => setHoveredIcon('x')}
                   onMouseLeave={() => setHoveredIcon(null)}
                 >
-                  <Icon icon="Icon-Social-IG" size={28} color={hoveredIcon === 'instagram' ? '#D30013' : 'white'} />
+                  <Icon icon="X_logo_2023" size={22} color={hoveredIcon === 'x' ? '#D30013' : 'white'} />
                 </a>
                 <a
                   href="https://www.youku.com/profile/index/?uid=UMTg2MTQ5NTk3Mg=="
@@ -484,7 +503,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
           </div>
 
           {/* Copyright */}
-          <div className="mt-10 pt-6 border-t border-[#646261] mb-[90px] md:mb-80px">
+          <div className="mt-10 pt-6 border-t border-[#646261] md:mb-[10px]">
             <a href='https://beian.miit.gov.cn/#/Integrated/index'>
               <p className="text-[14px] text-[#FDFCF8] mt-4 text-left leading-relaxed">
                 © 2026 Dulwich College Management International Limited, or its affiliates
@@ -529,19 +548,30 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
             </button>
 
             {/* QR Code Image */}
-            <div className="p-8 md:p-12">
+            <div className="p-8 md:p-12 relative min-h-[200px] flex items-center justify-center">
+              {/* Loading Spinner */}
+              {imageLoading && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-t-4 border-[#D30013]"></div>
+                </div>
+              )}
+
+              {/* QR Code Image */}
               <img
                 src={activeModal === 'wechat' ? wechatQRCode : redNoteQRCode}
                 alt={activeModal === 'wechat' ? 'WeChat QR Code' : 'RedNote QR Code'}
-                className="w-full h-auto"
+                className={`w-full h-auto transition-opacity duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+                onLoad={() => setImageLoading(false)}
+                onError={() => setImageLoading(false)}
                 style={{
                   animation: isModalClosing
                     ? 'fadeOut 0.2s ease-out'
-                    : 'fadeIn 0.4s ease-out 0.1s backwards'
+                    : !imageLoading ? 'fadeIn 0.4s ease-out' : 'none'
                 }}
               />
             </div>
           </div>
+          
         </div>
       )}
 
@@ -624,6 +654,30 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
           }
         }
       `}</style>
+
+<div className='mb-[60px] md:mb-[10px] bg-white px-4 py-4'>
+                  {/* EiM Family Logo - Right */}
+                  <div className='max-w-[1120px] m-auto flex justify-end'>
+                  <a
+                href="https://www.eimglobal.com/?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex place-items-baseline leading-4 gap-4 hover:opacity-80 transition-opacity duration-200 flex-shrink-0"
+              >
+                <span className="font-figtree text-[12px] md:text-[14px] text-[#000] font-normal whitespace-nowrap relative">
+                  Part of the EiM Family
+                </span>
+                <img
+                  src={eimLogo}
+                  alt="EiM Family"
+                  className="h-16 md:h-16 w-auto"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+              </a>
+              </div>
+            </div>
     </footer>
   );
 }

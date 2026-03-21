@@ -21,9 +21,40 @@ const ScrollSpyPage = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const contentRef = useRef(null);
   const observerRef = useRef(null);
+  const sidebarRef = useRef(null);
+
+  // Scroll chaining: sidebar scrolls first, then hands off to the page
+  useEffect(() => {
+    const sidebar = sidebarRef.current;
+    if (!sidebar) return;
+
+    const handleWheel = (e) => {
+      const { deltaY } = e;
+      const { scrollTop, scrollHeight, clientHeight } = sidebar;
+      const atTop    = scrollTop <= 0 && deltaY < 0;
+      const atBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 1 && deltaY > 0;
+
+      if (!atTop && !atBottom) {
+        // Sidebar still has room to scroll — take control and scroll it manually.
+        // Without preventDefault the browser sends the wheel event to the page instead.
+        e.preventDefault();
+        e.stopPropagation();
+        sidebar.scrollTop += deltaY;
+      }
+      // When sidebar is at its top/bottom limit, do nothing:
+      // the browser will naturally pass the scroll to the page.
+    };
+
+    sidebar.addEventListener('wheel', handleWheel, { passive: false });
+    return () => sidebar.removeEventListener('wheel', handleWheel);
+  }, []);
 
   // Group consecutive same-type blocks (testimonial, curriculum, openday_carousel)
   const groupedBlocks = useMemo(() => {
+    // Filter out video and promo blocks from the page entirely
+    const excludedTypes = ['promo', 'promo_new', 'admissions_promo'];
+    const filteredBlocks = (blocks || []).filter(block => !excludedTypes.includes(block.type));
+
     const grouped = [];
     let collectionGroup = [];
     let curriculamGroup = [];
@@ -48,7 +79,7 @@ const ScrollSpyPage = ({
       }
     };
 
-    (blocks || []).forEach(block => {
+    filteredBlocks.forEach(block => {
       if (block.type === 'testimonial' || block.type === 'quote_card' || block.type === 'staff_quote') {
         flushCurriculam(); flushOpenday();
         collectionGroup.push(block);
@@ -67,58 +98,121 @@ const ScrollSpyPage = ({
     return grouped;
   }, [blocks]);
 
-  // Derive one nav item per grouped section (not per DOM heading)
   const blockNavItems = useMemo(() => {
-    const toTitleCase = (str) =>
-      str.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const clean = (str) => (str || '').trim().replace(/\s+/g, ' ');
 
-    const formatBlockName = (block) => {
-      const source = block.items ? block.items[0] : block;
-      const raw = source?.name || source?.type || block.name || block.type || '';
-      return raw ? toTitleCase(raw) : `Block ${block.id || ''}`;
-    };
+    const getBestTitle = (block, index) => {
+      // 1. Direct block-level fields
+      if (block.title) return clean(block.title);
+      if (block.subtitle) return clean(block.subtitle);
+      if (block.heading) return clean(block.heading);
 
-    const getTitle = (content, block) => {
-      if (!content) return formatBlockName(block);
-      const itemType = content['item-type'];
-      if (itemType === 'quote_card') return content.author || content.quotetext || formatBlockName(block);
-      if (itemType === 'staff_quote') return content.author_name || content.sq_quotetext || formatBlockName(block);
-      if (itemType === 'story_card') return content.sc_title || formatBlockName(block);
-      return content.title || content.heading || content.name || formatBlockName(block);
-    };
+      // 2. Structured content — named fields (title, subtitle, heading, text, value)
+      if (block.content && typeof block.content === 'object' && !Array.isArray(block.content)) {
+        const c = block.content;
+        const named = clean(c.title || c.subtitle || c.heading || c.text || c.value || null);
+        if (named && named.length >= 3) return named;
 
-    return groupedBlocks.map((block, index) => {
-      let title = '';
-      if (block.items) {
-        title = getTitle(block.items[0]?.content, block);
-      } else if (block.content && typeof block.content === 'object') {
-        title = getTitle(block.content, block);
-      } else if (block.title) {
-        title = block.title;
-      } else if (block.content && typeof block.content === 'string') {
-        const d = document.createElement('div');
-        d.innerHTML = block.content;
-        const h = d.querySelector('h1,h2,h3,h4');
-        title = h ? h.textContent : formatBlockName(block);
-      } else {
-        title = formatBlockName(block);
+        // 2b. content.copy — raw HTML used by copy / 2-col-copy / 2-col-image-copy blocks.
+        //     ONLY extract text from h1-h5 headings, strong tags, or elements with "subtitle" class.
+        const copyHtml = c.copy || (c.col && c.col[0] && c.col[0].copy) || null;
+        if (copyHtml && typeof copyHtml === 'string' && copyHtml.trim()) {
+          const div = document.createElement('div');
+          div.innerHTML = copyHtml;
+
+          // ONLY look for heading tags (h1-h5), strong tags, and elements with class "subtitle"
+          const headingSelectors = 'h1, h2, h3, h4, h5, strong, .subtitle, [class*="subtitle"]';
+          const headingEl = div.querySelector(headingSelectors);
+
+          if (headingEl?.textContent?.trim()) {
+            const cleaned = clean(headingEl.textContent);
+            if (cleaned && cleaned.length >= 3) return cleaned;
+          }
+        }
       }
-      return { id: `block-${index}`, title, index };
-    });
-  }, [groupedBlocks]);
 
+      // 3. Grouped blocks — check each item's direct fields, then their content.copy (headings only)
+      if (block.items?.length > 0) {
+        for (const item of block.items) {
+          if (item.title) return clean(item.title);
+          if (item.subtitle) return clean(item.subtitle);
+          if (item.heading) return clean(item.heading);
+          // Also try item's content.copy - ONLY extract from headings, strong tags, or subtitle classes
+          const itemCopy = item.content?.copy;
+          if (itemCopy && typeof itemCopy === 'string' && itemCopy.trim()) {
+            const div = document.createElement('div');
+            div.innerHTML = itemCopy;
+            const headingSelectors = 'h1, h2, h3, h4, h5, strong, .subtitle, [class*="subtitle"]';
+            const headingEl = div.querySelector(headingSelectors);
+            if (headingEl?.textContent?.trim()) {
+              const cleaned = clean(headingEl.textContent);
+              if (cleaned && cleaned.length >= 3) return cleaned;
+            }
+          }
+        }
+      }
+
+      // 4. HTML parsing — block.content is a raw HTML string (legacy) - headings and strong tags only
+      if (typeof block.content === 'string' && block.content.trim()) {
+        const div = document.createElement('div');
+        div.innerHTML = block.content;
+
+        // Check for subtitle class first
+        const subtitle = div.querySelector('.subtitle, [class*="subtitle"]');
+        if (subtitle?.textContent?.trim()) return clean(subtitle.textContent);
+
+        // Then check for headings and strong tags in order of preference
+        const orderedTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'strong'];
+        for (const tag of orderedTags) {
+          const el = div.querySelector(tag);
+          if (el?.textContent?.trim()) return clean(el.textContent);
+        }
+      }
+
+      // 5. Friendly fallbacks
+      const typeMap = {
+        curriculam_group: 'Our Curriculum',
+        collection_block_group: 'Testimonials & Quotes',
+        openday_carousel_group: 'Open Days & Events',
+        testimonial: 'Parent Voices',
+      };
+
+      return typeMap[block.type] || null;
+    };
+
+    // Define which block types should NOT appear in the sidebar list
+    const hiddenInNavTypes = ['text_block', 'cta', '2-col-cta', '2-col-image'];
+
+    return groupedBlocks
+      .map((block, index) => {
+        const title = getBestTitle(block, index);
+        // Skip if block type is in hidden list OR if no meaningful title was found
+        if (hiddenInNavTypes.includes(block.type) || !title || title.length < 3) return null;
+
+        return { id: `block-${index}`, title, index };
+      })
+      .filter(Boolean);
+  }, [groupedBlocks]);
   // Scroll spy — observe each grouped section
   useEffect(() => {
     if (!contentRef.current) return;
 
-    const sections = contentRef.current.querySelectorAll('[id^="block-"]');
+    // Observe the actual section containers we created in the map function
+    const sections = contentRef.current.querySelectorAll('.scrollspy-block-section');
+
     if (sections.length === 0) return;
 
-    observerRef.current = createScrollSpyObserver(setActiveSection);
+    // Ensure setActiveSection receives the ID of the section (e.g., "block-0")
+    observerRef.current = createScrollSpyObserver((id) => {
+      setActiveSection(id);
+    });
+
     sections.forEach((section) => observerRef.current.observe(section));
 
-    return () => { if (observerRef.current) observerRef.current.disconnect(); };
-  }, [groupedBlocks, blockNavItems]);
+    return () => {
+      if (observerRef.current) observerRef.current.disconnect();
+    };
+  }, [groupedBlocks]); // Re-run if blocks change
 
   // Handle scroll to section
   const handleScrollToSection = (id) => {
@@ -137,9 +231,7 @@ const ScrollSpyPage = ({
   return (
     <>
       <style>{`
-        /* ============================================
-           SCROLLSPY PAGE LAYOUT STYLES
-           ============================================ */
+  
 
         /* Main Container */
         .scrollspy-page {
@@ -240,20 +332,20 @@ const ScrollSpyPage = ({
           color: #9E1422;
           margin-bottom: 1rem;
           line-height: 1.2;
+          text-align:left;
         }
 
         .scrollspy-page-description {
           font-size: 18px;
           color: #6B7280;
           margin-bottom: 3rem;
+          text-align:left;
           line-height: 1.6;
         }
 
         /* Block Section Container */
         .scrollspy-block-section {
-          margin-bottom: 4rem;
-          padding-bottom: 3rem;
-          border-bottom: 1px solid #E3D9D1;
+        
           scroll-margin-top: 120px;
         }
 
@@ -303,10 +395,19 @@ const ScrollSpyPage = ({
         }
 
         .scrollspy-content p {
-        
+
           font-size: 16px;
           line-height: 1.8;
           margin-bottom: 1.25rem;
+        }
+
+        /* Subtitle styling */
+        .scrollspy-content .subtitle {
+          color: rgb(55, 65, 81);
+          font-size: 24px;
+          font-weight: 600;
+          margin-top: 2rem;
+          margin-bottom: 1rem;
         }
 
         /* ============================================
@@ -317,15 +418,12 @@ const ScrollSpyPage = ({
           top: 0;
           left: max(0px, calc(50vw - 800px));
           width: 300px;
-          height: 100vh;
+          height: calc(100vh - 160px);
           padding: 160px 1.5rem 2rem;
           background: #FFFFFF;
           overflow-y: auto;
           z-index: 10;
-    
         }
-
-        .scrollspy-anchors::-webkit-scrollbar { width: 0; }
 
         // .scrollspy-anchors-header {
         //   margin-bottom: 1.5rem;
@@ -357,22 +455,42 @@ const ScrollSpyPage = ({
           font-size: 14px;
           transition: all 0.2s ease;
           cursor: pointer;
-          border-left: 4px solid #F2EDE9;
-          border-radius: 4px;
           position: relative;
+        }
+
+        .scrollspy-anchor-item:before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 5px;
+          height: 100%;
+          background-color: #F2EDE9;
+          border-radius: 10px;
+          transition: all 0.3s ease;
+         
         }
 
         .scrollspy-anchor-item:hover {
           color: #D30013;
-          border-left-color: #D30013;
           padding-left: 1.5rem;
+        }
+
+        .scrollspy-anchor-item:hover:before {
+          background-color: #D30013;
+          height: 100%;
         }
 
         .scrollspy-anchor-item.active {
           color: #D30013;
           font-weight: 600;
-          border-left-color: #D30013;
           padding-left: 1.5rem;
+        }
+
+        .scrollspy-anchor-item.active:before {
+          background-color: #D30013;
+          height: 100%;
         }
 
         .scrollspy-anchor-item.level-h2 {
@@ -539,11 +657,11 @@ const ScrollSpyPage = ({
       `}</style>
 
       <div className="scrollspy-page w-full">
-    
+
 
         {/* Mobile Overlay */}
         <div
-          className={`scrollspy-overlay ${isMobileMenuOpen ? 'active' : ''}`}
+          className={`scrollspy-overlay `}
           onClick={toggleMobileMenu}
         />
 
@@ -588,7 +706,7 @@ const ScrollSpyPage = ({
 
         {/* Right Sidebar - Section Navigation */}
         {blockNavItems.length > 0 && (
-          <aside className="scrollspy-anchors">
+          <aside className="scrollspy-anchors" ref={sidebarRef}>
             <div className="scrollspy-anchors-header">
               {/* <div className="scrollspy-anchors-title">On This Page</div> */}
             </div>
@@ -608,10 +726,10 @@ const ScrollSpyPage = ({
             </nav>
           </aside>
         )}
-        
+
 
         {/* Mobile Menu Toggle Button */}
-        <button
+        {/* <button
           className="scrollspy-mobile-toggle"
           onClick={toggleMobileMenu}
           aria-label="Toggle navigation menu"
@@ -638,7 +756,7 @@ const ScrollSpyPage = ({
               />
             )}
           </svg>
-        </button>
+        </button> */}
       </div>
 
       {/* Footer — position: relative + z-index: 20 so it renders above the fixed sidebar (z-index: 10) */}
