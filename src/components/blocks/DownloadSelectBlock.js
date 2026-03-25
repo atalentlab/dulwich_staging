@@ -90,7 +90,7 @@ const DownloadSelectBlock = ({ content }) => {
   };
 
   return (
-    <section className="py-12 px-4 bg-white">
+    <section className="py-6 px-4 bg-white">
       <div className="max-w-[1120px] mx-auto">
         {/* Header with Title and Download All Button */}
         <div className="flex justify-between items-center mb-8">

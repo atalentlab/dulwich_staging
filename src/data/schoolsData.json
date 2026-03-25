@@ -4,7 +4,7 @@
     "items": [
       {
         "name": "Dulwich College Beijing",
-        "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/lr002864.jpg",
+        "image_url": "https://assets.dulwich.org/thumbs/schools/fit/300x162/lr002864.jpg",
         "established": 2005,
         "ages": "3 to 18",
         "students": 1570,
@@ -231,12 +231,12 @@
           "url": "https://hengqin.dulwich.org"
         },
         {
-          "name": "曼谷德威学院",
+          "name": "曼谷德威国际学校",
           "image_url": "https://assets.dulwich.org/thumbs/schools/fit/472x256/23004-dulwich-college-bangkok-main-road-20250121-20250211-141857-258-1.jpeg",
           "established": 2025,
           "ages": "3 至18岁",
           "students": 5000,
-          "location": "泰国曼谷",
+          "location": "曼谷",
           "tags": ["IGCSE", "IB文凭"],
           "content": "拥有最先进设施的德威学院最新成员。",
           "url": "https://bangkok.dulwich.org"
@@ -280,12 +280,12 @@
   "title": "学校列表",
   "items": [
     {
-      "name": "曼谷",
+      "name": "曼谷德威国际学校",
       "image_url": "https://dulwich.blob.core.chinacloudapi.cn/dulwich-staging/schools/23004-dulwich-college-bangkok-main-road-20250121.jpeg",
       "established": 2019,
       "ages": "3至18岁",
       "students": 100,
-      "location": "泰国曼谷",
+      "location": "曼谷",
       "tags": ["IGCSE","IB课程"],
       "content": "历史悠久的优质汉语教育。",
       "url": "https://bangkok.dulwich.org/",

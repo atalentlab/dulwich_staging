@@ -264,7 +264,7 @@ const CollectionBlock = ({ content }) => {
               {/* Quote Card */}
               {slide.type === 'quote' ? (
                 <div
-                  className="quote-card-overlay w-[300px] h-[420px] md:w-[340px] md:h-[450px] lg:w-[300px] lg:h-[480px] xl:w-[424px] xl:h-[528px] relative rounded-lg py-[30px] px-[25px] md:py-[35px] md:px-[30px] lg:py-10 lg:px-[35px] xl:py-[50px] xl:px-10 flex flex-col justify-between overflow-hidden shadow-lg"
+                  className="quote-card-overlay w-[300px] h-[420px] md:w-[340px] md:h-[450px] lg:w-[300px] lg:h-[480px] xl:w-[424px] xl:h-[528px] relative rounded-lg py-[30px] px-[25px] md:py-[35px] md:px-[30px] lg:py-10 lg:px-[35px] xl:py-[50px] xl:px-10 flex flex-col justify-between overflow-hidden"
                   style={{
                     backgroundColor: slide.bgColor,
                     backgroundImage: `url(${IcoStar})`,
@@ -346,7 +346,7 @@ const CollectionBlock = ({ content }) => {
 
               /* Story Card */
               ) : slide.type === 'story' ? (
-                <div className="bg-white w-[300px] h-[420px] md:w-[340px] md:h-[450px] lg:w-[300px] lg:h-[480px] xl:w-[424px] xl:h-[528px] rounded-lg overflow-hidden flex flex-col items-start shadow-md">
+                <div className="bg-white w-[300px] h-[440px] md:w-[340px] md:h-[450px] lg:w-[300px] lg:h-[480px] xl:w-[424px] xl:h-[528px] rounded-lg overflow-hidden flex flex-col items-start shadow-md">
                   {slide.image && (
                     <div className="w-full h-[170px] md:h-[190px] lg:h-[100px] 2xl:h-[200px] xl:h-[240px] overflow-hidden shrink-0">
                       <img

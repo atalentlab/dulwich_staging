@@ -174,7 +174,7 @@ const AlbumBlock = ({ content }) => {
   }, [selectedAlbum]);
 
   return (
-    <section data-id={anchorId} className="py-12 px-4 bg-white">
+    <section data-id={anchorId} className="py-2 md:py-10 px-4 bg-white">
       <style>{`
         @keyframes albumOverlayIn  { from { opacity: 0; } to { opacity: 1; } }
         @keyframes albumOverlayOut { from { opacity: 1; } to { opacity: 0; } }

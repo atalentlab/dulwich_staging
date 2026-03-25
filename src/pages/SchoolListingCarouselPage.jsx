@@ -18,6 +18,43 @@ import ssXianImg from '../assets/schoollist/ss-xian.webp';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
+// Static tags per school (mirrors SCHOOL_CTAS pattern)
+const jsontag = {
+  // International schools
+  'Dulwich College Bangkok': ['IGCSE', 'IB Diploma'],
+  'Dulwich College Beijing': ['IGCSE'],
+  'Dulwich College Shanghai Pudong': ['IGCSE', 'IB Diploma'],
+  'Dulwich College Shanghai Puxi': ['IGCSE', 'IB Diploma'],
+  'Dulwich College Suzhou': ['IGCSE', 'IB Diploma'],
+  'Dulwich College (Singapore)': ['IGCSE', 'IB Diploma'],
+  'Dulwich College Seoul': ['IGCSE', 'IB Diploma'],
+
+  // High School programmes
+  'Dulwich International High School Programme Suzhou': ['IGCSE', 'A Level'],
+  'Dulwich Int. High School Programme Suzhou': ['IGCSE', 'A Level'],
+  'Dulwich International High School Programme Hengqin': ['Pre-A Level', 'A Level'],
+  'Dulwich Int. High School Programme Hengqin': ['Pre-A Level', 'A Level'],
+
+  // Chinese names
+  '曼谷德威学院': ['IGCSE', 'IB课程'],
+  '北京德威学院': ['IGCSE'],
+  '北京德威英国国际学校': ['IGCSE'],
+  '上海浦东德威国际学校': ['IGCSE', 'IB课程'],
+  '上海浦东德威英国国际学校': ['IGCSE', 'IB课程'],
+  '上海德威外籍人员子女学校（浦东）': ['IGCSE', 'IB课程'],
+  '上海浦西德威国际学校': ['IGCSE', 'IB课程'],
+  '上海德威外籍人员子女学校（浦西）': ['IGCSE', 'IB课程'],
+  '苏州德威国际学校': ['IGCSE', 'IB课程'],
+  '苏州德威学院': ['IGCSE', 'IB课程'],
+  '苏州德威外籍人员子女学校': ['IGCSE', 'IB课程'],
+  '德威学院（新加坡）': ['IGCSE', 'IB课程'],
+  '德威学院首尔分校': ['IGCSE', 'IB课程'],
+  '苏州德威国际高中课程': ['IGCSE', 'A Level课程'],
+  '苏州工业园区德威联合书院': ['IGCSE', 'A Level课程'],
+  '德威国际高中课程横琴分校': ['Pre-A Level课程', 'A Level课程'],
+  '横琴德威国际课程高中项目·广东横琴粤澳深度合作区华发容闳高级中学': ['Pre-A Level课程', 'A Level课程'],
+};
+
 export default function SchoolListingCarouselPage({ title = "Find a School" }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const scrollContainerRef = useRef(null);
@@ -90,6 +127,28 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
     return null;
   };
 
+  // Helper function to get tags for a school
+  const getSchoolTags = (schoolName) => {
+    if (!schoolName) return [];
+
+    // Try exact match first
+    if (jsontag[schoolName]) {
+      return jsontag[schoolName];
+    }
+
+    // Try normalized match (case-insensitive, trimmed)
+    const normalizedName = schoolName.trim();
+    const matchedKey = Object.keys(jsontag).find(
+      key => key.toLowerCase() === normalizedName.toLowerCase()
+    );
+
+    if (matchedKey) {
+      return jsontag[matchedKey];
+    }
+
+    return [];
+  };
+
   // Fetch schools from API
   useEffect(() => {
     const fetchSchools = async () => {
@@ -105,16 +164,21 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
 
         if (data.success && data.data) {
           // Transform API data to match carousel format
-          const transformedSchools = data.data.map(school => ({
-            name: school.full_title || school.title || school.name,
-            location: school.location,
-            students: school.students_count || school.students,
-            ages: school.ages,
-            established: school.established,
-            image_url: school.image_url,
-            url: school.url,
-            tags: school.tags || [],
-          }));
+          const transformedSchools = data.data.map(school => {
+            const schoolName = school.full_title || school.title || school.name;
+
+            return {
+              name: schoolName,
+              location: school.location,
+              students: school.students_count || school.students,
+              ages: school.ages,
+              established: school.established,
+              image_url: school.image_url,
+              url: school.url,
+              // Use API tags if available, otherwise fall back to jsontag mapping
+              tags: (school.tags && school.tags.length > 0) ? school.tags : getSchoolTags(schoolName),
+            };
+          });
 
           setDynamicSchools(transformedSchools);
         }
@@ -230,7 +294,7 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
       <section className="bg-white py-8">
         {/* Title section with max-width 1120px */}
         <div className="max-w-[1120px] mx-auto">
-          <h1 className="text-left text-4xl md:text-5xl lg:text-6xl font-bold text-[#9E1422]">
+          <h1 className="text-left text-4xl md:text-5xl lg:text-6xl font-bold text-[#9E1422] mb-10">
             {title}
           </h1>
         </div>
@@ -309,7 +373,7 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
 
                       {/* Tags */}
                       {school.tags && school.tags.length > 0 && (
-                        <div className="flex gap-1.5 flex-wrap mt-1">
+                        <div className="flex gap-1.5 flex-wrap mt-3 mb-1 py-2">
                           {school.tags.map((tag, i) => (
                             <span
                               key={i}

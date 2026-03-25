@@ -263,7 +263,7 @@ const TaxonomyBlock = ({ content }) => {
   }
 
   return (
-    <section data-id={anchorId} className="py-12 px-4 bg-white">
+    <section data-id={anchorId} className="py-2 md:py-10 px-4 bg-white">
       <style>{`
         /* Ensure HTML content renders properly */
         .taxonomy-html-content p {
@@ -284,11 +284,11 @@ const TaxonomyBlock = ({ content }) => {
           margin-bottom: 0.5rem;
         }
         .taxonomy-html-content a {
-          color: #D30013;
+          color: #fff;
           text-decoration: underline;
         }
         .taxonomy-html-content a:hover {
-          color: #B01810;
+          color: #ddd;
         }
 
         /* Custom scrollbar for dropdown */

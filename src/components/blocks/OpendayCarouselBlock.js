@@ -41,6 +41,7 @@ function buildCta(type, link, contextualData) {
 function OpendayCarouselBlock({ items = [], content = [] }) {
   const sliderRef = useRef(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const isDraggingRef = useRef(false);
 
   // Suppress ResizeObserver loop error (benign warning)
   React.useEffect(() => {
@@ -102,10 +103,21 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
     centerMode: false,
     variableWidth: false,
     swipeToSlide: true,
-    touchThreshold: 10,
+    touchThreshold: 5,
+    swipe: true,
+    touchMove: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    beforeChange: (current, next) => setCurrentSlide(next),
+    beforeChange: (current, next) => {
+      isDraggingRef.current = true;
+      setCurrentSlide(next);
+    },
+    afterChange: () => {
+      // Reset dragging flag after animation completes
+      setTimeout(() => {
+        isDraggingRef.current = false;
+      }, 100);
+    },
     appendDots: dots => (
       <div className="pl-4 sm:pl-8 md:pl-12 lg:pl-[calc((100vw-1120px)/2)]">
         <ul style={{ margin: "0px", display: "flex", gap: "8px" }}>{dots}</ul>
@@ -138,8 +150,11 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
           centerPadding: '0px',
           infinite: true,
           swipeToSlide: true,
-          touchThreshold: 10,
+          swipe: true,
+          touchMove: true,
+          touchThreshold: 5,
           speed: 400,
+          draggable: true,
         }
       }
     ]
@@ -159,6 +174,12 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
                 href: item.cta.href,
                 target: item.cta.external ? '_blank' : '_self',
                 rel: item.cta.external ? 'noopener noreferrer' : undefined,
+                onClick: (e) => {
+                  // Prevent navigation if slider just changed (user was swiping)
+                  if (isDraggingRef.current) {
+                    e.preventDefault();
+                  }
+                },
               } : {};
               return (
                 <div key={`${item.id}-${idx}`} className="max-[800px]:px-0 px-2 md:px-3">
@@ -374,6 +395,32 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
           }
           .openday-carousel .slick-slide:active {
             cursor: grabbing;
+          }
+        }
+
+        /* Improve touch responsiveness */
+        .openday-carousel .slick-list {
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .openday-carousel a {
+          -webkit-tap-highlight-color: transparent;
+          pointer-events: auto;
+        }
+
+        /* Mobile touch optimization - allow horizontal swipe */
+        @media (max-width: 800px) {
+          .openday-carousel .slick-list {
+            touch-action: pan-x pan-y pinch-zoom !important;
+          }
+          .openday-carousel .slick-track {
+            touch-action: pan-x pan-y !important;
+          }
+          .openday-carousel .slick-slide {
+            touch-action: pan-x pan-y !important;
+          }
+          .openday-carousel a {
+            touch-action: pan-x pan-y !important;
           }
         }
       `}</style>

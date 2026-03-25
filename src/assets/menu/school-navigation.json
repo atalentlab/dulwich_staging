@@ -659,8 +659,8 @@
                 ]
               },
               {
-                "title": "Co-Curricular Activities",
-                "url": "/learning/holistic-education/co-curricular-activities",
+                "title": "Enrichment Activities",
+                "url": "/learning/holistic-education/enrichment-activities",
                 "schools": [
                   "hengqin-high-school"
                 ]
@@ -1012,7 +1012,7 @@
               },
               {
                 "title": "Wellbeing",
-                "url": "/community/our-members/safeguarding",
+                "url": "/community/our-members/wellbeing",
                 "schools": [
                   "singapore"
                 ]
@@ -1228,7 +1228,8 @@
                 "url": "/admissions/apply/frequently-asked-questions",
                 "excludeSchools": [
                  "suzhou",
-                 "shanghai-puxi"
+                 "shanghai-puxi",
+                 "hengqin-high-school"
                 ]
               },
               {
@@ -1920,7 +1921,13 @@
                   "suzhou",
                   "shanghai-pudong",
                   "singapore",
-                  "suzhou-high-school",
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "核心素养活动",
+                "url": "/zh/learning/holistic-education/enrichment-activities",
+                "schools": [
                   "hengqin-high-school"
                 ]
               },
@@ -2437,7 +2444,8 @@
                 "url": "/zh/admissions/apply/frequently-asked-questions",
                 "excludeSchools":[
                   "suzhou",
-                  "shanghai-puxi"
+                  "shanghai-puxi",
+                  "hengqin-high-school"
                 ]
               },
               {

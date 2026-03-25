@@ -91,7 +91,7 @@ if (style === '2') {
         {/* Accordion Header */}
         <button
           onClick={() => toggleSection('style-2')}
-          className="w-full flex items-center justify-between text-left py-12 border-t border-b border-gray-200 px-4 -mx-4 transition-all duration-300 group relative overflow-hidden accordion-hover-style-2"
+          className="w-full flex items-center justify-between text-left py-12 border-t border-gray-200 px-4 -mx-4 transition-all duration-300 group relative overflow-hidden accordion-hover-style-2"
         >
           <h3 className="text-[24px] sm:text-xl font-bold text-[#3C3737] relative z-10">
             {title}
@@ -119,17 +119,18 @@ if (style === '2') {
           }`}
         >
           <div className="text-left pt-6 pb-8 space-y-6">
-            {copy && (
+          {copy && (
               <div
-                className="prose prose-sm text-[#3C3737]"
+                className="prose prose-sm text-[#3C3737] 
+                          [&_ul]:list-disc [&_ul]:pl-6 
+                          [&_li]:mb-2"
                 dangerouslySetInnerHTML={{ __html: copy }}
               />
             )}
-
             {/* CTA Button */}
             {cta && (
               <a
-                href={cta || '#'}
+                href={cta}
                 className="text-left inline-block mt-4 px-6 py-3 border-2 border-[#D30013] text-[#D30013] rounded-[10px] font-semibold hover:bg-[#D30013] hover:text-white transition"
               >
                 {ctaName}

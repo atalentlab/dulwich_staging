@@ -45,7 +45,7 @@ const PromoNewBlock = ({ content }) => {
   return (
     <section
       data-id={anchorId}
-      className="pl-4 mt-4 mb-4 md:mt-0 md:mb-10"
+      className="pl-4 mt-4 mb-4 md:mt-12 md:mb-10"
     >
       <div className="w-full relative">
         <div className="flex flex-col lg:flex-row gap-0 items-start">
@@ -105,7 +105,7 @@ const PromoNewBlock = ({ content }) => {
 
           {/* Image - Extends to right edge */}
           {sc_image && (
-            <div className="flex-1 w-full lg:min-w-[500px] mt-8 lg:mt-0">
+            <div className="flex-1 w-full lg:min-w-[500px] pr-4 lg:pr-0 mt-8 lg:mt-0">
               <img
                 src={sc_image}
                 alt={red_heading || eyebrow || 'Promotional image'}

@@ -91,12 +91,12 @@ const DownloadBlock = ({ content }) => {
   };
 
   return (
-    <section data-id={anchorId} className="py-12 px-4 bg-white">
+    <section data-id={anchorId} className="py-2 md:py-10 px-4 bg-white">
       <div className="max-w-[1120px] mx-auto">
-        <div className="bg-[#FAF7F5] rounded-lg p-8 lg:p-12 relative">
+        <div className="bg-[#FAF7F5] rounded-lg p-6 lg:p-10 relative">
           
           {/* Header with Title and Download All Button */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div className="max-w-2xl">
               {/* Title */}
               {title && (

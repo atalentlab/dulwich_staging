@@ -163,8 +163,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   // Get schools using React Query hook (ensures fresh fetch)
   const { schools: fetchedSchools, isLoading: schoolsLoading } = useSchools(locale);
 
-  // State for the left dropdown - default to localised "Please select"
-  const [selectedOption, setSelectedOption] = useState(t.pleaseSelect);
+  // State for the left dropdown - will be set to current school name
+  const [selectedOption, setSelectedOption] = useState('');
   const [displaySchoolName, setDisplaySchoolName] = useState('INTERNATIONAL');
   const [hoveredIcon, setHoveredIcon] = useState(null);
 
@@ -187,12 +187,20 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
     }, 300);
   };
 
-  // Sync selectedOption label when language toggles
+  // Sync selectedOption with current school on mount and when schools load
   useEffect(() => {
-    setSelectedOption(prev =>
-      (prev === 'Please select' || prev === '请选择' || prev === 'International' || prev === '国际') ? t.pleaseSelect : prev
-    );
-  }, [t.pleaseSelect]);
+    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
+
+    if (currentSchoolSlug && schoolsToUse && schoolsToUse.length > 0) {
+      const currentSchoolData = schoolsToUse.find(s => s.slug === currentSchoolSlug);
+      if (currentSchoolData && currentSchoolData.title) {
+        setSelectedOption(currentSchoolData.title);
+      }
+    } else if (schoolInfo?.menu_title && schoolInfo.menu_title !== 'International') {
+      // Fallback to menuTitle from API if schools list hasn't loaded
+      setSelectedOption(schoolInfo.menu_title);
+    }
+  }, [fetchedSchools, availableSchools, currentSchoolSlug, schoolInfo]);
 
   // Schools are now provided by SchoolsContext (no duplicate API calls)
 
@@ -243,6 +251,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
 
   // Get safeguarding text from API
   const safeguardingHtml = schoolInfo?.footer_rs_copy || null;
+  const footerCopyHtml = schoolInfo?.footer_copy || null;
   const menuTitle = schoolInfo?.menu_title || null;
   // Get contact info from API
   const addresses = Array.isArray(schoolInfo?.addresses) ? schoolInfo.addresses : [];
@@ -318,8 +327,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
       const currentSchoolData = schoolsToUse.find(s => s.slug === currentSchoolSlug);
       if (currentSchoolData) {
         setDisplaySchoolName(currentSchoolData.title.toUpperCase());
-        // Don't auto-select the current school - keep "Please select" as default
-        // setSelectedOption(currentSchoolData.title);
+        // Auto-select the current school in the dropdown
+        setSelectedOption(currentSchoolData.title);
         return;
       }
     }
@@ -334,20 +343,17 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
     }
   }, [selectedSchool, availableSchools, fetchedSchools]);
 
-  // Generate options from fetchedSchools with localised "Please select" as first option
+  // Generate options from fetchedSchools (without "Please select")
   const selectOptions = useMemo(() => {
-    const options = [t.pleaseSelect];
-
     // Use fetchedSchools from API, fallback to availableSchools from props
     const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
 
     if (schoolsToUse && schoolsToUse.length > 0) {
-      const schoolOptions = schoolsToUse.map(school => school.title);
-      return [...options, ...schoolOptions];
+      return schoolsToUse.map(school => school.title);
     }
 
-    return options;
-  }, [fetchedSchools, availableSchools, t.pleaseSelect]);
+    return [];
+  }, [fetchedSchools, availableSchools]);
 
   // Create a mapping for school data lookup
   const schoolDataMap = useMemo(() => {
@@ -368,6 +374,11 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
     // Use fetchedSchools from API, fallback to availableSchools from props
     const schoolsToUse = (fetchedSchools && fetchedSchools.length > 0) ? fetchedSchools : availableSchools;
 
+    // Prioritize selectedOption if it's already set (from useEffect)
+    if (selectedOption && selectedOption !== '') {
+      return selectedOption;
+    }
+
     // Prioritize current school from subdomain slug — most accurate indicator
     if (currentSchoolSlug && schoolsToUse && schoolsToUse.length > 0) {
       const current = schoolsToUse.find(s =>
@@ -375,6 +386,11 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
         (s.title && s.title.toLowerCase() === currentSchoolSlug.toLowerCase())
       );
       if (current) return current.title;
+    }
+
+    // Use menuTitle from API if we're on a school site but schools list hasn't loaded yet
+    if (currentSchoolSlug && schoolInfo?.menu_title && schoolInfo.menu_title !== 'International') {
+      return schoolInfo.menu_title;
     }
 
     // Fall back to explicitly selected school prop (but skip International defaults)
@@ -387,25 +403,15 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
       if (found) return found.title;
     }
 
-    // If we have a selectedOption from manual selection, use it as fallback
-    if (selectedOption && selectedOption !== t.pleaseSelect) {
-      return selectedOption;
-    }
-
-    // Default to "Please select"
-    return t.pleaseSelect;
-  }, [selectedSchool, fetchedSchools, availableSchools, currentSchoolSlug, selectedOption, t.pleaseSelect, t.international, menuTitle]);
+    // Default to empty string (will show current school)
+    return schoolInfo?.menu_title || '';
+  }, [selectedSchool, fetchedSchools, availableSchools, currentSchoolSlug, selectedOption, schoolInfo]);
 
   // Handle selection change
   const handleSelectChange = (schoolName) => {
     setSelectedOption(schoolName);
 
     if (!schoolName) return;
-
-    // If "Please select" is chosen, just return without navigating
-    if (schoolName === t.pleaseSelect) {
-      return;
-    }
 
     // Update state
     if (setSelectedSchool && setSelectedSchoolSlug) {
@@ -444,10 +450,8 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   };
 
   return (
-    <footer
-      ref={(el) => (sectionRefs?.current ? sectionRefs.current['footer'] = el : null)}
-      className="bg-[#3C3737] text-white transition-all duration-1000 mt-12"
-    >
+    <footer ref={(el) => (sectionRefs?.current ? sectionRefs.current['footer'] = el : null)}
+      className="bg-[#3C3737] text-white transition-all duration-1000 mt-16">
       {/* Top Section - Logo and School Selector */}
       <div className="max-w-[1120px] mx-auto px-4 py-10 md:py-14">
         <div className="flex flex-col md:flex-row items-start md:items-start justify-between gap-6 md:gap-8">
@@ -494,7 +498,6 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                 onChange={handleSelectChange}
                 isOpen={isDropdownOpen}
                 setIsOpen={setIsDropdownOpen}
-                placeholder={t.pleaseSelect}
               />
             </div>
             </div>
@@ -748,17 +751,19 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
 </div>
 <div className="grid grid-cols-3 gap-x-6 gap-y-6 mt-4">
 
-                        <a
-                          href={socialLinks.youku}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-start"
-                          aria-label="Youku"
-                          onMouseEnter={() => setHoveredIcon('youku-alt')}
-                          onMouseLeave={() => setHoveredIcon(null)}
-                        >
-                          <Icon icon="Icon-Social-YK" size={24} color={hoveredIcon === 'youku-alt' ? '#D30013' : 'white'} />
-                        </a>
+                        {socialLinks.youku && socialLinks.youku !== '#' && (
+                          <a
+                            href={socialLinks.youku}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-start"
+                            aria-label="Youku"
+                            onMouseEnter={() => setHoveredIcon('youku-alt')}
+                            onMouseLeave={() => setHoveredIcon(null)}
+                          >
+                            <Icon icon="Icon-Social-YK" size={24} color={hoveredIcon === 'youku-alt' ? '#D30013' : 'white'} />
+                          </a>
+                        )}
 
                         {/* Row 2 */}
                         <a
@@ -883,15 +888,17 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                       <Icon icon="Icon-Social-RedNote" size={44} color="white" />
                     </button>
                   )}
-                  <a
-                    href={socialLinks.youku}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-all duration-300 hover:opacity-70 hover:scale-110"
-                    aria-label="Youku"
-                  >
-                    <Icon icon="Icon-Social-YK" size={28} color="white" />
-                  </a>
+                  {socialLinks.youku && socialLinks.youku !== '#' && (
+                    <a
+                      href={socialLinks.youku}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-all duration-300 hover:opacity-70 hover:scale-110"
+                      aria-label="Youku"
+                    >
+                      <Icon icon="Icon-Social-YK" size={28} color="white" />
+                    </a>
+                  )}
                 </div>
 
                 {/* Row 2: Instagram, Facebook, YouTube, LinkedIn */}
@@ -938,13 +945,13 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
           </div>
 
           {/* Safeguarding Notice */}
-          <div className=" text-[16px] text-left text-[#FFFFFF] mb-8">
+          <div className="text-[16px] text-left text-[#FFFFFF]">
             {safeguardingHtml ? (
-              <div className="leading-relaxed md:flex">
+              <div className="lg:flex">
                 <strong className="text-white font-bold">{t.safeguardingTitle}</strong>{' '}
               &nbsp;
                 <span
-                  className='font-light'
+                  className='font-light leading'
                   dangerouslySetInnerHTML={{ __html: safeguardingHtml }}
                 />
               </div>
@@ -978,28 +985,34 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
               ></div>
             </div>
           )}
-
-          {/* Copyright and EiM Logo */}
-          <div className="pt-0 border-t border-[#4a4545] mb-[150px] mt-[20px] md:mb-0">
+{/* Copyright and EiM Logo */}
+<div className="pt-0 border-t border-[#4a4545] mb-[5px] md:mb-[16px] mt-[10px]">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mt-[30px]">
               {/* Copyright - Left */}
               <a
-                href='https://beian.miit.gov.cn/#/Integrated/index'
-                target="_blank"
-                rel="noopener noreferrer"
+                href={currentSchoolSlug === 'singapore' ? undefined : 'https://beian.miit.gov.cn/#/Integrated/index'}
+                target={currentSchoolSlug === 'singapore' ? '_self' : '_blank'}
+                rel={currentSchoolSlug === 'singapore' ? undefined : 'noopener noreferrer'}
                 className="text-[14px] hover:opacity-80 transition-opacity duration-200 text-[#FDFCF8]"
               >
-                <p className="text-[14px] text-[#FDFCF8] hover:text-gray-300 text-left leading-relaxed transition-colors duration-200">
-                  © 2026 Dulwich College Management International Limited, or its affiliates
-                  <br className="md:hidden" />
-                  <span className="hidden md:inline"> · </span>
-                  沪ICP备16016470号-4 · 沪公网安备31010602002392号
-                </p>
+                {currentSchoolSlug === 'singapore' ? (
+                  <p className="text-[14px] text-[#FDFCF8] hover:text-gray-300 text-left leading-relaxed transition-colors duration-200">
+                    Dulwich College (Singapore) PEI Registration Number: 201027137D - Period of Registration: 09-01-2024 to 08-01-2028
+                    <br />
+                    © 2026 Dulwich College Management International Limited, or its affiliates
+                  </p>
+                ) : (
+                  <p className="text-[14px] text-[#FDFCF8] hover:text-gray-300 text-left leading-relaxed transition-colors duration-200">
+                    © 2026 Dulwich College Management International Limited, or its affiliates
+                    <br className="md:hidden" />
+                    <span className="hidden md:inline"> · </span>
+                    沪ICP备16016470号-4 · 沪公网安备31010602002392号
+                  </p>
+                )}
               </a>
             </div>
           
           </div>
-
         </div>
 
         <div className='mb-[60px] md:mb-[10px] bg-white px-4 py-4'>

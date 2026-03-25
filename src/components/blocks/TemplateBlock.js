@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Select from 'react-select';
 import { fetchAllArticles, fetchArticleTags } from '../../api/articleService';
+import { fetchTeacherList } from '../../api/teacherService';
 import { getCurrentSchool } from '../../utils/schoolDetection';
 import loadingSpinner from '../../assets/images/loading_spinner.gif';
 
@@ -67,12 +69,39 @@ const TemplateBlock = ({ content }) => {
   const [isInitialLoad, setIsInitialLoad] = useState(true); // Track if this is the first load
 
   const dropdownRef = useRef(null); // Ref for the scrollable dropdown
+  const loadMoreButtonRef = useRef(null); // Ref for the article load more button
+  const teacherLoadMoreButtonRef = useRef(null); // Ref for the teacher load more button
 
   const ARTICLES_PER_PAGE = 6;
-  const INITIAL_ARTICLES_COUNT = 20; // Show 20 articles initially
+  const INITIAL_ARTICLES_COUNT = 18; // Show 18 articles initially (3 pages)
 
-  // Load Tags on Mount
+  // People Listing State
+  const [teachers, setTeachers] = useState([]);
+  const [filteredTeachers, setFilteredTeachers] = useState([]);
+  const [schools, setSchools] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [selectedSchool, setSelectedSchool] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [schoolSearchQuery, setSchoolSearchQuery] = useState('');
+  const [departmentSearchQuery, setDepartmentSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('Name'); // Name, School, Department
+  const [expandedTeacher, setExpandedTeacher] = useState(null);
+  const [showSchoolFilter, setShowSchoolFilter] = useState(false);
+  const [showDepartmentFilter, setShowDepartmentFilter] = useState(false);
+
+  // Teacher pagination state
+  const [teacherPageNo, setTeacherPageNo] = useState(1);
+  const [hasMoreTeachers, setHasMoreTeachers] = useState(true);
+  const [loadingMoreTeachers, setLoadingMoreTeachers] = useState(false);
+  const INITIAL_TEACHERS_COUNT = 20;
+  const TEACHERS_PER_PAGE = 10;
+
+
+  // Load Tags on Mount and when school/locale changes
   useEffect(() => {
+    let isMounted = true; // Track if component is still mounted
+
     const loadTags = async () => {
       if (template === 'network-news' || template === 'school-news') {
         try {
@@ -80,34 +109,42 @@ const TemplateBlock = ({ content }) => {
           const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
           const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
 
-          // Fetch school-specific tags and global tags in parallel
-          const [schoolTags, globalTags] = await Promise.all([
-            fetchArticleTags(locale, schoolParam).catch(() => []),
-            fetchArticleTags(locale).catch(() => []),
-          ]);
-          // Merge both, deduplicated by id
-          const merged = [...(globalTags || [])];
-          const globalIds = new Set(merged.map(t => String(t.id)));
-          (schoolTags || []).forEach(t => {
-            if (!globalIds.has(String(t.id))) merged.push(t);
-          });
-          setTags(merged);
+          console.log('📚 Loading tags for school:', schoolParam, 'locale:', locale);
 
-          // Apply pretag-id only for IDs that exist in the loaded tags list
-          if (pretagId.length > 0) {
-            const loadedIds = new Set(merged.map(t => String(t.id)));
-            const validPretagIds = pretagId.map(String).filter(id => loadedIds.has(id));
-            if (validPretagIds.length > 0) {
-              setSelectedTags(validPretagIds);
+          // Fetch tags with school parameter (API returns both school-specific and global tags)
+          const loadedTags = await fetchArticleTags(locale, schoolParam);
+
+          // Only update state if component is still mounted
+          if (isMounted) {
+            console.log('✅ Tags loaded:', loadedTags?.length || 0);
+            setTags(loadedTags || []);
+
+            // Apply pretag-id only for IDs that exist in the loaded tags list
+            if (pretagId.length > 0) {
+              const loadedIds = new Set((loadedTags || []).map(t => String(t.id)));
+              const validPretagIds = pretagId.map(String).filter(id => loadedIds.has(id));
+              if (validPretagIds.length > 0) {
+                setSelectedTags(validPretagIds);
+              }
             }
           }
         } catch (err) {
-          console.error('Error loading tags:', err);
+          if (isMounted) {
+            console.error('❌ Error loading tags:', err);
+            setTags([]);
+          }
         }
       }
     };
+
     loadTags();
-  }, [template]);
+
+    // Cleanup function to prevent state updates on unmounted component
+    return () => {
+      isMounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [template, currentSchoolSlug, locale]);
 
   // Auto-select tag from navigation state after tags are loaded
   useEffect(() => {
@@ -184,6 +221,13 @@ const TemplateBlock = ({ content }) => {
   useEffect(() => {
     const fetchInitialArticles = async () => {
       if (template === 'network-news' || template === 'school-news') {
+        console.log('🔄 Initial Fetch Triggered - Dependencies:', {
+          selectedTags,
+          template,
+          currentSchoolSlug,
+          locale
+        });
+
         setLoading(true);
         setError(null);
         setPageNo(1); // Reset page
@@ -191,32 +235,31 @@ const TemplateBlock = ({ content }) => {
         setIsInitialLoad(true); // Mark as initial load
 
         try {
-          // For initial load, fetch multiple pages to get 20 articles
-          // Fetch 3 pages (10 articles each) to get 20+ articles
-          const allArticlesData = [];
-          let mainData = null;
-          let responseTags = [];
-
           // Add CMS suffix to school parameter if present
           const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
           const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
 
-          // Single fetch — service returns 24 for dulwich-life slug
-          const response = await fetchAllArticles({
+          const params = {
             slug: 'dulwich-life',
             locale: locale,
             school: schoolParam,
             tags: selectedTags,
-          });
+            limit: INITIAL_ARTICLES_COUNT,
+            page_no: 1
+          };
 
-          allArticlesData.push(...(response.articles || []));
-          mainData = response.main || null;
-          responseTags = response.tags || [];
+          console.log('🔄 Initial Fetch - API params:', params);
 
-          const newArticles = allArticlesData;
-          const main = mainData;
+          // Fetch first page with initial articles count
+          const response = await fetchAllArticles(params);
+
+          const newArticles = response.articles || [];
+          const main = response.main || null;
+          const responseTags = response.tags || [];
+
           setMaindata(main);
-          setPageNo(1);
+          // Set page number to 3 since we're loading 3 pages initially (18 articles / 6 per page)
+          setPageNo(3);
 
           // Merge tags from articles response into tags state to cover any missing ones
           if (responseTags.length > 0) {
@@ -237,8 +280,7 @@ const TemplateBlock = ({ content }) => {
           setIsInitialLoad(false); // Initial load complete
 
           // Determine if there might be more
-          // Since we fetched 3 pages, check if the last page had less than 10 articles
-          if (newArticles.length < 20) {
+          if (newArticles.length < INITIAL_ARTICLES_COUNT) {
             setHasMore(false);
           } else {
             setHasMore(true);
@@ -257,6 +299,165 @@ const TemplateBlock = ({ content }) => {
     fetchInitialArticles();
   }, [selectedTags, template, currentSchoolSlug, locale]);
 
+  // Fetch Teachers for people-listing template
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      if (template === 'people-listing') {
+        setLoading(true);
+        setError(null);
+        setTeacherPageNo(1);
+        setHasMoreTeachers(true);
+
+        try {
+          // Add CMS suffix to school parameter
+          const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+          const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
+
+          const response = await fetchTeacherList({
+            school: schoolParam,
+            locale: locale,
+            limit: INITIAL_TEACHERS_COUNT,
+            page_no: 1
+          });
+
+          const teacherData = response.teachers || [];
+          setTeachers(teacherData);
+          setFilteredTeachers(teacherData);
+
+          // Check if there are more teachers to load
+          if (teacherData.length < INITIAL_TEACHERS_COUNT) {
+            setHasMoreTeachers(false);
+          }
+
+          // Extract unique schools and departments from all teachers
+          // We need to fetch all teachers for filter options
+          const allTeachersResponse = await fetchTeacherList({
+            school: schoolParam,
+            locale: locale,
+            limit: 1000, // Large number to get all teachers for filters
+            page_no: 1
+          });
+
+          const allTeachers = allTeachersResponse.teachers || [];
+          const schoolsSet = new Set();
+          const departmentsMap = new Map();
+
+          allTeachers.forEach(teacher => {
+            // Extract schools
+            if (teacher.school && Array.isArray(teacher.school)) {
+              teacher.school.forEach(s => {
+                schoolsSet.add(JSON.stringify({ id: s.id, name: s.name }));
+              });
+            }
+
+            // Extract departments
+            if (teacher.departments && Array.isArray(teacher.departments)) {
+              teacher.departments.forEach(d => {
+                if (!departmentsMap.has(d.id)) {
+                  departmentsMap.set(d.id, { id: d.id, name: d.name });
+                }
+              });
+            }
+          });
+
+          const uniqueSchools = Array.from(schoolsSet).map(s => JSON.parse(s));
+          const uniqueDepartments = Array.from(departmentsMap.values());
+
+          setSchools(uniqueSchools.sort((a, b) => a.name.localeCompare(b.name)));
+          setDepartments(uniqueDepartments.sort((a, b) => a.name.localeCompare(b.name)));
+
+        } catch (err) {
+          console.error('Error loading teachers:', err);
+          setError('Failed to load teacher directory');
+          setTeachers([]);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchTeachers();
+  }, [template, currentSchoolSlug, locale]);
+
+  // Filter teachers based on selected filters and search
+  useEffect(() => {
+    if (template === 'people-listing') {
+      let filtered = [...teachers];
+
+      // Apply school filter
+      if (selectedSchool) {
+        filtered = filtered.filter(teacher =>
+          teacher.school && teacher.school.some(s => s.id === parseInt(selectedSchool))
+        );
+      }
+
+      // Apply department filter
+      if (selectedDepartment) {
+        filtered = filtered.filter(teacher =>
+          teacher.departments && teacher.departments.some(d => d.id === parseInt(selectedDepartment))
+        );
+      }
+
+      // Apply search filter
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        filtered = filtered.filter(teacher =>
+          teacher.name.toLowerCase().includes(query) ||
+          (teacher.job_title && teacher.job_title.toLowerCase().includes(query))
+        );
+      }
+
+      setFilteredTeachers(filtered);
+    }
+  }, [teachers, selectedSchool, selectedDepartment, searchQuery, template]);
+
+  // Load More Teachers (Pagination)
+  const handleLoadMoreTeachers = async () => {
+    if (loadingMoreTeachers || !hasMoreTeachers) return;
+
+    setLoadingMoreTeachers(true);
+    const nextPage = teacherPageNo + 1;
+
+    try {
+      const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+      const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
+
+      const response = await fetchTeacherList({
+        school: schoolParam,
+        locale: locale,
+        limit: TEACHERS_PER_PAGE,
+        page_no: nextPage
+      });
+
+      const newTeachers = response.teachers || [];
+
+      if (newTeachers.length > 0) {
+        setTeachers(prev => [...prev, ...newTeachers]);
+        setTeacherPageNo(nextPage);
+
+        if (newTeachers.length < TEACHERS_PER_PAGE) {
+          setHasMoreTeachers(false);
+        }
+
+        // Scroll to load more button after new content is added
+        setTimeout(() => {
+          if (teacherLoadMoreButtonRef.current) {
+            teacherLoadMoreButtonRef.current.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+              inline: 'nearest'
+            });
+          }
+        }, 500);
+      } else {
+        setHasMoreTeachers(false);
+      }
+    } catch (err) {
+      console.error('Error loading more teachers:', err);
+    } finally {
+      setLoadingMoreTeachers(false);
+    }
+  };
 
   // Load More Articles (Pagination)
   const handleLoadMore = async () => {
@@ -264,31 +465,60 @@ const TemplateBlock = ({ content }) => {
 
     setLoadingMore(true);
     const nextPage = pageNo + 1;
+    const startTime = Date.now();
+
+    console.log('🔄 Load More - Current pageNo:', pageNo);
+    console.log('🔄 Load More - Fetching nextPage:', nextPage);
+    console.log('🔄 Load More - Current articles count:', articles.length);
 
     try {
       // Add CMS suffix to school parameter if present
       const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
       const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
 
-      const response = await fetchAllArticles({
+      const params = {
         slug: 'dulwich-life',
         locale: locale,
         school: schoolParam,
         limit: ARTICLES_PER_PAGE,
         page_no: nextPage,
         tags: selectedTags
-      });
+      };
+
+      console.log('🔄 Load More - API params:', params);
+
+      const response = await fetchAllArticles(params);
 
       const newArticles = response.articles || [];
+      console.log('🔄 Load More - Received articles:', newArticles.length);
 
+      // Ensure minimum loading time of 800ms for smooth animation
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, 800 - elapsedTime);
+
+      if (remainingTime > 0) {
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
 
       if (newArticles.length > 0) {
         setArticles(prev => [...prev, ...newArticles]);
         setPageNo(nextPage);
+        console.log('✅ Load More - Updated pageNo to:', nextPage);
 
         if (newArticles.length < ARTICLES_PER_PAGE) {
           setHasMore(false);
         }
+
+        // Scroll to load more button after new content is added
+        setTimeout(() => {
+          if (loadMoreButtonRef.current) {
+            loadMoreButtonRef.current.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+              inline: 'nearest'
+            });
+          }
+        }, 500);
       } else {
         setHasMore(false);
       }
@@ -328,7 +558,12 @@ const TemplateBlock = ({ content }) => {
   };
 
   // Handle tag selection (using tag ID)
-  const handleTagClick = (tagId) => {
+  const handleTagClick = (tagId, event) => {
+    // Prevent event from bubbling up to parent elements
+    if (event) {
+      event.stopPropagation();
+    }
+
     const id = String(tagId);
     setSelectedTags(prev => {
       const newSelectedTags = prev.includes(id)
@@ -340,6 +575,9 @@ const TemplateBlock = ({ content }) => {
 
       return newSelectedTags;
     });
+
+    // Keep dropdown open after selection
+    setShowTagsFilter(true);
   };
 
   // Prevent scroll propagation from dropdown
@@ -375,10 +613,651 @@ const TemplateBlock = ({ content }) => {
     return (
       <section data-id={anchorId} className="py-16 px-4 bg-[#FAF7F5]">
         <div className="max-w-[1120px] mx-auto text-center">
-          <div className="text-gray-600 py-12">
+          <div className="text-[#3C3C3B] py-12">
             <img src={loadingSpinner} alt="Loading..." className="inline-block h-[200px] w-auto" />
             {/* <p className="mt-4">Loading articles...</p> */}
           </div>
+        </div>
+      </section>
+    );
+  }
+
+  // School color mapping
+  const schoolColors = {
+    "Senior School": "bg-[#d40012] text-white",
+    "Junior School": "bg-[#189dd0] text-white",
+    "DUCKS": "bg-[#fdb907] text-white",
+    "Whole College": "bg-[#9e1522] text-white",
+  };
+
+  // Get school badge color
+  const getSchoolColor = (schoolName) => {
+    return schoolColors[schoolName] || "bg-gray-600 text-white";
+  };
+
+  // Render people-listing template
+  if (template === 'people-listing') {
+    return (
+      <section data-id={anchorId} className="py-12 px-4 bg-gray-50">
+        <style>{`
+          /* Smooth accordion expansion with snap effect */
+          .accordion-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: grid-template-rows;
+          }
+
+          .accordion-content.open {
+            grid-template-rows: 1fr;
+          }
+
+          .accordion-content > div {
+            overflow: hidden;
+          }
+
+          /* Fade in animation for accordion content */
+          .accordion-inner {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.25s ease-out 0.1s, transform 0.25s ease-out 0.1s;
+          }
+
+          .accordion-content.open .accordion-inner {
+            opacity: 1;
+            transform: translateY(0);
+          }
+
+          /* Custom scrollbar styles for dropdown */
+          .dropdown-scroll {
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
+          }
+
+          .dropdown-scroll::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          .dropdown-scroll::-webkit-scrollbar-track {
+            background: #F3F4F6;
+            border-radius: 4px;
+          }
+
+          .dropdown-scroll::-webkit-scrollbar-thumb {
+            background: #D30013;
+            border-radius: 4px;
+          }
+
+          .dropdown-scroll::-webkit-scrollbar-thumb:hover {
+            background: #B8000F;
+          }
+
+          /* Firefox scrollbar */
+          .dropdown-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #D30013 #F3F4F6;
+          }
+        `}</style>
+        <div className="max-w-[1120px] mx-auto relative">
+          {/* Tags Filter */}
+          <div className="mb-6 relative z-50">
+            <div className="flex items-center gap-3">
+              <div className="relative w-full max-w-[360px] z-50">
+                <button
+                  onClick={() => setShowDepartmentFilter(!showDepartmentFilter)}
+                  className="flex items-center justify-between w-full px-4 py-3 bg-[#FAF7F5] border-2 border-gray-300 rounded-lg hover:border-red-600 transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    <span className="text-[#3C3C3B] font-medium text-base">Tags</span>
+                  </div>
+                  <svg className={`w-5 h-5 text-[#9E1422] transition-transform duration-300 ${showDepartmentFilter ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+              {/* Tags Dropdown */}
+              {showDepartmentFilter && (
+                <div className="absolute left-0 mt-1 w-full bg-[#FAF7F5] border rounded-lg shadow-xl overflow-hidden transition-all duration-300 max-h-[400px] opacity-100 z-50">
+                  {/* Tabs */}
+                  <div className="flex border-b border-gray-200 bg-[#FAF7F5]">
+                    <button
+                      onClick={() => {
+                        setActiveTab('Name');
+                        setSchoolSearchQuery('');
+                        setDepartmentSearchQuery('');
+                      }}
+                      className={`flex-1 px-4 py-3 text-sm font-medium transition-all relative ${
+                        activeTab === 'Name'
+                          ? 'text-[#3C3737] bg-white'
+                          : 'text-[#3C3C3B] hover:bg-gray-100'
+                      }`}
+                    >
+                      Name
+                      {activeTab === 'Name' && (
+                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#9E1422]"></div>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActiveTab('School');
+                        setSchoolSearchQuery('');
+                        setDepartmentSearchQuery('');
+                      }}
+                      className={`flex-1 px-4 py-3 text-sm font-medium transition-all relative ${
+                        activeTab === 'School'
+                          ? 'text-[#3C3737] bg-white'
+                          : 'text-[#3C3C3B] hover:bg-gray-100'
+                      }`}
+                    >
+                      Schools
+                      {activeTab === 'School' && (
+                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#9E1422]"></div>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActiveTab('Department');
+                        setSchoolSearchQuery('');
+                        setDepartmentSearchQuery('');
+                      }}
+                      className={`flex-1 px-4 py-3 text-sm font-medium transition-all relative ${
+                        activeTab === 'Department'
+                          ? 'text-[#3C3737] bg-white'
+                          : 'text-[#3C3C3B] hover:bg-gray-100'
+                      }`}
+                    >
+                      Department
+                      {activeTab === 'Department' && (
+                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#9E1422]"></div>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Name Tab */}
+                  {activeTab === 'Name' && (
+                    <>
+                      {/* Search Input - Fixed */}
+                      <div className="p-4 bg-[#FAF7F5]">
+                        <div className="relative">
+                          <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                          </svg>
+                          <input
+                            type="text"
+                            placeholder="Search by name or job title"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-10 pr-10 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-gray-400 transition-colors"
+                          />
+                          {searchQuery && (
+                            <button
+                              onClick={() => setSearchQuery('')}
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      {/* Scrollable Teacher List */}
+                      <div
+                        className="overflow-y-scroll dropdown-scroll p-2"
+                        style={{ maxHeight: '250px', overflowY: 'scroll', WebkitOverflowScrolling: 'touch' }}
+                        onWheel={(e) => e.stopPropagation()}
+                        onTouchMove={(e) => e.stopPropagation()}
+                      >
+                        {[...teachers]
+                          .sort((a, b) => a.name.localeCompare(b.name))
+                          .filter(teacher =>
+                            teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            (teacher.job_title && teacher.job_title.toLowerCase().includes(searchQuery.toLowerCase()))
+                          )
+                          .map(teacher => (
+                            <div
+                              key={teacher.id}
+                              className="w-full text-left px-4 py-3 text-sm hover:bg-gray-50 transition-all duration-150 rounded-md mb-1 cursor-pointer"
+                              onClick={() => {
+                                // Scroll to the teacher card
+                                const teacherCard = document.getElementById(`teacher-${teacher.id}`);
+                                if (teacherCard) {
+                                  teacherCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                  // Briefly highlight the card
+                                  teacherCard.classList.add('ring-2', 'ring-[#9E1422]', 'ring-offset-2');
+                                  setTimeout(() => {
+                                    teacherCard.classList.remove('ring-2', 'ring-[#9E1422]', 'ring-offset-2');
+                                  }, 2000);
+                                }
+                                setShowDepartmentFilter(false);
+                              }}
+                            >
+                              <div className="font-medium text-[#3C3C3B]">{teacher.name}</div>
+                              {teacher.job_title && (
+                                <div className="text-xs text-gray-500 mt-1">{teacher.job_title}</div>
+                              )}
+                            </div>
+                          ))}
+                        {[...teachers]
+                          .filter(teacher =>
+                            teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            (teacher.job_title && teacher.job_title.toLowerCase().includes(searchQuery.toLowerCase()))
+                          ).length === 0 && (
+                          <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                            No teachers found
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+
+                  {/* School Tab */}
+                  {activeTab === 'School' && (
+                    <>
+                      {/* Search Input - Fixed */}
+                      <div className="p-4 bg-[#FAF7F5]">
+                        <div className="relative">
+                          <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                          </svg>
+                          <input
+                            type="text"
+                            placeholder="Search"
+                            value={schoolSearchQuery}
+                            onChange={(e) => setSchoolSearchQuery(e.target.value)}
+                            className="w-full pl-10 pr-10 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-gray-400 transition-colors"
+                          />
+                          {schoolSearchQuery && (
+                            <button
+                              onClick={() => setSchoolSearchQuery('')}
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      {/* Scrollable List */}
+                      <div
+                        className="overflow-y-scroll dropdown-scroll p-2"
+                        style={{ maxHeight: '250px', overflowY: 'scroll', WebkitOverflowScrolling: 'touch' }}
+                        onWheel={(e) => e.stopPropagation()}
+                        onTouchMove={(e) => e.stopPropagation()}
+                      >
+                        {schools
+                          .filter(school =>
+                            school.name.toLowerCase().includes(schoolSearchQuery.toLowerCase())
+                          )
+                          .map(school => (
+                            <button
+                              key={school.id}
+                              onClick={() => {
+                                setSelectedSchool(school.id.toString());
+                                setShowDepartmentFilter(false);
+                                setSchoolSearchQuery('');
+                              }}
+                              className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 transition-all duration-150 flex items-center justify-between rounded-md mb-1 ${
+                                selectedSchool === school.id.toString() ? 'bg-red-50 text-red-700 font-medium' : 'text-gray-700'
+                              }`}
+                            >
+                              <span>{school.name}</span>
+                              {selectedSchool === school.id.toString() && (
+                                <svg className="w-4 h-4 text-[#9E1422]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                                </svg>
+                              )}
+                            </button>
+                          ))}
+                        {schools.filter(school =>
+                          school.name.toLowerCase().includes(schoolSearchQuery.toLowerCase())
+                        ).length === 0 && (
+                          <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                            No schools found
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+
+                  {/* Department Tab */}
+                  {activeTab === 'Department' && (
+                    <>
+                      {/* Search Input - Fixed */}
+                      <div className="p-4 bg-[#FAF7F5]">
+                        <div className="relative">
+                          <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                          </svg>
+                          <input
+                            type="text"
+                            placeholder="Search"
+                            value={departmentSearchQuery}
+                            onChange={(e) => setDepartmentSearchQuery(e.target.value)}
+                            className="w-full pl-10 pr-10 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-gray-400 transition-colors"
+                          />
+                          {departmentSearchQuery && (
+                            <button
+                              onClick={() => setDepartmentSearchQuery('')}
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      {/* Scrollable List */}
+                      <div
+                        className="overflow-y-scroll dropdown-scroll p-2"
+                        style={{ maxHeight: '250px', overflowY: 'scroll', WebkitOverflowScrolling: 'touch' }}
+                        onWheel={(e) => e.stopPropagation()}
+                        onTouchMove={(e) => e.stopPropagation()}
+                      >
+                        {departments
+                          .filter(dept =>
+                            dept.name.toLowerCase().includes(departmentSearchQuery.toLowerCase())
+                          )
+                          .map(dept => (
+                            <button
+                              key={dept.id}
+                              onClick={() => {
+                                setSelectedDepartment(dept.id.toString());
+                                setShowDepartmentFilter(false);
+                                setDepartmentSearchQuery('');
+                              }}
+                              className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 transition-all duration-150 flex items-center justify-between rounded-md mb-1 ${
+                                selectedDepartment === dept.id.toString() ? 'bg-red-50 text-red-700 font-medium' : 'text-gray-700'
+                              }`}
+                            >
+                              <span>{dept.name}</span>
+                              {selectedDepartment === dept.id.toString() && (
+                                <svg className="w-4 h-4 text-[#9E1422]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                                </svg>
+                              )}
+                            </button>
+                          ))}
+                        {departments.filter(dept =>
+                          dept.name.toLowerCase().includes(departmentSearchQuery.toLowerCase())
+                        ).length === 0 && (
+                          <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                            No departments found
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+              </div>
+
+              {/* Clear Filters Button */}
+              {(selectedSchool || selectedDepartment || searchQuery) && (
+                <button
+                  onClick={() => {
+                    setSelectedSchool('');
+                    setSelectedDepartment('');
+                    setSearchQuery('');
+                    setShowDepartmentFilter(false);
+                  }}
+                  className="px-4 py-2 text-sm font-medium text-[#9E1422] hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors border border-red-300 hover:border-red-500"
+                >
+                  Clear Filters
+                </button>
+              )}
+            </div>
+          </div>
+
+
+          {/* Active Filters Display */}
+          {(selectedSchool || selectedDepartment || searchQuery) && (
+            <div className="mb-4 flex flex-wrap gap-2 items-center">
+              <span className="text-sm text-[#3C3C3B] font-medium">Active filters:</span>
+              {searchQuery && (
+                <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full flex items-center gap-2">
+                  Search: "{searchQuery}"
+                  <button onClick={() => setSearchQuery('')} className="hover:text-blue-900">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </span>
+              )}
+              {selectedSchool && (
+                <span className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full flex items-center gap-2">
+                  School: {schools.find(s => s.id.toString() === selectedSchool)?.name}
+                  <button onClick={() => setSelectedSchool('')} className="hover:text-green-900">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </span>
+              )}
+              {selectedDepartment && (
+                <span className="px-3 py-1 bg-purple-100 text-purple-800 text-sm rounded-full flex items-center gap-2">
+                  Department: {departments.find(d => d.id.toString() === selectedDepartment)?.name}
+                  <button onClick={() => setSelectedDepartment('')} className="hover:text-purple-900">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </span>
+              )}
+            </div>
+          )}
+
+{/* Teacher Cards */}
+{filteredTeachers.length > 0 ? (
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start relative z-0">
+    {filteredTeachers.map((teacher, index) => {
+      const isOpen = expandedTeacher === teacher.id;
+      const teacherId = teacher.id;
+
+      const handleToggle = () => {
+        setExpandedTeacher((prevExpanded) => {
+          // If this card is already expanded, close it
+          if (prevExpanded === teacherId) {
+            return null;
+          }
+          // Otherwise, open this card (and close any other)
+          return teacherId;
+        });
+      };
+
+      return (
+        <div
+          key={`teacher-card-${teacherId}-${index}`}
+          id={`teacher-${teacherId}`}
+          className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-[#F2EDE9] hover:shadow-lg transition-all duration-300"
+        >
+
+          {/* Card Header - Clickable Area */}
+          <div
+            className="flex items-center justify-between p-0 cursor-pointer hover:bg-[#FAF7F5] active:bg-gray-100 transition-all duration-200"
+            onClick={handleToggle}
+          >
+            <div className="flex items-left gap-5 flex-1 min-w-0">
+              {/* Teacher Image */}
+              <div className="flex-shrink-0 overflow-hidden rounded-lg">
+                {teacher.image ? (
+                  <img
+                    src={teacher.image}
+                    alt={teacher.name}
+                    className="w-[140px] h-[162px] rounded-lg shadow-sm transition-transform duration-500 ease-out group-hover:scale-110"
+                  />
+                ) : (
+                  <div className="w-[140px] h-[160px] bg-gray-200 rounded-lg flex items-center justify-center shadow-sm">
+                    <span className="text-gray-400 text-xs">No Photo</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Teacher Info */}
+              <div className="flex-1 min-w-0 text-left align-center mt-[16px]">
+                {teacher.school && teacher.school.length > 0 && (
+                  <div className="mb-2">
+                    <span className={`inline-block px-3 py-2 text-xs font-semibold rounded-lg ${getSchoolColor(
+                      // If school filter is active, show the selected school; otherwise show the first school
+                      selectedSchool
+                        ? teacher.school.find(s => s.id === parseInt(selectedSchool))?.name || teacher.school[0].name
+                        : teacher.school[0].name
+                    )}`}>
+                      {selectedSchool
+                        ? teacher.school.find(s => s.id === parseInt(selectedSchool))?.name || teacher.school[0].name
+                        : teacher.school[0].name}
+                    </span>
+                  </div>
+                )}
+
+                <h3 className="text-[24px] font-bold text-[#3C3737] mb-2 mt-2 truncate">
+                  {teacher.name}
+                </h3>
+
+                {teacher.job_title && (
+                  <p className="text-[#3C3C3B] text-sm line-clamp-2">
+                    {teacher.job_title}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Accordion Button */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleToggle();
+              }}
+              aria-label={isOpen ? "Collapse details" : "Expand details"}
+              aria-expanded={isOpen}
+              className="flex items-center mr-3 justify-center w-8 h-8 rounded-full text-[#D30013] bg-[#FAF7F5] border border-[#F2EDE9] ml-4 transition-all duration-300 flex-shrink-0 group-hover:bg-[#D30013] group-hover:text-white group-hover:w-14 group-hover:h-10"
+            >
+              <svg
+                className={`w-4 h-4 transform transition-transform duration-300 ease-in-out ${
+                  isOpen ? "rotate-180" : ""
+                }`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+          </div>
+
+          {/* Expanded Content with Smooth Animation */}
+          <div className={`accordion-content p-0 my-0 ${isOpen ? 'open' : ''}`}>
+            <div className="accordion-inner border-t border-gray-200 bg-gray-50">
+
+              {/* Joined */}
+              {teacher.joined && (
+                <div className="mb-4 text-left">
+                  <h4 className="text-[#9E1422] font-bold mb-1 text-sm">Joined</h4>
+                  <p className="text-[#3C3C3B] text-sm">{teacher.joined}</p>
+                </div>
+              )}
+
+              {/* Qualifications */}
+              {teacher.qualifications && (
+                <div className="mb-4 p-6 px-4">
+                  <h4 className="text-[#9E1422] font-bold mb-1 text-sm">
+                    Qualifications
+                  </h4>
+                  <div
+                    className="text-[#3C3C3B] prose prose-sm max-w-none text-sm p-6"
+                    dangerouslySetInnerHTML={{
+                      __html: teacher.qualifications,
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* Content/Biography */}
+              {teacher.content && (
+                <div className="mb-0 px-6 mt-6 text-left">
+                  <div
+                    className="text-[#3C3C3B]  prose prose-sm max-w-none text-sm"
+                    dangerouslySetInnerHTML={{
+                      __html: teacher.content,
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* Background */}
+              {teacher.background && (
+                <div className="mb-4">
+                  <div
+                    className="text-[#3C3C3B] prose prose-sm max-w-none text-sm"
+                    dangerouslySetInnerHTML={{
+                      __html: teacher.background,
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* Departments */}
+              {teacher.departments && teacher.departments.length > 0 && (
+                <div className='p-6 text-left'>
+                  <h4 className="text-[#9E1422] font-bold mb-2 text-sm">Department{teacher.departments.length > 1 ? 's' : ''}</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {teacher.departments.map(dept => (
+                      <span key={dept.id} className="px-3 py-1 bg-[#FAF7F5] border border-[#9E1422] text-[#3C3C3B]  text-xs rounded-full">
+                        {dept.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+) : (
+  <div className="text-center py-16 px-6 bg-gray-50 rounded-xl border border-gray-200">
+    <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+    </svg>
+    <h3 className="text-lg font-semibold text-[#3C3C3B] mb-2">No Teachers Found</h3>
+    <p className="text-sm text-gray-500">
+      {loading ? 'Loading teachers...' : 'Try adjusting your filters to find more results.'}
+    </p>
+  </div>
+)}
+
+{/* Load More Teachers Button */}
+{filteredTeachers.length > 0 && hasMoreTeachers && !selectedSchool && !selectedDepartment && !searchQuery && (
+  <div ref={teacherLoadMoreButtonRef} className="text-center mt-8 min-h-[120px] flex items-center justify-center">
+    {loadingMoreTeachers ? (
+      <img src={loadingSpinner} alt="Loading..." className="h-[100px] w-[100px]" />
+    ) : (
+      <button
+        onClick={handleLoadMoreTeachers}
+        className="px-8 py-3 bg-[#d30014] text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
+      >
+        Load More
+      </button>
+    )}
+  </div>
+)}
+
+
         </div>
       </section>
     );
@@ -389,7 +1268,7 @@ const TemplateBlock = ({ content }) => {
       <div className="max-w-[1120px] mx-auto">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h2 className="text-left font-bold lg:text-[50px] max-w-[900px] font-weight-900 text-[#3C3737] mb-4 leading-none">
+          <h2 className="text-left font-bold lg:text-[50px] max-w-[900px] font-weight-900 text-[#3C3737]  mb-4 leading-none">
             {maindata.intro}
           </h2>
         </div>
@@ -413,10 +1292,10 @@ const TemplateBlock = ({ content }) => {
                 className="flex items-center justify-between w-[352px] h-[64px] px-5 bg-white border rounded-lg transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-[#3C3C3B]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-5 h-5 text-[#3C3C3B] " fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                   </svg>
-                  <span className="text-base font-semibold text-[#3C3C3B]">Tags</span>
+                  <span className="text-base font-semibold text-[#3C3C3B] ">Tags</span>
                 </div>
                 <svg
                   className={`w-5 h-5 text-[#D30013] transition-transform duration-300 ${showTagsFilter ? 'rotate-180' : ''}`}
@@ -438,10 +1317,10 @@ const TemplateBlock = ({ content }) => {
                   {tags.map((tag) => (
                     <button
                       key={tag.id}
-                      onClick={() => handleTagClick(tag.id)}
+                      onClick={(e) => handleTagClick(tag.id, e)}
                       className={`block w-full text-left px-4 py-3 text-base border-b border-gray-200 last:border-b-0 transition ${selectedTags.includes(String(tag.id))
-                        ? 'bg-gray-300 text-gray-900 font-medium'
-                        : 'bg-white text-gray-700 hover:bg-gray-100'
+                        ? 'bg-gray-300 text-[#3C3737] font-medium'
+                        : 'bg-white text-[#3C3C3B] hover:bg-gray-100'
                         }`}
                     >
                       {tag.title}
@@ -462,8 +1341,8 @@ const TemplateBlock = ({ content }) => {
                       className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-300 rounded-lg font-medium hover:border-[#9E1422] hover:shadow-md transition"
                     >
                       <button
-                        onClick={() => handleTagClick(tagId)}
-                        className="flex items-center gap-2 text-base text-gray-900 hover:text-[#9E1422]"
+                        onClick={(e) => handleTagClick(tagId, e)}
+                        className="flex items-center gap-2 text-base text-[#3C3737] hover:text-[#9E1422]"
                       >
                         <svg className="w-4 h-4 text-[#9E1422]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -483,7 +1362,7 @@ const TemplateBlock = ({ content }) => {
           {/* News Grid */}
           {articles.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 transition-shadow duration-300 ">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                 {articles.map((item, index) => {
                   // Use listing_image if available, fallback to image
                   const articleImage = item.listing_image || item.image;
@@ -491,7 +1370,10 @@ const TemplateBlock = ({ content }) => {
                   return (
                     <article
                       key={`${item.id}-${index}`}
-                      className="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow duration-300 group flex flex-col h-full"
+                      className="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition-all duration-300 group flex flex-col h-full animate-slideUp"
+                      style={{
+                        animationDelay: `${(index % 6) * 80}ms`
+                      }}
                     >
                       {/* Article Image with Label */}
                       <div className="relative h-48 overflow-hidden flex-shrink-0">
@@ -521,7 +1403,7 @@ const TemplateBlock = ({ content }) => {
                           {item.title}
                         </h3>
                         {item.intro && (
-                          <div className="text-sm text-gray-600 mb-4 leading-relaxed flex-1 line-clamp-3">
+                          <div className="text-sm text-[#3C3C3B] mb-4 leading-relaxed flex-1 line-clamp-3">
                             {item.intro}
                           </div>
                         )}
@@ -533,7 +1415,7 @@ const TemplateBlock = ({ content }) => {
                               const localePrefix = locale && locale !== 'en' ? `/${locale}` : '';
                               return `${window.location.origin}${localePrefix}${normalizedPath}`;
                             })()}
-                            className="inline-block border border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-semibold px-4 py-2 text-sm transition-colors duration-200 rounded-lg shadow"
+                            className="inline-block border border-red-600 text-[#9E1422] hover:bg-red-600 hover:text-white font-semibold px-4 py-2 text-sm transition-colors duration-200 rounded-lg shadow"
                           >
                             {locale === 'zh' ? '阅读更多' : 'Read More'}
                           </a>
@@ -546,13 +1428,13 @@ const TemplateBlock = ({ content }) => {
 
               {/* Load More Button */}
               {hasMore && (
-                <div className="text-center">
+                <div ref={loadMoreButtonRef} className="text-center min-h-[160px] flex items-center justify-center">
                   {loadingMore ? (
-                    <img src={loadingSpinner} alt="Loading..." className="inline-block h-[140px] w-[140px]" />
+                    <img src={loadingSpinner} alt="Loading..." className="h-[140px] w-[140px]" />
                   ) : (
                     <button
                       onClick={handleLoadMore}
-                      className="inline-block px-8 py-3 bg-[#d30014] text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
+                      className="px-8 py-3 bg-[#d30014] text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
                     >
                       Load More
                     </button>

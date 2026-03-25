@@ -397,19 +397,37 @@ app.get('*', async (req, res) => {
   const description = escapeHtml(meta?.meta_description || banner?.meta_description || 'Dulwich International Schools - World-class education across Asia.');
   const keywords    = escapeHtml(meta?.meta_keywords    || banner?.meta_keywords    || 'Dulwich, international school, education, Asia');
 
-  // Image always comes from banner.header_image
+  // Image priority: header_image first, then fall back to cover_image
   let rawImage        = banner?.header_image || '';
   const isPlaceholder = !rawImage || rawImage.includes('no-image.gif') || rawImage.includes('placeholders/no-image');
 
-  if (!isPlaceholder) {
+  console.log('[OG Image Debug]', {
+    path: req.path,
+    header_image: banner?.header_image,
+    cover_image: banner?.cover_image,
+    isPlaceholder,
+  });
+
+  // If header_image is not available or is placeholder, try cover_image
+  if (isPlaceholder && banner?.cover_image) {
+    rawImage = banner.cover_image;
+    console.log('[OG Image] Using cover_image as fallback:', rawImage);
+  }
+
+  // Re-check if the fallback image is valid
+  const isFinalPlaceholder = !rawImage || rawImage.includes('no-image.gif') || rawImage.includes('placeholders/no-image');
+
+  if (!isFinalPlaceholder) {
     if (rawImage.startsWith('//'))     rawImage = 'https:' + rawImage;
     else if (rawImage.startsWith('/')) rawImage = API_BASE + rawImage;
   }
 
-  // Use header_image directly — simple, fast, no generation overhead.
+  // Use header_image or cover_image — simple, fast, no generation overhead.
   // WhatsApp will show title + description even if image is missing (like dulwich.org).
-  const absoluteImage = isPlaceholder ? '' : rawImage;
+  const absoluteImage = isFinalPlaceholder ? '' : rawImage;
   const image = absoluteImage ? escapeHtml(absoluteImage) : '';
+
+  console.log('[OG Image] Final image:', image);
 
   html = injectMetaTags(html, { title, description, keywords, image, url: ogUrl });
   res.send(html);

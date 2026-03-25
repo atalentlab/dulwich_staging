@@ -125,7 +125,7 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
     const controller = new AbortController();
     (async () => {
       try {
-        const baseUrl = process.env.REACT_APP_API_URL || 'https://www.dulwich.atalent.xyz';
+        const baseUrl = process.env.REACT_APP_API_URL;
         const currentLocale = isChineseVersion ? 'zh' : 'en';
         const response = await fetch(`${baseUrl}/api/schools?locale=${currentLocale}`, {
           signal: controller.signal,
@@ -135,7 +135,7 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
         // Ensure International option exists
         const hasInternational = rawSchools.some(s => s.slug === 'international');
         const processed = hasInternational ? rawSchools : [
-          { id: -1, title: 'International', slug: 'international', url: process.env.REACT_APP_BASE_URL || 'https://www.dulwich-frontend.atalent.xyz/' },
+          { id: -1, title: 'International', slug: 'international', url: process.env.REACT_APP_BASE_URL },
           ...rawSchools,
         ];
         setSchoolsList(processed);
@@ -249,7 +249,7 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
       if (internationalData?.url) {
         window.location.href = internationalData.url.replace(/\\\//g, '/');
       } else {
-        const baseUrl = process.env.REACT_APP_BASE_URL || 'https://www.dulwich-frontend.atalent.xyz/';
+        const baseUrl = process.env.REACT_APP_BASE_URL;
         window.location.href = isChineseVersion ? `${baseUrl}zh/` : baseUrl;
       }
       return;
@@ -269,7 +269,7 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
   return (
     <footer
       ref={(el) => (sectionRefs?.current ? sectionRefs.current['footer'] = el : null)}
-      className="bg-[#3C3737] text-[#FFFFFF] transition-all duration-1000"
+      className="bg-[#3C3737] text-[#FFFFFF] transition-all duration-1000 mt-[16px]"
     >
       {/* Top Section - Logo and School Selector */}
       <div className="max-w-[1120px] mx-auto px-4 py-14">
@@ -500,10 +500,15 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
               </a>
               {' '}{nav.safeguarding.suffix}
             </p>
+            <div className="footer-privacy flex justify-center gap-3 mt-6 text-center">
+                 <a href={nav.Policy.linkUrl} className='text-[16px] text-left text-[#FDFCF8] underline hover:text-[#D30013] transition-colors'>{nav.Policy.title}</a>
+                 <span className="text-[#FDFCF8]">|</span>
+                 <a href={nav.RecruitmentPolicy.linkUrl} className='text-[16px] text-left text-[#FDFCF8] underline hover:text-[#D30013] transition-colors'>{nav.RecruitmentPolicy.title}</a>
+              </div>
           </div>
 
           {/* Copyright */}
-          <div className="mt-10 pt-6 border-t border-[#646261] md:mb-[10px]">
+          <div className="mt-4 md:mt-10 pt-2 md:pt-6 border-t border-[#646261] md:mb-[10px] text-left">
             <a href='https://beian.miit.gov.cn/#/Integrated/index'>
               <p className="text-[14px] text-[#FDFCF8] mt-4 text-left leading-relaxed">
                 © 2026 Dulwich College Management International Limited, or its affiliates

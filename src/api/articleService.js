@@ -114,6 +114,9 @@ export const fetchArticles = async ({
   }
 };
 
+// In-flight request cache for tags — prevents duplicate API calls
+const _pendingTagRequests = {};
+
 /**
  * Fetches article tags for filtering
  * @param {string} locale - The locale/language code
@@ -121,40 +124,54 @@ export const fetchArticles = async ({
  * @returns {Promise<Array>} Array of tag objects with id, title, and slug
  */
 export const fetchArticleTags = async (locale = 'en', school) => {
-  try {
-    let url = `${API_BASE_URL}/api/tags?locale=${locale}`;
+  let url = `${API_BASE_URL}/api/tags?locale=${locale}`;
 
-    if (school) {
-      url += `&school=${school}`;
-    }
-
-    console.log('Fetching article tags from:', url);
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const rawData = await response.json();
-
-    console.log('Tags API Response:', rawData);
-
-    if (rawData.success && rawData.data && rawData.data.tags) {
-      // Return array of tag objects with id, title, and slug
-      return rawData.data.tags;
-    }
-
-    return [];
-  } catch (error) {
-    console.error('Error fetching article tags:', error);
-    throw error;
+  if (school) {
+    url += `&school=${school}`;
   }
+
+  // Return existing in-flight promise if same request is already pending
+  if (_pendingTagRequests[url]) {
+    console.log('⚡ Reusing in-flight tags request:', url);
+    return _pendingTagRequests[url];
+  }
+
+  console.log('🔄 Fetching article tags from:', url);
+
+  const promise = (async () => {
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const rawData = await response.json();
+
+      console.log('✅ Tags API Response:', rawData);
+
+      if (rawData.success && rawData.data && rawData.data.tags) {
+        // Return array of tag objects with id, title, and slug
+        return rawData.data.tags;
+      }
+
+      return [];
+    } catch (error) {
+      console.error('❌ Error fetching article tags:', error);
+      throw error;
+    } finally {
+      // Remove from cache once resolved or rejected
+      delete _pendingTagRequests[url];
+    }
+  })();
+
+  _pendingTagRequests[url] = promise;
+  return promise;
 };
 
 /**
@@ -173,15 +190,16 @@ export const fetchAllArticles = async ({
   locale = 'en',
   school = null,
   limit = 6,
+  page_no = 1,
   tags = []
 } = {}) => {
-  // dulwich-life always fetches 24; all other slugs use provided limit (default 6)
-  const resolvedLimit = slug === 'dulwich-life' ? 24 : limit;
+  // Use the provided limit directly - no override
+  const resolvedLimit = limit;
 
   let url = `${API_BASE_URL}/api/article?slug=${slug}`;
   if (locale) url += `&locale=${locale}`;
   if (school) url += `&school=${school}`;
-  url += `&limit=${resolvedLimit}&page_no=1`;
+  url += `&limit=${resolvedLimit}&page_no=${page_no}`;
   if (tags && tags.length > 0) {
     tags.forEach(tagId => { url += `&tags[]=${tagId}`; });
   }

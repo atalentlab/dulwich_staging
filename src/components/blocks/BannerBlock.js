@@ -353,7 +353,7 @@ min-[1920px]:mt-[7%] overflow-hidden transition-all duration-1000`}
 
   return (
     <section
-      className={`hero mt-0 ${normalizedLayoutType === 4 ? 'lg:mt-[72px]' : (isScrolled ? 'lg:mt-[72px]' : 'lg:mt-[130px]')} transition-all duration-300 ease-in-out`}
+      className={`hero mt-0 ${normalizedLayoutType === 4 ? 'lg:mt-[72px]' : (isScrolled ? 'lg:mt-[72px]' : 'lg:mt-[130px]')} transition-all duration-300 ease-in-out mb-[18px]`}
       style={{
         position: 'relative',
         width: '100%',
@@ -416,7 +416,7 @@ min-[1920px]:mt-[7%] overflow-hidden transition-all duration-1000`}
 
       {/* <div className="relative z-10 text-center text-white px-4 w-full max-w-[1120px] mx-auto flex flex-col justify-center min-h-[500px] xs:min-h-[500px] sm:min-h-[500px] md:min-h-[600px] lg:min-h-[756px]"> */}
       <div className='
-  relative z-10 text-center text-white px-4 max-w-[1120px] mx-auto mt-[60px] lg:mt-0
+  relative z-10 text-center text-white px-4 max-w-[1120px] mx-auto mt-[60px]lg:mt-0
   flex flex-col justify-center w-full h-full min-h-[500px] md:min-h-[unset]
 '>
         {!hidePageTitle && (
@@ -442,7 +442,7 @@ min-[1920px]:mt-[7%] overflow-hidden transition-all duration-1000`}
       {!isVideoPlaying && (
         <div className="absolute bottom-0 left-0 right-0 z-20" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
           <div className="w-full max-w-[1120px] px-4 xs:px-6 sm:px-8">
-            <div className="flex items-center gap-2 xs:gap-3 sm:gap-4 pb-4 xs:pb-6 sm:pb-8">
+            <div className="relative mb-[-35px] md:static md:mb-0 flex items-center gap-2 xs:gap-3 sm:gap-4 pb-4 xs:pb-6 sm:pb-8">
               {/* Scroll Down Button */}
               <button
                 onClick={handleScrollDown}

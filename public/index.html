@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
   <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
     <meta name="theme-color" content="#000000" />
     <meta name="author" content="Dulwich International Schools" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Baidu Site Verification -->
+    <meta name="baidu-site-verification" content="FgEqZATC4K" />
 
     <!-- Default SEO / OG / Twitter tags -->
     <!-- server.js replaces these on every request with page-specific values -->
@@ -20,7 +25,7 @@
     <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="Dulwich International Schools" />
     <meta property="og:description" content="We are the leading network of British international schools offering the globally IB program. Discover and achieve academic excellence with us." />
-    <meta property="og:image" content="ttps://dulwich-azure-prod.oss-cn-shanghai.aliyuncs.com/pages/dcsg-holistic-education.jpg" />
+    <meta property="og:image" content="https://dulwich-azure-prod.oss-cn-shanghai.aliyuncs.com/pages/dcsg-holistic-education.jpg" />
     <meta property="og:image:alt" content="Dulwich International Schools" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -29,7 +34,7 @@
     <meta name="twitter:site" content="@DulwichColleges" />
     <meta name="twitter:title" content="Dulwich International Schools" />
     <meta name="twitter:description" content="We are the leading network of British international schools offering the globally IB program. Discover and achieve academic excellence with us." />
-    <meta name="twitter:image" content="%REACT_APP_SITE_URL%/og-image-gen?title=Dulwich+International+Schools" />
+    <meta name="twitter:image" content="https://dulwich-azure-prod.oss-cn-shanghai.aliyuncs.com/pages/dcsg-holistic-education.jpg" />
   <!-- Suppress cross-origin "Script error." before React registers its error listener -->
   <script>
     window.addEventListener('error', function(event) {
@@ -39,9 +44,24 @@
       }
     }, true);
   </script>
+
+  <!-- jQuery - Required by some GTM tags -->
+  <!-- Load jQuery synchronously (blocking) to ensure it's available before GTM -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <!-- Google Tag Manager - Will execute after jQuery is loaded -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KC29SPB');</script>
+  <!-- End Google Tag Manager -->
   </head>
   <body>
-    <noscript>Dulwich 5.0</noscript>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KC29SPB"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
   </body>
 </html>

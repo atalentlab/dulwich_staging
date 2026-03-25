@@ -12,7 +12,9 @@ import CookiePolicyPage from './pages/CookiePolicyPage';
 import SitemapPage from './pages/SitemapPage';
 import CookieConsentBanner from './components/common/CookieConsentBanner';
 import StickyOurDulwich from './components/common/StickyOurDulwich';
+import SeoulPopCard from './components/SeoulPopCard';
 import SmoothScrolling from './components/SmoothScrolling';
+import usePageTracking from './hooks/usePageTracking';
 import './App.css';
 
 // // Component to handle home page routing based on domain
@@ -33,6 +35,9 @@ import './App.css';
 
 function App() {
   const location = useLocation();
+
+  // Enable automatic page tracking with GTM
+  usePageTracking();
 
   // Update HTML lang attribute based on current path
   useEffect(() => {
@@ -80,6 +85,9 @@ function App() {
 
         {/* Sticky Our Dulwich widget — fixed on right edge, all pages */}
         <StickyOurDulwich />
+
+        {/* Seoul PopCard widget — loads on specific pages for Seoul school only */}
+        <SeoulPopCard />
       </div>
 
       {/* React Query DevTools - Only shows in development */}

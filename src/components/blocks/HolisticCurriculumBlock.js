@@ -326,7 +326,7 @@ const HolisticCurriculumBlock = ({ content }) => {
             }}
           >
             <h2 className="holistic-title text-[#FDFCF8] text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 md:mb-6 text-center tracking-tight px-4">
-              {title || 'Holistic Curriculum'}
+              {title}
             </h2>
             <p className="holistic-subtitle text-[#FDFCF8] text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl mb-8 sm:mb-10 md:mb-12 lg:mb-14 text-center max-w-3xl px-4" style={{ opacity: 0.85 }}>
               {subtitleText}

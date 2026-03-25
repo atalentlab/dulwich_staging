@@ -5,17 +5,17 @@ import Icon from '../Icon';
 // Icon and color mapping based on level/title
 const LEVEL_CONFIG = {
   'Ducks': {
-    tag: '#009ED0',
-    overlay: 'bg-[#009ED0]/60',
-    gradient: 'bg-gradient-to-t from-[#009ed0]/90 via-[#009ed0]/70 to-[#009ed0]/50',
-    activeText: 'text-[#009ED0]',
-    iconName: 'dock1',
-  },
-  'Junior': {
     tag: '#FFB909',
     overlay: 'bg-[#FFB909]/60',
     gradient: 'bg-gradient-to-t from-[#D4831A]/90 via-[#FFB909]/70 to-[#FFB909]/50',
     activeText: 'text-[#FFB909]',
+    iconName: 'dock1',
+  },
+  'Junior': {
+    tag: '#009ED0',
+    overlay: 'bg-[#009ED0]/60',
+    gradient: 'bg-gradient-to-t from-[#009ed0]/90 via-[#009ed0]/70 to-[#009ed0]/50',
+    activeText: 'text-[#009ED0]',
     iconName: 'plants',
   },
   'Senior': {
@@ -165,7 +165,7 @@ const EASE = 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
 function LiveWorldWiseGrid({ content }) {
   const sliderRef = useRef(null);
   const trackRef = useRef(null);
-  const drag = useRef({ active: false });
+  const drag = useRef({ active: false, direction: null, startY: 0 });
   const skipEffect = useRef(false);
 
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -181,31 +181,65 @@ function LiveWorldWiseGrid({ content }) {
 
   // Sync track when tab is clicked
   useEffect(() => {
-    if (!trackRef.current || !sliderRef.current || expandedIndex === null) return;
-    if (skipEffect.current) { skipEffect.current = false; return; }
+    console.log('🔄 Sync effect triggered - expandedIndex:', expandedIndex, 'skipEffect:', skipEffect.current);
+
+    if (!trackRef.current || !sliderRef.current || expandedIndex === null) {
+      console.log('🔄 Sync effect skipped - missing refs or null index');
+      return;
+    }
+
+    if (skipEffect.current) {
+      console.log('🔄 Sync effect skipped by skipEffect flag');
+      skipEffect.current = false;
+      return;
+    }
+
     const W = sliderRef.current.offsetWidth;
     const idx = Math.max(0, expandedIndex);
+    const transform = `translateX(${-idx * W}px)`;
+    console.log('🔄 Sync effect applying - idx:', idx, 'W:', W, 'transform:', transform);
     trackRef.current.style.transition = EASE;
-    trackRef.current.style.transform = `translateX(${-idx * W}px)`;
+    trackRef.current.style.transform = transform;
   }, [expandedIndex]);
 
   // Snap to index
   const snapTo = (idx) => {
     const W = sliderRef.current?.offsetWidth || 0;
     if (!trackRef.current) return;
+    const transform = `translateX(${-idx * W}px)`;
+    console.log('📍 snapTo - index:', idx, 'W:', W, 'transform:', transform);
     trackRef.current.style.transition = EASE;
-    trackRef.current.style.transform = `translateX(${-idx * W}px)`;
+    trackRef.current.style.transform = transform;
   };
 
   // Drag functionality
-  const beginDrag = (clientX) => {
-    if (expandedIndex === null || !sliderRef.current || !trackRef.current) return;
+  const beginDrag = (clientX, clientY) => {
+    console.log('🎯 beginDrag called - expandedIndex:', expandedIndex, 'clientX:', clientX);
+
+    if (expandedIndex === null) {
+      console.log('❌ beginDrag blocked - expandedIndex is null');
+      return;
+    }
+    if (!sliderRef.current) {
+      console.log('❌ beginDrag blocked - sliderRef is null');
+      return;
+    }
+    if (!trackRef.current) {
+      console.log('❌ beginDrag blocked - trackRef is null');
+      return;
+    }
+
     const W = sliderRef.current.offsetWidth;
     const idx = Math.max(0, expandedIndex);
+    const currentTransform = trackRef.current.style.transform;
+
+    console.log('🎯 beginDrag - idx:', idx, 'W:', W, 'currentTransform:', currentTransform);
+
     trackRef.current.style.transition = 'none';
     drag.current = {
       active: true,
       startX: clientX,
+      startY: clientY || 0,
       startIndex: idx,
       baseOffset: -idx * W,
       W,
@@ -214,26 +248,45 @@ function LiveWorldWiseGrid({ content }) {
       lastX: clientX,
       lastT: Date.now(),
     };
+    console.log('🎯 beginDrag - drag state:', {
+      startIndex: idx,
+      baseOffset: -idx * W,
+      W: W,
+      startX: clientX
+    });
     setIsDragging(true);
   };
 
-  const moveDrag = (clientX) => {
-    if (!drag.current.active || !trackRef.current) return;
+  const moveDrag = (clientX, clientY) => {
+    if (!drag.current.active || !trackRef.current) {
+      console.log('❌ moveDrag blocked - active:', drag.current.active, 'trackRef:', !!trackRef.current);
+      return false;
+    }
+
     const now = Date.now();
     const dt = now - drag.current.lastT || 1;
+
     drag.current.velX = (clientX - drag.current.lastX) / dt;
     drag.current.lastX = clientX;
     drag.current.lastT = now;
     drag.current.offsetPx = clientX - drag.current.startX;
-    trackRef.current.style.transform = `translateX(${drag.current.baseOffset + drag.current.offsetPx}px)`;
+
+    const newTransform = `translateX(${drag.current.baseOffset + drag.current.offsetPx}px)`;
+    trackRef.current.style.transform = newTransform;
+    console.log('🎯 Move drag - offsetPx:', drag.current.offsetPx, 'transform:', newTransform);
+
+    return true;
   };
 
   const endDrag = () => {
     if (!drag.current.active) return;
+    const { W, startIndex, offsetPx, velX } = drag.current;
+
+    console.log('endDrag - startIndex:', startIndex, 'offsetPx:', offsetPx, 'velX:', velX);
+
     drag.current.active = false;
     setIsDragging(false);
 
-    const { W, startIndex, offsetPx, velX } = drag.current;
     const threshold = W * 0.2;
     const momentum = velX * 150;
     const total = offsetPx + momentum;
@@ -242,40 +295,92 @@ function LiveWorldWiseGrid({ content }) {
     if (total < -threshold) newIndex = Math.min(startIndex + 1, itemsRef.current.length - 1);
     else if (total > threshold) newIndex = Math.max(startIndex - 1, 0);
 
+    console.log('endDrag - snapping to index:', newIndex, 'total:', total, 'threshold:', threshold);
     snapTo(newIndex);
     skipEffect.current = true;
     setExpandedIndex(newIndex);
   };
 
-  // Global mouse listeners while dragging
+  // Global mouse and touch listeners while dragging
   useEffect(() => {
     if (!isDragging) return;
-    const onMove = (e) => moveDrag(e.clientX);
-    const onUp = () => endDrag();
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup', onUp);
+
+    console.log('🔄 Setting up global drag listeners');
+
+    const onMouseMove = (e) => {
+      e.preventDefault();
+      moveDrag(e.clientX, e.clientY);
+    };
+
+    const onMouseUp = (e) => {
+      e.preventDefault();
+      endDrag();
+    };
+
+    const onTouchMove = (e) => {
+      if (e.touches[0]) {
+        console.log('📱 Global touch move:', e.touches[0].clientX);
+        moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+        e.preventDefault();
+      }
+    };
+
+    const onTouchEnd = (e) => {
+      console.log('📱 Global touch end');
+      e.preventDefault();
+      endDrag();
+    };
+
+    // Mouse events
+    document.addEventListener('mousemove', onMouseMove, { passive: false });
+    document.addEventListener('mouseup', onMouseUp, { passive: false });
+
+    // Touch events - use passive: false to allow preventDefault
+    document.addEventListener('touchmove', onTouchMove, { passive: false });
+    document.addEventListener('touchend', onTouchEnd, { passive: false });
+    document.addEventListener('touchcancel', onTouchEnd, { passive: false });
+
     return () => {
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
+      console.log('🔄 Cleaning up global drag listeners');
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('touchmove', onTouchMove);
+      document.removeEventListener('touchend', onTouchEnd);
+      document.removeEventListener('touchcancel', onTouchEnd);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDragging]);
 
   const handleExpandView = (index) => {
+    console.log('🎬 handleExpandView called with index:', index);
     skipEffect.current = true;
     setExpandedIndex(index);
 
-    // Use double requestAnimationFrame to ensure DOM has fully rendered and layout calculated
+    // Immediately set position (may not have correct width yet, but prevents flash)
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        if (trackRef.current && sliderRef.current) {
-          const W = sliderRef.current.offsetWidth;
-          const idx = Math.max(0, index);
-          trackRef.current.style.transition = 'none';
-          trackRef.current.style.transform = `translateX(${-idx * W}px)`;
-        }
-      });
+      if (trackRef.current && sliderRef.current) {
+        const W = sliderRef.current.offsetWidth;
+        const idx = Math.max(0, index);
+        console.log('🎬 Immediate position - index:', idx, 'W:', W);
+        trackRef.current.style.transition = 'none';
+        trackRef.current.style.transform = `translateX(${-idx * W}px)`;
+      }
     });
+
+    // Wait for the expanded view transition to complete (0.6s), then reposition with final width
+    setTimeout(() => {
+      if (trackRef.current && sliderRef.current) {
+        const W = sliderRef.current.offsetWidth;
+        const idx = Math.max(0, index);
+        const transform = `translateX(${-idx * W}px)`;
+        console.log('🎬 Final position (after transition) - index:', idx, 'W:', W, 'transform:', transform);
+        trackRef.current.style.transition = 'none';
+        trackRef.current.style.transform = transform;
+
+        // Force a reflow to ensure the transform is applied
+        void trackRef.current.offsetHeight;
+      }
+    }, 650); // Wait for 0.6s transition + 50ms buffer
   };
 
   const handleCloseExpandView = () => {
@@ -324,8 +429,12 @@ function LiveWorldWiseGrid({ content }) {
               return (
                 <div
                   key={index}
-                  className="relative group overflow-hidden rounded-lg shadow border border-[#F2EDE9] bg-white transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer h-full"
+                  className="relative group overflow-hidden rounded-lg shadow border border-[#F2EDE9] bg-white transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer h-full touch-manipulation"
                   onClick={() => handleExpandView(index)}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    handleExpandView(index);
+                  }}
                 >
                 <div className="hidden min-[775px]:block relative h-[220px] sm:h-[480px] md:h-[780px] overflow-hidden rounded-lg">
                   <img
@@ -358,12 +467,20 @@ function LiveWorldWiseGrid({ content }) {
                 <div className="absolute bottom-0 left-0 right-0 bg-white z-10 p-4 md:p-6 md:py-8 flex items-center justify-between">
                   <h3 className="text-lg md:text-2xl font-bold text-[#3C3737]">{item.title}</h3>
 
-                  <div
-                    className="relative flex-shrink-0 rounded-full w-12 h-12 border border-[#D30013] text-[#D30013] transition-all duration-500 ease-in-out group-hover:w-[4.2rem] group-hover:bg-[#D30013] group-hover:text-white group-hover:border-transparent"
-                    onClick={e => { e.stopPropagation(); handleExpandView(index); }}
+                  <button
+                    className="relative flex-shrink-0 rounded-full w-12 h-12 border border-[#D30013] text-[#D30013] transition-all duration-500 ease-in-out group-hover:w-[4.2rem] group-hover:bg-[#D30013] group-hover:text-white group-hover:border-transparent touch-manipulation"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleExpandView(index);
+                    }}
+                    onTouchEnd={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      handleExpandView(index);
+                    }}
                   >
                     <MoveDiagonal className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5" />
-                  </div>
+                  </button>
                 </div>
               </div>
               );
@@ -406,8 +523,16 @@ function LiveWorldWiseGrid({ content }) {
 
                 {/* Close Button */}
                 <button
-                  onClick={handleCloseExpandView}
-                  className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 z-10 inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-white/80 hover:text-white hover:bg-white/15 transition-all duration-300 border border-white/20 bg-black/10"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCloseExpandView();
+                  }}
+                  onTouchEnd={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleCloseExpandView();
+                  }}
+                  className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 z-10 inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-white/80 hover:text-white hover:bg-white/15 transition-all duration-300 border border-white/20 bg-black/10 touch-manipulation"
                 >
                   <Maximize2 className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span className="text-xs sm:text-sm font-semibold">Close</span>
@@ -417,11 +542,45 @@ function LiveWorldWiseGrid({ content }) {
                 <div
                   ref={sliderRef}
                   className="flex-1 overflow-hidden select-none"
-                  style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-                  onMouseDown={(e) => beginDrag(e.clientX)}
-                  onTouchStart={(e) => beginDrag(e.touches[0].clientX)}
-                  onTouchMove={(e) => { e.preventDefault(); moveDrag(e.touches[0].clientX); }}
-                  onTouchEnd={endDrag}
+                  style={{
+                    cursor: isDragging ? 'grabbing' : 'grab',
+                    WebkitUserSelect: 'none',
+                    userSelect: 'none',
+                    WebkitTouchCallout: 'none'
+                  }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    beginDrag(e.clientX, e.clientY);
+                  }}
+                  onTouchStart={(e) => {
+                    const touch = e.touches[0];
+                    if (touch) {
+                      console.log('✅ Touch start on slider at x:', touch.clientX);
+                      beginDrag(touch.clientX, touch.clientY);
+                    }
+                  }}
+                  onTouchMove={(e) => {
+                    if (drag.current.active && e.touches[0]) {
+                      console.log('✅ Touch move to x:', e.touches[0].clientX);
+                      moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }
+                  }}
+                  onTouchEnd={(e) => {
+                    if (drag.current.active) {
+                      console.log('✅ Touch end');
+                      e.preventDefault();
+                      e.stopPropagation();
+                      endDrag();
+                    }
+                  }}
+                  onTouchCancel={(e) => {
+                    if (drag.current.active) {
+                      console.log('⚠️ Touch cancelled');
+                      endDrag();
+                    }
+                  }}
                 >
                   {/* Track */}
                   <div
@@ -432,7 +591,7 @@ function LiveWorldWiseGrid({ content }) {
                     {items.map((item, index) => (
                       <div
                         key={index}
-                        className="flex-shrink-0 flex flex-col items-center justify-center text-center px-4 sm:px-6 md:px-10 pointer-events-none w-full"
+                        className="flex-shrink-0 flex flex-col items-center justify-center text-center px-4 sm:px-6 md:px-10 w-full"
                       >
                         <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4 md:space-y-5">
                           <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-5xl font-extrabold text-white">
@@ -450,8 +609,9 @@ function LiveWorldWiseGrid({ content }) {
                             <div className="pt-1 sm:pt-2">
                               <a
                                 href={getCtaUrl(item)}
-                                className="inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-full border border-white/40 text-white font-semibold text-xs sm:text-sm hover:bg-white/15 transition-all duration-300 pointer-events-auto"
+                                className="inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-full border border-white/40 text-white font-semibold text-xs sm:text-sm hover:bg-white/15 transition-all duration-300 pointer-events-auto touch-manipulation"
                                 onClick={(e) => e.stopPropagation()}
+                                onTouchEnd={(e) => e.stopPropagation()}
                               >
                                 {item['cta-text']}
                               </a>
@@ -473,8 +633,16 @@ function LiveWorldWiseGrid({ content }) {
                         return (
                           <button
                             key={index}
-                            onClick={() => setExpandedIndex(index)}
-                            className={`flex items-center gap-1.5 sm:gap-2 p-2 sm:px-5 sm:py-2.5 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setExpandedIndex(index);
+                            }}
+                            onTouchEnd={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              setExpandedIndex(index);
+                            }}
+                            className={`flex items-center gap-1.5 sm:gap-2 p-2 sm:px-5 sm:py-2.5 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base touch-manipulation ${
                               isActive
                                 ? 'bg-black/30 text-white font-bold shadow-lg'
                                 : 'bg-transparent text-white/60 hover:text-white/90 hover:bg-black/10 font-medium'

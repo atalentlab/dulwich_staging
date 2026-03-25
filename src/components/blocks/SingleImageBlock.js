@@ -44,14 +44,14 @@ const SingleImageBlock = ({ content }) => {
   const isFullWidth = alignment === 'full-width' || alignment === 'full';
 
   return (
-    <section data-id={anchorId} className="py-12 px-4 bg-white">
+    <section data-id={anchorId} className="py-2 md:py-10 px-4 bg-white">
       <div className={isFullWidth ? 'w-full' : 'max-w-[1120px] mx-auto'}>
         {/* Image container with optional title overlay */}
         <div className="relative">
           <img
             src={imageUrl}
             alt={imageDescription || caption || title || 'Image'}
-            className={`w-full h-auto min-h-[400px] rounded-lg ${
+            className={`w-full h-auto rounded-lg ${
               alignment === 'original' ? 'max-w-[1600px] mx-auto' : ''
             } ${
               alignment === 'cropped' ? 'max-w-[1600px] mx-auto aspect-[1600/650] object-cover' : ''

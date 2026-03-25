@@ -134,11 +134,19 @@ const PageRenderer = ({ slug: fixedSlug, locale: fixedLocale }) => {
   const { data, isLoading, error, isFetching } = usePageBySlug(slug, locale);
 
   // Dynamically update SEO meta tags — meta object takes priority over banner
+  // OG Image priority: header_image first, then fall back to cover_image if header_image is placeholder
+  const getOgImage = () => {
+    const headerImage = data?.banner?.header_image;
+    const coverImage = data?.banner?.cover_image;
+    const isPlaceholder = !headerImage || headerImage.includes('no-image.gif') || headerImage.includes('placeholders/no-image');
+    return isPlaceholder ? (coverImage || '') : headerImage;
+  };
+
   useSEO({
     meta_title:       data?.meta?.meta_title       || data?.banner?.meta_title       || data?.banner?.title,
     meta_description: data?.meta?.meta_description || data?.banner?.meta_description,
     meta_keywords:    data?.meta?.meta_keywords    || data?.banner?.meta_keywords,
-    og_image:         data?.banner?.header_image,
+    og_image:         getOgImage(),
   });
 
   // Handle smooth scrolling to anchors - only after data is loaded

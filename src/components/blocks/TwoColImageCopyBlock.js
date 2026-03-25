@@ -14,7 +14,7 @@ const TwoColImageCopyBlock = ({ content }) => {
   const imageUrl = image?.startsWith('http') ? image : `${API_BASE_URL}${image}`;
 
   return (
-    <section data-id={anchorId} className="py-12 px-4 bg-white">
+    <section data-id={anchorId} className="py-2 md:py-10 px-4 bg-white">
       <div className="max-w-[1120px] mx-auto text-left p-2">
         {title && (
           <h2 className="text-lg font-semibold text-[#3C3C3B] mb-6">

@@ -15,7 +15,7 @@ const TwoColImageBlock = ({ content }) => {
   // Enhanced prose classes for comprehensive HTML tag styling
 
   return (
-    <section data-id={anchorId} className="py-12 px-4 bg-white">
+    <section data-id={anchorId} className="py-2 md:py-10 px-4 bg-white">
       <div className="max-w-[1120px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
           {colArray.map((column, index) => {

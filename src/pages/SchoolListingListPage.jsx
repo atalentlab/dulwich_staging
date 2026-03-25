@@ -3,8 +3,8 @@ import Icon from '../components/Icon';
 import schoolsDataJson from '../data/schoolsData.json';
 import useSEO from '../hooks/useSEO';
 // Import local school images
-import beijingImg from '../assets/schoollist/puxi.jpg';
-import pudongImg from '../assets/schoollist/puxi.jpg';
+import beijingImg from '../assets/schoollist/beijing.jpg';
+import pudongImg from '../assets/schoollist/pudong.jpg';
 import puxiImg from '../assets/schoollist/puxi.jpg';
 import suzhouImg from '../assets/schoollist/suzhou.jpeg';
 import singaporeImg from '../assets/schoollist/singapore.png';
@@ -97,27 +97,36 @@ const jsontag = {
   // International schools
   'Dulwich College Bangkok': ['IGCSE', 'IB Diploma'],
   'Dulwich College Beijing': ['IGCSE'],
-  'Dulwich College Shanghai Pudong':  ['IGCSE', 'IB Diploma'],
+  'Dulwich College Shanghai Pudong': ['IGCSE', 'IB Diploma'],
   'Dulwich College Shanghai Puxi': ['IGCSE', 'IB Diploma'],
   'Dulwich College Suzhou': ['IGCSE', 'IB Diploma'],
-  'Dulwich College Singapore':  ['IGCSE', 'IB Diploma'],
-  'Dulwich College Seoul':  ['IGCSE', 'IB Diploma'],
+  'Dulwich College (Singapore)': ['IGCSE', 'IB Diploma'],
+  'Dulwich College Seoul': ['IGCSE', 'IB Diploma'],
 
   // High School programmes
+  'Dulwich International High School Programme Suzhou': ['IGCSE', 'A Level'],
   'Dulwich Int. High School Programme Suzhou': ['IGCSE', 'A Level'],
+  'Dulwich International High School Programme Hengqin': ['Pre-A Level', 'A Level'],
   'Dulwich Int. High School Programme Hengqin': ['Pre-A Level', 'A Level'],
 
   // Chinese names
-
-  '上海德威外籍人员子女学校（浦东）': ['IGCSE', 'IB课程'],
-  '苏州德威外籍人员子女学校':  ['IGCSE', 'IB课程'],
-  '苏州工业园区德威联合书院': ['IGCSE', 'A Level课程'],
-  '横琴德威国际课程高中项目·广东横琴粤澳深度合作区华发容闳高级中学': ['Pre-A Level课程', 'A Level课程'],
+  '曼谷德威学院': ['IGCSE', 'IB课程'],
+  '北京德威学院': ['IGCSE'],
   '北京德威英国国际学校': ['IGCSE'],
-  '上海德威外籍人员子女学校（浦西）':  ['IGCSE', 'IB课程'],
-  '德威学院首尔分校':  ['IGCSE', 'IB课程'],
-  '苏州中学':  ['IGCSE', 'A Level课程'],
+  '上海浦东德威国际学校': ['IGCSE', 'IB课程'],
+  '上海浦东德威英国国际学校': ['IGCSE', 'IB课程'],
+  '上海德威外籍人员子女学校（浦东）': ['IGCSE', 'IB课程'],
+  '上海浦西德威国际学校': ['IGCSE', 'IB课程'],
+  '上海德威外籍人员子女学校（浦西）': ['IGCSE', 'IB课程'],
+  '苏州德威国际学校': ['IGCSE', 'IB课程'],
+  '苏州德威学院': ['IGCSE', 'IB课程'],
+  '苏州德威外籍人员子女学校': ['IGCSE', 'IB课程'],
+  '德威学院（新加坡）': ['IGCSE', 'IB课程'],
+  '德威学院首尔分校': ['IGCSE', 'IB课程'],
+  '苏州德威国际高中课程': ['IGCSE', 'A Level课程'],
+  '苏州工业园区德威联合书院': ['IGCSE', 'A Level课程'],
   '德威国际高中课程横琴分校': ['Pre-A Level课程', 'A Level课程'],
+  '横琴德威国际课程高中项目·广东横琴粤澳深度合作区华发容闳高级中学': ['Pre-A Level课程', 'A Level课程'],
 }
 
 /**

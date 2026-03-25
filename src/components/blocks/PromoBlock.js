@@ -32,7 +32,7 @@ const PromoBlock = ({ content }) => {
   // Extra Small/Micro Style (xs) - Micro cards with image and title only
   if (style === 'xs') {
     return (
-      <section data-id={anchorId} className="py-12 px-4 bg-white">
+      <section data-id={anchorId} className="py-10 px-4 bg-white">
         <div className="max-w-[1120px] mx-auto">
           {/* Section Header */}
           <div className="mb-8 text-left">
@@ -140,7 +140,7 @@ const PromoBlock = ({ content }) => {
   // Small 4-Column Style (s) - Four promotional cards in a row
   if (style === 's') {
     return (
-      <section data-id={anchorId} className="py-12 px-4 bg-white">
+      <section data-id={anchorId} className="py-10 px-4 bg-white">
         <div className="max-w-[1120px] mx-auto">
           {/* Section Header */}
           <div className="mb-12 text-left">
@@ -242,7 +242,7 @@ const PromoBlock = ({ content }) => {
   // Medium 3-Column Style (m) - Three promotional cards in a row
   if (style === 'm') {
     return (
-      <section data-id={anchorId} className="py-12 px-4 bg-white">
+      <section data-id={anchorId} className="py-10 px-4 bg-white">
         <div className="max-w-[1120px] mx-auto">
           {/* Main Title and Intro */}
           {title && (
@@ -344,7 +344,7 @@ const PromoBlock = ({ content }) => {
   // Large 2-Column Style (l) - Two promotional cards side by side
   if (style === 'l') {
     return (
-      <section data-id={anchorId} className="py-12 px-4 bg-white">
+      <section data-id={anchorId} className="py-10 px-4 bg-white">
         <div className="max-w-[1120px] mx-auto">
           {/* Main Title and Intro */}
           {title && (
@@ -477,7 +477,7 @@ const PromoBlock = ({ content }) => {
   // Extra Large Style (xl) - Full width two-column layout
   if (style === 'xl') {
     return (
-      <section data-id={anchorId} className="py-12 px-4 bg-white">
+      <section data-id={anchorId} className="py-10 px-4 bg-white">
         <div className="max-w-[1120px] mx-auto">
           {/* Main Title and Intro */}
           {title && (
@@ -603,7 +603,7 @@ const PromoBlock = ({ content }) => {
 
   // Default layout for other styles (large, medium, small, micro)
   return (
-    <section data-id={anchorId} className="py-12 px-4 bg-white">
+    <section data-id={anchorId} className="py-10 px-4 bg-white">
       <div className="max-w-[1120px] mx-auto">
         {title && (
           <h2 className="text-3xl lg:text-4xl font-bold mb-6 text-left text-[#3C3737]">

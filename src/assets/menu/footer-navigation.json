@@ -66,6 +66,14 @@
       "linkText": "here",
       "linkUrl": "https://assets.dulwich.org/static/23-24-DCI-EN-Safeguarding-Policy_for-GroupSite_IA_20230705.pdf",
       "suffix": "for more information."
+    },  
+    "Policy": {
+      "title": "Privacy Policy",
+      "linkUrl": "/privacy-policy"
+    },
+    "RecruitmentPolicy": {
+      "title": "Recruitment Privacy Policy",
+      "linkUrl": "/recruitment-privacy-policy"
     }
   },
 
@@ -136,6 +144,14 @@
       "linkText": "点击这里",
       "linkUrl": "https://assets.dulwich.org/static/23-24-DCI-EN-Safeguarding-Policy_for-GroupSite_IA_20230705.pdf",
       "suffix": "了解更多信息。"
+    },  
+    "Policy": {
+      "title": "隐私政策",
+      "linkUrl": "/zh/privacy-policy"
+    },
+    "RecruitmentPolicy": {
+      "title": "应聘者隐私政策",
+      "linkUrl": "/zh/recruitment-privacy-policy"
     }
   }
 }

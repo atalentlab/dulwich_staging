@@ -28,7 +28,7 @@ const CtaBlock = ({ content }) => {
   };
 
   return (
-    <section data-id={anchorId} className="py-12 px-4 bg-white">
+    <section data-id={anchorId} className="py-4 md:py-10 px-4 bg-white">
       <div className="max-w-[1120px] mx-auto">
         <div className={`flex flex-wrap gap-4 ${alignmentClasses[alignment] || 'justify-center'}`}>
           {ctaArray.map((button, index) => (

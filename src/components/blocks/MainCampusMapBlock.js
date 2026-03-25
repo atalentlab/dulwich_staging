@@ -259,7 +259,7 @@ const MainCampusMapBlock = ({ content }) => {
                   onClick={() => setSelectedCampusId(addr.id)}
                   className={`campus-tab px-3 md:px-4 py-2 md:py-3 rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap transform hover:scale-105 ${
                     selectedCampusId === addr.id
-                      ? 'bg-[#D30013] text-white shadow-lg scale-105'
+                      ? 'bg-[#D30013] text-white shadow-lg'
                       : 'bg-[#E5E5E5] text-[#3C3737] hover:bg-[#D5D5D5]'
                   }`}
                 >
