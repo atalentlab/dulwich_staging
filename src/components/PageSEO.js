@@ -37,6 +37,11 @@ const PageSEO = ({
   const pageTitle = useMemo(() => {
     if (title) return title;
 
+    // Check for meta_title from API response first
+    if (pageData?.meta?.meta_title) {
+      return pageData.meta.meta_title;
+    }
+
     // For article pages with page data
     if (pageData?.title) {
       const schoolName = schoolInfo?.menu_title || 'Dulwich International Schools';
@@ -55,6 +60,11 @@ const PageSEO = ({
   const pageDescription = useMemo(() => {
     if (description) return description;
 
+    // Check for meta_description from API response first
+    if (pageData?.meta?.meta_description) {
+      return pageData.meta.meta_description;
+    }
+
     // For article pages with intro text
     if (pageData?.intro) {
       // Strip HTML tags and limit length
@@ -68,7 +78,7 @@ const PageSEO = ({
       return plainText.length > 160 ? `${plainText.substring(0, 157)}...` : plainText;
     }
 
-    return 'We are the leading network of British international schools offering the globally IB program. Discover and achieve academic excellence with us.';
+    return '';
   }, [description, pageData, schoolInfo]);
 
   // Generate dynamic OG image - prioritize header_image (KV image)
@@ -81,7 +91,15 @@ const PageSEO = ({
       return `${ASSETS_BASE_URL}/${image}`;
     }
 
-    // 2. For article pages, use the article's listing_image or image
+    // 2. Check for og_image from API meta response first
+    if (pageData?.meta?.og_image) {
+      if (pageData.meta.og_image.startsWith('http://') || pageData.meta.og_image.startsWith('https://')) {
+        return pageData.meta.og_image;
+      }
+      return `${ASSETS_BASE_URL}/${pageData.meta.og_image}`;
+    }
+
+    // 3. For article pages, use the article's listing_image or image
     if (pageData?.listing_image) {
       if (pageData.listing_image.startsWith('http://') || pageData.listing_image.startsWith('https://')) {
         return pageData.listing_image;
@@ -96,7 +114,7 @@ const PageSEO = ({
       return `${ASSETS_BASE_URL}/${pageData.image}`;
     }
 
-    // 3. Use school's header_image (KV image) - PRIMARY OG IMAGE
+    // 4. Use school's header_image (KV image) - PRIMARY OG IMAGE
     if (schoolInfo?.header_image) {
       if (schoolInfo.header_image.startsWith('http://') || schoolInfo.header_image.startsWith('https://')) {
         return schoolInfo.header_image;
@@ -104,7 +122,7 @@ const PageSEO = ({
       return `${ASSETS_BASE_URL}/${schoolInfo.header_image}`;
     }
 
-    // 4. Fallback to school's cover_image if header_image not available
+    // 5. Fallback to school's cover_image if header_image not available
     if (schoolInfo?.cover_image) {
       if (schoolInfo.cover_image.startsWith('http://') || schoolInfo.cover_image.startsWith('https://')) {
         return schoolInfo.cover_image;
@@ -112,7 +130,7 @@ const PageSEO = ({
       return `${ASSETS_BASE_URL}/${schoolInfo.cover_image}`;
     }
 
-    // 5. Fallback to default OG image
+    // 6. Fallback to default OG image
     return 'https://dulwich-azure-prod.oss-cn-shanghai.aliyuncs.com/pages/dcsg-holistic-education.jpg';
   }, [image, pageData, schoolInfo, ASSETS_BASE_URL]);
 
@@ -125,13 +143,18 @@ const PageSEO = ({
 
   // Generate keywords
   const keywords = useMemo(() => {
+    // Check for meta_keywords from API response first
+    if (pageData?.meta?.meta_keywords) {
+      return pageData.meta.meta_keywords;
+    }
+
     const baseKeywords = 'Dulwich, international school, education, IB programme';
     const schoolName = schoolInfo?.menu_title;
     if (schoolName && schoolName !== 'International') {
       return `${baseKeywords}, ${schoolName}`;
     }
     return `${baseKeywords}, Asia`;
-  }, [schoolInfo]);
+  }, [pageData, schoolInfo]);
 
   return (
     <SEO

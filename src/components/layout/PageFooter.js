@@ -72,17 +72,17 @@ const CustomDropdown = ({ value, options, onChange, isOpen, setIsOpen }) => {
               <div
                 key={index}
                 onClick={() => handleSelect(option)}
-                className={`px-4 py-3 cursor-pointer transition-all duration-150 ${
+                className={`px-4 py-3 cursor-pointer transition-all duration-150 text-left ${
                   value === option
-                    ? 'bg-[#FFF5F5] text-[#D30013] font-semibold'
-                    : 'text-[#3C3C3B] hover:bg-[#FAF7F5]'
-                } ${index === 0 ? 'border-b border-gray-200 rounded-t-lg' : ''} ${index === options.length - 1 ? 'rounded-b-lg' : ''}`}
+                     ? 'text-[#fff] font-semibold bg-gradient-to-r from-[#D30013] to-[#FF4D5A]/10 rounded-lg transition-all duration-15'
+                     : 'text-[#3C3C3B] hover:text-[#fff] hover:bg-gradient-to-r from-[#D30013] to-[#FF4D5A]/60 rounded-lg transition-all duration-15'
+                } ${index === 0 ? 'rounded-t-lg' : ''} ${index === options.length - 1 ? 'rounded-b-lg' : ''}`}
               >
                 <div className="flex items-center">
+                {option}
                   {value === option && (
                     <span className="mr-2 text-[#D30013] font-bold">✓</span>
                   )}
-                  {option}
                 </div>
               </div>
             ))}
@@ -111,14 +111,6 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
   // State for the left dropdown — initially shows "Please select" placeholder
   const [selectedOption, setSelectedOption] = useState(nav.pleaseSelect);
 
-  // Sync selectedOption when language toggles without unmounting
-  useEffect(() => {
-    setSelectedOption(prev => {
-      if (prev === 'International' || prev === '国际') return nav.international;
-      if (prev === 'Please select' || prev === '请选择') return nav.pleaseSelect;
-      return prev;
-    });
-  }, [nav.international, nav.pleaseSelect]);
 
   // Always fetch schools from API with the current locale
   useEffect(() => {
@@ -132,12 +124,8 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
         });
         const json = await response.json();
         const rawSchools = json?.success && Array.isArray(json?.data) ? json.data : [];
-        // Ensure International option exists
-        const hasInternational = rawSchools.some(s => s.slug === 'international');
-        const processed = hasInternational ? rawSchools : [
-          { id: -1, title: 'International', slug: 'international', url: process.env.REACT_APP_BASE_URL },
-          ...rawSchools,
-        ];
+        // Filter out the 'international' entry — not shown in dropdown
+        const processed = rawSchools.filter(s => s.slug !== 'international');
         setSchoolsList(processed);
       } catch (err) {
         if (err?.name === 'AbortError') return;
@@ -158,21 +146,18 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
   const currentSchoolTitle = useMemo(() => {
     if (selectedSchool && schoolsList.length > 0) {
       const found = schoolsList.find(school =>
-        school.title === selectedSchool || 
+        school.title === selectedSchool ||
         `Dulwich College ${school.title}` === selectedSchool ||
         school.slug === (typeof selectedSchool === 'string' && selectedSchool.toLowerCase())
       );
-      if (found) return found.slug === 'international' ? nav.international : found.title;
-      if (selectedSchool === 'International' || selectedSchool === 'International School' || selectedSchool === 'Dulwich International College') {
-        return nav.international;
-      }
+      if (found) return found.title;
     }
     // If we have a selectedOption from manual selection, use it as fallback
     if (selectedOption && selectedOption !== nav.pleaseSelect) {
       return selectedOption;
     }
-    return nav.international;
-  }, [selectedSchool, schoolsList, nav.international, selectedOption, nav.pleaseSelect]);
+    return nav.pleaseSelect;
+  }, [selectedSchool, schoolsList, selectedOption, nav.pleaseSelect]);
 
   // State for social icon hover
   const [hoveredIcon, setHoveredIcon] = useState(null);
@@ -196,19 +181,13 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
     }, 300);
   };
 
-  // Generate options from schoolsList (from API / context / props) with localised "International" as first option
+  // Generate options from schoolsList (from API / context / props)
   const selectOptions = useMemo(() => {
-    const options = [nav.international];
-
     if (schoolsList && schoolsList.length > 0) {
-      const schoolOptions = schoolsList
-        .filter(school => school.slug !== 'international')
-        .map(school => school.title);
-      return [...options, ...schoolOptions];
+      return schoolsList.map(school => school.title);
     }
-
-    return options;
-  }, [schoolsList, nav.international]);
+    return [];
+  }, [schoolsList]);
 
   // Create a mapping for school data lookup
   const schoolDataMap = useMemo(() => {
@@ -229,39 +208,23 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
 
     // Update state
     if (setSelectedSchool && setSelectedSchoolSlug) {
-      if (schoolName === nav.international) {
-        setSelectedSchool('International');
-        setSelectedSchoolSlug('international');
-      } else {
-        const schoolData = schoolDataMap[schoolName];
-        if (schoolData) {
-          setSelectedSchool(schoolName);
-          setSelectedSchoolSlug(schoolData.slug);
-          localStorage.setItem('selectedSchoolSlug', schoolData.slug);
-          localStorage.setItem('selectedSchoolName', schoolName);
-        }
+      const schoolData = schoolDataMap[schoolName];
+      if (schoolData) {
+        setSelectedSchool(schoolName);
+        setSelectedSchoolSlug(schoolData.slug);
+        localStorage.setItem('selectedSchoolSlug', schoolData.slug);
+        localStorage.setItem('selectedSchoolName', schoolName);
       }
     }
 
     // Redirect to school URL
-    if (schoolName === nav.international) {
-      const internationalData = schoolsList.find(s => s.slug === 'international');
-      if (internationalData?.url) {
-        window.location.href = internationalData.url.replace(/\\\//g, '/');
+    const schoolData = schoolDataMap[schoolName];
+    if (schoolData) {
+      if (schoolData.url) {
+        const cleanUrl = schoolData.url.replace(/\\\//g, '/');
+        window.location.href = cleanUrl;
       } else {
-        const baseUrl = process.env.REACT_APP_BASE_URL;
-        window.location.href = isChineseVersion ? `${baseUrl}zh/` : baseUrl;
-      }
-      return;
-    } else {
-      const schoolData = schoolDataMap[schoolName];
-      if (schoolData) {
-        if (schoolData.url) {
-          const cleanUrl = schoolData.url.replace(/\\\//g, '/');
-          window.location.href = cleanUrl;
-        } else {
-          window.location.href = getSchoolUrl(schoolData.slug, '');
-        }
+        window.location.href = getSchoolUrl(schoolData.slug, '');
       }
     }
   };
@@ -502,8 +465,8 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
             </p>
             <div className="footer-privacy flex justify-center gap-3 mt-6 text-center">
                  <a href={nav.Policy.linkUrl} className='text-[16px] text-left text-[#FDFCF8] underline hover:text-[#D30013] transition-colors'>{nav.Policy.title}</a>
-                 <span className="text-[#FDFCF8]">|</span>
-                 <a href={nav.RecruitmentPolicy.linkUrl} className='text-[16px] text-left text-[#FDFCF8] underline hover:text-[#D30013] transition-colors'>{nav.RecruitmentPolicy.title}</a>
+                 {/* <span className="text-[#FDFCF8]">|</span>
+                 <a href={nav.RecruitmentPolicy.linkUrl} className='text-[16px] text-left text-[#FDFCF8] underline hover:text-[#D30013] transition-colors'>{nav.RecruitmentPolicy.title}</a> */}
               </div>
           </div>
 

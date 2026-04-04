@@ -6,7 +6,6 @@ import PageFooter from '../components/layout/PageFooter';
 import DataGrid from './DataGrid';
 import TextBlock from '../components/TextBlock';
 import EyeText from '../components/eyeText';
-import LiveWorldView from '../components/LiveWorldView';
 import LiveWorldWiseOverlay from '../components/LiveWorldWiseOverlay';
 import ImageBlock from '../components/ImageBlock';
 import LiveWorldWiseGrid from '../components/LiveWorldWiseGrid';
@@ -16,13 +15,6 @@ import HistorySlider from '../components/HistorySlider';
 import HolisticCurriculumBlock from '../components/blocks/HolisticCurriculumBlock';
 import DCSZ_Chevron_KV_3840x2160_20260123 from '../assets/images/DCSZ/DCSZ_Chevron_KV_3840x2160_20260123.png';
 
-
-/**
- * TestPage - Full Screen Section Scrolling Demo
- *
- * Features Apple-style smooth scrolling with full-screen sections
- * Based on the Dulwich landing page reference
- */
 const TestPage = () => {
   const [activeSection, setActiveSection] = useState(0);
   const [isVisible, setIsVisible] = useState({});

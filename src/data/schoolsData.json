@@ -98,7 +98,7 @@
         "ages": "3 to 18",
         "students": 5000,
         "location": "Bangkok, Thailand",
-        "tags": ["IGCSE", "IB Diploma"],
+        "tags": ["IGCSE"],
         "content": "Newest addition to the Dulwich family with state-of-the-art facilities.",
         "url": "https://bangkok.dulwich.org"
       },
@@ -237,7 +237,7 @@
           "ages": "3 至18岁",
           "students": 5000,
           "location": "曼谷",
-          "tags": ["IGCSE", "IB文凭"],
+          "tags": ["IGCSE"],
           "content": "拥有最先进设施的德威学院最新成员。",
           "url": "https://bangkok.dulwich.org"
         },
@@ -286,7 +286,7 @@
       "ages": "3至18岁",
       "students": 100,
       "location": "曼谷",
-      "tags": ["IGCSE","IB课程"],
+      "tags": ["IGCSE"],
       "content": "历史悠久的优质汉语教育。",
       "url": "https://bangkok.dulwich.org/",
       "ctas": [
@@ -353,7 +353,7 @@
       "ctas": [
         {
           "label": "访问网站",
-          "url": "https://shanghai.dehong.cn/admissions-application"
+          "url": "https://shanghai.dehong.cn/zh/admissions-application"
         }
       ]
     },
@@ -372,7 +372,7 @@
       "ctas": [
         {
           "label": "访问网站",
-          "url": "https://beijing.dehong.cn/admissions/application"
+          "url": "https://beijing.dehong.cn/zh/admissions/application"
         }
       ]
     },
@@ -391,7 +391,7 @@
       "ctas": [
         {
           "label": "访问网站",
-          "url": "https://xian.dehong.cn/admissions"
+          "url": "https://xian.dehong.cn/zh/admissions"
         }
       ]
     }

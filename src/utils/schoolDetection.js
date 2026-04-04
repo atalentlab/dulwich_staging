@@ -22,8 +22,6 @@ export const getSchoolFromHostname = (hostname) => {
     'suzhou',
     'hengqin-high-school',
     'suzhou-high-school',
-    'international',
-    // Legacy single-word slugs (for backward compatibility)
     'shanghai',
     'yangon',
     'zhuhai',
@@ -153,7 +151,7 @@ export const getSchoolUrl = (school, path = '') => {
   // Build: www.{school}.dulwich-frontend.atalent.xyz
   if (parts.length >= 4 && parts[0] === 'www' && parts[2].includes('dulwich')) {
     const baseDomain = parts.slice(-2).join('.'); // atalent.xyz
-    return `${protocol}//www.${school}.dulwich-frontend.${baseDomain}${port}${path}`;
+    return `${protocol}//www.${school}.dulwich.${baseDomain}${port}${path}`;
   }
 
   // New format: singapore.atalent.xyz or localhost

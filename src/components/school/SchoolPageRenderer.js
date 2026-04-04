@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Navigate } from 'react-router-dom';
 import { useSchoolPageBySlug } from '../../hooks/useSchoolPageBySlug';
-import useSEO from '../../hooks/useSEO';
+import DynamicSEO from '../SEO/DynamicSEO';
 import useSmoothScroll from '../../hooks/useSmoothScroll';
 import { useSchools } from '../../contexts/SchoolsContext';
 import BlockRenderer from '../blocks/BlockRenderer';
@@ -41,8 +41,8 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
   const [selectedSchoolSlug, setSelectedSchoolSlug] = useState('');
   const [chatOpen, setChatOpen] = useState(false);
 
-  // Supported locales
-  const supportedLocales = ['zh', 'en', 'cn'];
+  // Supported locales (only zh/cn - English is default without prefix)
+  const supportedLocales = ['zh', 'cn'];
 
   // Parse URL to extract locale and slug
   const parseUrl = (pathname) => {
@@ -97,20 +97,52 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
   const { data, isLoading, error, isFetching } = useSchoolPageBySlug(pageSlug, school, locale);
 
   // Dynamically update SEO meta tags — meta object takes priority over banner
-  // OG Image priority: header_image first, then fall back to cover_image if header_image is placeholder
+  // OG Image priority: header_image > cover_image > media > background_image
   const getOgImage = () => {
     const headerImage = data?.banner?.header_image;
     const coverImage = data?.banner?.cover_image;
-    const isPlaceholder = !headerImage || headerImage.includes('no-image.gif') || headerImage.includes('placeholders/no-image');
-    return isPlaceholder ? (coverImage || '') : headerImage;
+    const mediaImage = data?.banner?.media;
+    const backgroundImage = data?.banner?.background_image;
+
+    // Skip placeholder images AND Azure CDN URLs (we prefer files.dulwich.org)
+    const isPlaceholder = (img) => !img ||
+                                   img.includes('no-image.gif') ||
+                                   img.includes('placeholders/no-image') ||
+                                   img.includes('placeholder') ||
+                                   img.includes('dulwich-azure-prod.oss-cn-shanghai.aliyuncs.com');
+
+    // Try images in priority order
+    if (!isPlaceholder(headerImage)) {
+      const absoluteUrl = headerImage.startsWith('http') ? headerImage : `${window.location.origin}${headerImage}`;
+      console.log('📸 School OG Image - Using header_image:', absoluteUrl);
+      return absoluteUrl;
+    }
+
+    if (!isPlaceholder(coverImage)) {
+      const absoluteUrl = coverImage.startsWith('http') ? coverImage : `${window.location.origin}${coverImage}`;
+      console.log('📸 School OG Image - Using cover_image:', absoluteUrl);
+      return absoluteUrl;
+    }
+
+    if (!isPlaceholder(mediaImage)) {
+      const absoluteUrl = mediaImage.startsWith('http') ? mediaImage : `${window.location.origin}${mediaImage}`;
+      console.log('📸 School OG Image - Using media:', absoluteUrl);
+      return absoluteUrl;
+    }
+
+    if (!isPlaceholder(backgroundImage)) {
+      const absoluteUrl = backgroundImage.startsWith('http') ? backgroundImage : `${window.location.origin}${backgroundImage}`;
+      console.log('📸 School OG Image - Using background_image:', absoluteUrl);
+      return absoluteUrl;
+    }
+
+
   };
 
-  useSEO({
-    meta_title:       data?.meta?.meta_title       || data?.banner?.meta_title       || data?.banner?.title,
-    meta_description: data?.meta?.meta_description || data?.banner?.meta_description,
-    meta_keywords:    data?.meta?.meta_keywords    || data?.banner?.meta_keywords,
-    og_image:         getOgImage(),
-  });
+  // SEO is now handled by DynamicSEO component in each layout section
+
+  // Prepare school name for SEO
+  const schoolName = school ? school.charAt(0).toUpperCase() + school.slice(1) : '';
 
   // Handle smooth scrolling to anchors - only after data is loaded
   useSmoothScroll(!isLoading && !!data);
@@ -135,6 +167,53 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
   // Loading state
   if (isLoading) {
     return <Loading />;
+  }
+
+  // Check for redirect from API response
+  if (data?.redirects?.redirect === true && data?.redirects?.target) {
+    console.log('🔄 Redirect detected:', {
+      from: location.pathname,
+      to: data.redirects.target,
+      status: data.redirects.status
+    });
+
+    // Build redirect URL with locale preservation
+    let redirectTarget = data.redirects.target;
+
+    // If current page has locale prefix (/zh), preserve it in redirect
+    if (locale && locale !== 'en' && !redirectTarget.startsWith(`/${locale}`)) {
+      if (!redirectTarget.startsWith('/')) {
+        redirectTarget = '/' + redirectTarget;
+      }
+      redirectTarget = `/${locale}${redirectTarget}`;
+      console.log('🌐 Locale preserved in redirect:', redirectTarget);
+    }
+
+    console.log('➡️ Redirecting to:', redirectTarget);
+
+    // Render OG tags BEFORE redirect so WhatsApp can scrape them
+    // Use banner data from API if available
+    const redirectSeoTitle = data?.meta?.meta_title || data?.banner?.meta_title || data?.banner?.title || `Dulwich College ${schoolName}`;
+    const redirectSeoDescription = data?.meta?.meta_description || data?.banner?.meta_description || data?.banner?.description || '';
+    const redirectSeoImage = getOgImage();
+    const redirectSeoUrl = `${window.location.origin}${redirectTarget}`;
+
+    return (
+      <>
+        {/* OG Tags for WhatsApp/social bots - rendered BEFORE redirect */}
+        <DynamicSEO
+          title={redirectSeoTitle}
+          description={redirectSeoDescription}
+          image={redirectSeoImage}
+          url={redirectSeoUrl}
+          locale={locale === 'zh' ? 'zh_CN' : 'en_US'}
+          siteName={`Dulwich College ${schoolName}`}
+        />
+
+        {/* Client-side redirect */}
+        <Navigate to={redirectTarget} replace />
+      </>
+    );
   }
 
   // Error state - show appropriate error page based on status code
@@ -209,10 +288,26 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
   // Extract banner data - try multiple possible paths
   const bannerData = data?.banner || data?.data?.banner;
 
+  // Prepare SEO data for all layouts
+  const seoTitle = data?.meta?.meta_title || data?.banner?.meta_title || data?.banner?.title || `Dulwich College ${schoolName}`;
+  const seoDescription = data?.meta?.meta_description || data?.banner?.meta_description || data?.banner?.description || '';
+  const seoImage = getOgImage();
+  const seoUrl = `${window.location.origin}${location.pathname}`;
+
   // ── Layout type 5: full-viewport section-by-section scrolling ─────────────
   if (pageLayoutType === 5 || pageLayoutType === "5") {
     return (
       <>
+        {/* Dynamic SEO Meta Tags */}
+        <DynamicSEO
+          title={seoTitle}
+          description={seoDescription}
+          image={seoImage}
+          url={seoUrl}
+          locale={locale === 'zh' ? 'zh_CN' : 'en_US'}
+          siteName={`Dulwich College ${schoolName}`}
+        />
+
         <PageHeader
           selectedSchool={selectedSchool}
           availableSchools={availableSchools}
@@ -245,6 +340,16 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
   if (pageLayoutType === 3 || pageLayoutType === "3") {
     return (
       <>
+        {/* Dynamic SEO Meta Tags */}
+        <DynamicSEO
+          title={seoTitle}
+          description={seoDescription}
+          image={seoImage}
+          url={seoUrl}
+          locale={locale === 'zh' ? 'zh_CN' : 'en_US'}
+          siteName={`Dulwich College ${schoolName}`}
+        />
+
         <PageHeader
           selectedSchool={selectedSchool}
           availableSchools={availableSchools}
@@ -276,6 +381,16 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
   // ── Default layout ─────────────────────────────────────────────────────────
   return (
     <div className="school-page-wrapper">
+      {/* Dynamic SEO Meta Tags */}
+      <DynamicSEO
+        title={seoTitle}
+        description={seoDescription}
+        image={seoImage}
+        url={seoUrl}
+        locale={locale === 'zh' ? 'zh_CN' : 'en_US'}
+        siteName={`Dulwich College ${schoolName}`}
+      />
+
       {/* School-specific Header */}
       <PageHeader
         selectedSchool={selectedSchool}

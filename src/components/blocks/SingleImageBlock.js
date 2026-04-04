@@ -34,7 +34,7 @@ const SingleImageBlock = ({ content }) => {
   })();
 
   // Use title1/title2 if present, fall back to title
-  const headingLine1 = title1 || title || null;
+  const headingLine1 = title1;
   const headingLine2 = title2 || null;
 
   // Construct full image URL

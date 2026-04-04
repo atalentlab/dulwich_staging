@@ -110,9 +110,13 @@ const DownloadSelectBlock = ({ content }) => {
         {/* File Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {fileArray.map((file, index) => (
-            <div key={index} className="flex flex-col">
+            <div
+              key={index}
+              className="flex flex-col cursor-pointer group"
+              onClick={() => handleDownload(file['download-select'])}
+            >
               {/* File Card */}
-              <div className="bg-[#ffcbcf] rounded-lg p-12 flex items-center justify-center mb-4 cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-300">
+              <div className="bg-[#ffcbcf] rounded-lg p-12 flex items-center justify-center mb-4 group-hover:shadow-lg group-hover:scale-105 transition-all duration-300">
                 {/* File Icon */}
                 <svg
                   className="w-20 h-20 text-[#D30013]"
@@ -134,14 +138,10 @@ const DownloadSelectBlock = ({ content }) => {
                 </svg>
               </div>
 
-              {/* File Name and Download Button */}
+              {/* File Name and Download Icon */}
               <div className="flex items-center justify-between">
-                <span className="text-gray-700 font-medium">{file.title}</span>
-                <button
-                  onClick={() => handleDownload(file['download-select'])}
-                  className="p-2 text-[#D30013] hover:bg-[#FFE5E5] rounded-lg transition-all duration-300"
-                  aria-label={`Download ${file.title}`}
-                >
+                <span className="text-gray-700 font-medium group-hover:text-[#D30013] transition-colors duration-300">{file.title}</span>
+                <div className="p-2 text-[#D30013] group-hover:bg-[#FFE5E5] rounded-lg transition-all duration-300">
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -155,7 +155,7 @@ const DownloadSelectBlock = ({ content }) => {
                       d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                     />
                   </svg>
-                </button>
+                </div>
               </div>
             </div>
           ))}

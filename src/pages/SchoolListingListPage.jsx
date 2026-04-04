@@ -95,8 +95,8 @@ const DEFAULT_TAGS = [];
 // Static tags per school (mirrors SCHOOL_CTAS pattern)
 const jsontag = {
   // International schools
-  'Dulwich College Bangkok': ['IGCSE', 'IB Diploma'],
-  'Dulwich College Beijing': ['IGCSE'],
+  'Dulwich College Bangkok': ['IGCSE'],
+  'Dulwich College Beijing': ['IGCSE', 'IB Diploma'],
   'Dulwich College Shanghai Pudong': ['IGCSE', 'IB Diploma'],
   'Dulwich College Shanghai Puxi': ['IGCSE', 'IB Diploma'],
   'Dulwich College Suzhou': ['IGCSE', 'IB Diploma'],
@@ -111,8 +111,8 @@ const jsontag = {
 
   // Chinese names
   '曼谷德威学院': ['IGCSE', 'IB课程'],
-  '北京德威学院': ['IGCSE'],
-  '北京德威英国国际学校': ['IGCSE'],
+  '北京德威学院': ['IGCSE', 'IB课程'],
+  '北京德威英国国际学校': ['IGCSE', 'IB课程'],
   '上海浦东德威国际学校': ['IGCSE', 'IB课程'],
   '上海浦东德威英国国际学校': ['IGCSE', 'IB课程'],
   '上海德威外籍人员子女学校（浦东）': ['IGCSE', 'IB课程'],
@@ -273,17 +273,6 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
 
     return null;
   };
-
-  // SEO Meta Tags
-  useSEO({
-    meta_title: isZh ? '寻找学校 | 德威国际学校' : 'Find a School | Dulwich International Schools',
-    meta_description: isZh
-      ? '探索亚洲12所德威国际学校。我们提供英国课程、IGCSE和IB文凭课程，为K-12学生提供全球视野的教育。'
-      : 'Explore 12 Dulwich International Schools across Asia. We offer British curriculum, IGCSE and IB Diploma for K-12 students with a global perspective.',
-    meta_keywords: 'international school, British curriculum, IGCSE, IB Diploma, K-12 education, Asia, Dulwich',
-    og_image: 'https://dulwich-azure-prod.oss-cn-shanghai.aliyuncs.com/pages/dcsg-holistic-education.jpg'
-  });
-
   // i18n labels - Define before using in useEffect
   const t = isZh ? {
     headerSubtext: '亚洲12所国际学校',
@@ -605,10 +594,10 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
                   } ${index === 0 ? 'border-b border-gray-200 rounded-t-lg' : ''} ${index === options.length - 1 ? 'rounded-b-lg' : ''}`}
                 >
                   <div className="flex items-center">
+                    {option}
                     {value === option && (
                       <span className="mr-2 text-[#D30013] font-bold">✓</span>
                     )}
-                    {option}
                   </div>
                 </div>
               ))}
@@ -923,17 +912,39 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
                               {/* CTA Buttons */}
                               {school.ctas && school.ctas.length > 0 && (
                               <div className="flex gap-3 mt-auto">
-                                {school.ctas.map((cta, ctaIndex) => (
-                                  <a
-                                    key={ctaIndex}
-                                    href={cta.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex-1 text-center bg-[#D30013] hover:bg-[#B8000F] text-[16px] text-white font-semibold px-4 py-3 rounded-lg transition-all duration-300"
-                                  >
-                                    {cta.label}
-                                  </a>
-                                ))}
+                                {school.ctas.map((cta, ctaIndex) => {
+                                  // Add /zh to URL if Chinese version and URL doesn't already have it
+                                  // Skip adding /zh for: Sister Schools, Bangkok, Singapore, and Seoul
+                                  const isSisterSchool = school.type === '姊妹学校' || school.type === 'Sister Schools';
+
+                                  // Check if school is Bangkok, Singapore, or Seoul (these schools don't have Chinese pages)
+                                  const isEnglishOnlySchool =
+                                    school.name?.includes('Bangkok') ||
+                                    school.name?.includes('曼谷') ||
+                                    school.name?.includes('Singapore') ||
+                                    school.name?.includes('新加坡') ||
+                                    school.name?.includes('Seoul') ||
+                                    school.name?.includes('首尔') ||
+                                    cta.url?.includes('bangkok.dulwich.org') ||
+                                    cta.url?.includes('singapore.dulwich.org') ||
+                                    cta.url?.includes('seoul.dulwich.org');
+
+                                  const ctaUrl = isZh && cta.url && !cta.url.endsWith('/zh') && !cta.url.includes('/zh/') && !isSisterSchool && !isEnglishOnlySchool
+                                    ? cta.url.replace(/\/$/, '') + '/zh'
+                                    : cta.url;
+
+                                  return (
+                                    <a
+                                      key={ctaIndex}
+                                      href={ctaUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex-1 text-center bg-[#D30013] hover:bg-[#B8000F] text-[16px] text-white font-semibold px-4 py-3 rounded-lg transition-all duration-300"
+                                    >
+                                      {cta.label}
+                                    </a>
+                                  );
+                                })}
                               </div>
                             )}
                       </div>
@@ -1016,7 +1027,7 @@ export default function SchoolListingListPage({ title = 'Find Your School' }) {
 
   <div className="px-6 py-4 border-t border-[#F2EDE9]">
     <a
-      href="https://suzhou-high-school.dulwich.org/"
+      href="https://suzhou-high-school.dulwich.org/zh"
       target="_blank"
       rel="noopener noreferrer"
       className="block text-center bg-[#D30013] hover:bg-[#B8000F] text-white font-semibold px-4 py-3 rounded-lg"

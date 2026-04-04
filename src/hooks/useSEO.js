@@ -3,7 +3,10 @@ import { useEffect } from 'react';
 /**
  * useSEO Hook
  * Dynamically updates all document head meta tags using banner data from the API.
- * Fields used: meta_title, meta_description, meta_keywords, header_image
+ * Fields used: meta_title, meta_description, meta_keywords, header_image, site_name
+ *
+ * Mirrors the tag set that server.js injects server-side, keeping the DOM
+ * consistent whether rendered by a browser (React) or a social-media bot (Node).
  */
 
 // Placeholder patterns — omit og:image entirely for these
@@ -16,10 +19,10 @@ const resolveOgImage = (src) => {
   return src;
 };
 
-const useSEO = ({ meta_title, meta_description, meta_keywords, og_image } = {}) => {
+const useSEO = ({ meta_title, meta_description, meta_keywords, og_image, site_name } = {}) => {
   useEffect(() => {
     // Update document title with fallback (handle both null and string "null")
-    const validTitle = meta_title && meta_title !== 'null' ? meta_title : 'Dulwich International Schools';
+    const validTitle = meta_title && meta_title !== 'null' ? meta_title : '';
     document.title = validTitle;
 
     // Helper: always set a <meta name="..."> tag (creates if missing, clears if empty)
@@ -48,27 +51,32 @@ const useSEO = ({ meta_title, meta_description, meta_keywords, og_image } = {}) 
 
     // Use direct CDN image URL (simple and reliable for WhatsApp/social crawlers)
     const resolvedImage = resolveOgImage(og_image);
-    const imageAlt = meta_title || 'Dulwich International Schools';
+    const imageAlt      = meta_title;
+    // Detect Chinese locale from url
+    const isZh = window.location.pathname.startsWith('/zh');
+    const ogLocale = isZh ? 'zh_CN' : 'en_US';
 
     // Standard meta tags
     setMetaName('description', meta_description);
-    setMetaName('keywords', meta_keywords);
+    setMetaName('keywords',    meta_keywords);
 
     // Open Graph — read by WhatsApp, Facebook, LinkedIn, Telegram
-    setMetaProperty('og:title', meta_title);
+    setMetaProperty('og:title',       meta_title);
     setMetaProperty('og:description', meta_description);
-    setMetaProperty('og:image', resolvedImage);        // always updated (clears stale image)
-    setMetaProperty('og:image:alt', imageAlt);
-    setMetaProperty('og:url', window.location.href);
-    setMetaProperty('og:type', 'website');
+    setMetaProperty('og:image',       resolvedImage);   // always updated (clears stale image)
+    setMetaProperty('og:image:alt',   imageAlt);
+    setMetaProperty('og:url',         window.location.href);
+    setMetaProperty('og:type',        'website');
+    setMetaProperty('og:locale',      ogLocale);
 
     // Twitter Card — read by Twitter / X
-    setMetaName('twitter:title', meta_title);
+    setMetaName('twitter:title',       meta_title);
     setMetaName('twitter:description', meta_description);
-    setMetaName('twitter:image', resolvedImage);       // always updated (clears stale image)
-    setMetaName('twitter:image:alt', imageAlt);
+    setMetaName('twitter:image',       resolvedImage);  // always updated (clears stale image)
+    setMetaName('twitter:image:alt',   imageAlt);
 
-  }, [meta_title, meta_description, meta_keywords, og_image]);
+  }, [meta_title, meta_description, meta_keywords, og_image, site_name]);
 };
 
 export default useSEO;
+

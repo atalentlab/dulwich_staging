@@ -31,7 +31,7 @@ const ScrollSpyPage = ({
     const handleWheel = (e) => {
       const { deltaY } = e;
       const { scrollTop, scrollHeight, clientHeight } = sidebar;
-      const atTop    = scrollTop <= 0 && deltaY < 0;
+      const atTop = scrollTop <= 0 && deltaY < 0;
       const atBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 1 && deltaY > 0;
 
       if (!atTop && !atBottom) {
@@ -114,14 +114,14 @@ const ScrollSpyPage = ({
         if (named && named.length >= 3) return named;
 
         // 2b. content.copy — raw HTML used by copy / 2-col-copy / 2-col-image-copy blocks.
-        //     ONLY extract text from h1-h5 headings, strong tags, or elements with "subtitle" class.
+        //     ONLY extract text from h1-h5 headings, no-strong tags, or elements with "subtitle" class.
         const copyHtml = c.copy || (c.col && c.col[0] && c.col[0].copy) || null;
         if (copyHtml && typeof copyHtml === 'string' && copyHtml.trim()) {
           const div = document.createElement('div');
           div.innerHTML = copyHtml;
 
-          // ONLY look for heading tags (h1-h5), strong tags, and elements with class "subtitle"
-          const headingSelectors = 'h1, h2, h3, h4, h5, strong, .subtitle, [class*="subtitle"]';
+          // ONLY look for heading tags (h1-h5), no-strong tags, and elements with class "subtitle"
+          const headingSelectors = 'h1, h2, .subtitle, [class*="subtitle"]';
           const headingEl = div.querySelector(headingSelectors);
 
           if (headingEl?.textContent?.trim()) {
@@ -137,12 +137,12 @@ const ScrollSpyPage = ({
           if (item.title) return clean(item.title);
           if (item.subtitle) return clean(item.subtitle);
           if (item.heading) return clean(item.heading);
-          // Also try item's content.copy - ONLY extract from headings, strong tags, or subtitle classes
+          // Also try item's content.copy - ONLY extract from headings, no-strong tags, or subtitle classes
           const itemCopy = item.content?.copy;
           if (itemCopy && typeof itemCopy === 'string' && itemCopy.trim()) {
             const div = document.createElement('div');
             div.innerHTML = itemCopy;
-            const headingSelectors = 'h1, h2, h3, h4, h5, strong, .subtitle, [class*="subtitle"]';
+            const headingSelectors = 'h1, h2, .subtitle, [class*="subtitle"]';
             const headingEl = div.querySelector(headingSelectors);
             if (headingEl?.textContent?.trim()) {
               const cleaned = clean(headingEl.textContent);
@@ -152,7 +152,7 @@ const ScrollSpyPage = ({
         }
       }
 
-      // 4. HTML parsing — block.content is a raw HTML string (legacy) - headings and strong tags only
+      // 4. HTML parsing — block.content is a raw HTML string (legacy) - headings and no-strong tags only
       if (typeof block.content === 'string' && block.content.trim()) {
         const div = document.createElement('div');
         div.innerHTML = block.content;
@@ -161,8 +161,8 @@ const ScrollSpyPage = ({
         const subtitle = div.querySelector('.subtitle, [class*="subtitle"]');
         if (subtitle?.textContent?.trim()) return clean(subtitle.textContent);
 
-        // Then check for headings and strong tags in order of preference
-        const orderedTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'strong'];
+        // Then check for headings and no-strong tags in order of preference
+        const orderedTags = ['h1', 'h2'];
         for (const tag of orderedTags) {
           const el = div.querySelector(tag);
           if (el?.textContent?.trim()) return clean(el.textContent);

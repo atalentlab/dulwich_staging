@@ -263,7 +263,7 @@ const MainCampusMapBlock = ({ content }) => {
                       : 'bg-[#E5E5E5] text-[#3C3737] hover:bg-[#D5D5D5]'
                   }`}
                 >
-                  {addr.title}
+                  {addr.title || (locale === 'zh' ? '主校区' : 'Main Campus')}
                 </button>
               ))}
             </div>

@@ -56,11 +56,8 @@ export const fetchTeacherList = async ({
     console.log('Teacher API Response:', rawData);
 
     if (rawData.success && rawData.data) {
-      return {
-        teachers: rawData.data || [],
-        total: rawData.total || rawData.data.length,
-        pagination: rawData.pagination || null,
-      };
+      // Return the structure that matches what TemplateBlock expects
+      return rawData;  // Returns { success: true, data: { people: [...], total, page_no, limit } }
     }
 
     throw new Error('Invalid API response format');

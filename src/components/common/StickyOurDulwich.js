@@ -61,7 +61,7 @@ const STICKY_DATA = {
     effect:   'slide-in-right',
     mobilewidth: 140,
     mobileheight: 80,
-    desktopMaxwidth: 200,
+    desktopMaxwidth: 220,
     mobileview: 'half'
 
 
@@ -84,8 +84,8 @@ function StickyOurDulwich() {
   if (!data) return null;
 
   const isTransitionHover = data.effect === 'transition-hover';
-  const topValue   = POSITION_MAP[data.position] || '50%';
-  const deskW      = data.desktopMaxwidth || 200;
+  const topValue   = POSITION_MAP[data.position];
+  const deskW      = data.desktopMaxwidth;
   const deskWpx    = `${deskW}px`;
 
   return (
@@ -110,7 +110,7 @@ function StickyOurDulwich() {
         className="block md:hidden"
         style={{
           minHeight: '40px',
-          transform: data.mobileview === 'half' ? 'translateX(50%)' : 'translateX(0)',
+          transform: data.mobileview === 'half' ? 'translateX(45%)' : 'translateX(0)',
         }}
       >
 
@@ -131,7 +131,7 @@ function StickyOurDulwich() {
           isTransitionHover
             ? {}
             : {
-                transform: hovered ? 'translateX(0)' : 'translateX(50%)',
+                transform: hovered ? 'translateX(0)' : 'translateX(45%)',
                 transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
               }
         }

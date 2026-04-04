@@ -81,12 +81,28 @@ export const fetchPageBySlug = async (slug, locale) => {
 
     // Transform API response
     if (rawData.success && rawData.data) {
-      const { banner, meta, blocks, schools, articles } = rawData.data;
+      const { banner, meta, blocks, schools, articles, redirects } = rawData.data;
+
+      // Check for redirect data - handle both formats
+      let redirectsData = null;
+      if (redirects) {
+        // Format 1: { redirects: { redirect: true, target: "...", status: "301" } }
+        redirectsData = redirects;
+      } else if (rawData.data.redirect === true && rawData.data.target) {
+        // Format 2: { redirect: true, target: "...", status: "301" } (fields at root level)
+        redirectsData = {
+          redirect: rawData.data.redirect,
+          target: rawData.data.target,
+          status: rawData.data.status || '301'
+        };
+        console.log('🔄 Redirect detected in API response:', redirectsData);
+      }
 
       return {
         banner: banner || {},
         meta:   meta   || null,
         blocks: blocks || [],
+        redirects: redirectsData,
         // Static header and footer for all pages
         header: STATIC_HEADER,
         footer: {

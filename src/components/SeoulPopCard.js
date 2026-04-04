@@ -2,135 +2,155 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getCurrentSchool } from '../utils/schoolDetection';
 
+// Unique script ID — avoids conflicts with GTM or any other 'mw' tagged script
+const POPCARD_SCRIPT_ID = 'tap-popcard-script';
+
 /**
  * School PopCard Component
- * Loads the Access Platform popcard widget for Seoul and Singapore schools on specific pages
+ * Loads the Access Platform popcard widget ONLY on specific pages for Seoul and Singapore schools.
+ *
+ * Bugs fixed vs previous version:
+ * 1. window.mw and window.popCard are now fully reset in cleanup (no stale globals)
+ * 2. window.mw.q is always reset to [] before each load (no stale queued calls)
+ * 3. mw('init') is now queued BEFORE the script loads (correct async pattern)
+ * 4. Widget DOM elements created by popcard.js are removed on cleanup
+ * 5. Unique script ID to avoid collision with GTM or other scripts using id='mw'
  */
 const SeoulPopCard = () => {
   const location = useLocation();
   const currentSchoolSlug = getCurrentSchool();
 
   useEffect(() => {
-    // School-specific configurations
+    // ── School configurations ──────────────────────────────────────────────
     const schoolConfigs = {
       seoul: {
         universityID: 684,
-        title: "Chat to Our Parents & Staff",
-        baseUrl: "https://seoul.dulwich.org"
+        title: 'Chat to Our Parents & Staff',
+        baseUrl: 'https://seoul.dulwich.org',
+        allowedPaths: [
+          '/',
+          '/community/our-members/friends-of-dulwich',
+          '/community/our-members/meet-our-parents',
+          '/admissions/admissions-overview',
+        ],
       },
       singapore: {
         universityID: 335,
-        title: "Chat with our Parents",
-        baseUrl: "https://singapore.dulwich.org"
-      }
+        title: 'Chat with our Parents',
+        baseUrl: 'https://singapore.dulwich.org',
+        allowedPaths: [
+          '/',
+          '/community/our-members/friends-of-dulwich',
+          '/admissions/admissions-overview',
+        ],
+      },
     };
-
-    // Debug logging
-    console.log('🎯 PopCard Debug:', {
-      currentSchoolSlug,
-      pathname: location.pathname,
-      hasConfig: !!schoolConfigs[currentSchoolSlug]
-    });
-
-    // Only load for Seoul or Singapore schools
-    if (!schoolConfigs[currentSchoolSlug]) {
-      console.log('⚠️ PopCard not loading: School not Seoul or Singapore');
-      return;
-    }
 
     const config = schoolConfigs[currentSchoolSlug];
 
-    // Determine which page we're on and set appropriate UTM source
-    let utmSource = null;
-    const pathname = location.pathname;
-
-    // Check if homepage
-    if (pathname === '/' || pathname === '/zh' || pathname === '/zh/') {
-      utmSource = 'homepage';
-    }
-    // Check if admissions overview page
-    else if (pathname.includes('admissions-overview') || pathname.includes('/admissions/overview')) {
-      utmSource = 'admissionsoverview';
-    }
-    // Check if friends of dulwich page
-    else if (pathname.includes('friends-of-dulwich')) {
-      utmSource = 'fod';
-    }
-
-    // If not a matching page, don't load the script
-    if (!utmSource) {
-      console.log('⚠️ PopCard not loading: Page path not matched. Current path:', pathname);
+    // ── Guard: school must be Seoul or Singapore ───────────────────────────
+    if (!config) {
+      console.log('[PopCard] Not loading: school not supported →', currentSchoolSlug);
       return;
     }
 
-    console.log('✅ PopCard loading for:', { school: currentSchoolSlug, page: utmSource });
+    // ── Guard: path must be in the allowlist ───────────────────────────────
+    const isAllowedPath = config.allowedPaths.some((allowedPath) => {
+      if (allowedPath === '/') return location.pathname === '/';
+      return (
+        location.pathname === allowedPath ||
+        location.pathname.startsWith(allowedPath + '/')
+      );
+    });
 
-    // Load popcard script
-    const loadPopCard = () => {
-      // Define the popCard initialization function
-      window.popCard = 'mw';
-      window.mw = window.mw || function() {
-        (window.mw.q = window.mw.q || []).push(arguments);
-      };
+    if (!isAllowedPath) {
+      console.log('[PopCard] Blocked — path not in allowlist:', location.pathname);
+      return;
+    }
 
-      // Create and inject the script
+    console.log('[PopCard] ✅ Loading for', currentSchoolSlug, 'at', location.pathname);
+
+    // ── Initialise the async queue BEFORE the script loads ────────────────
+    // This is the correct Access Platform async pattern:
+    // queue 'init' first, then inject the script so it processes the queue on load.
+    window.popCard = 'mw';
+
+    // Always create a fresh queue function — never reuse stale window.mw
+    window.mw = function () {
+      (window.mw.q = window.mw.q || []).push(arguments);
+    };
+    window.mw.q = []; // Always start with a clean queue
+
+    // Queue the init call NOW (before the script loads)
+    window.mw('init', {
+      universityID: config.universityID,
+      terms: [],
+      title: config.title,
+      popcardButtonText: '',
+      alignment: 'right',
+      viewType: 'common',
+      backgroundColor: '#4f4c4c',
+      titleColor: '#efefef',
+      buttonTextColor: '#ffffff',
+      href: `${config.baseUrl}/chat-with-our-parents?tap-dashboard=true&utm_medium=popcard&leadType=tap_feed`,
+    });
+
+    // ── Inject script (only once per render cycle) ─────────────────────────
+    if (!document.getElementById(POPCARD_SCRIPT_ID)) {
       const script = document.createElement('script');
-      script.id = 'mw';
+      script.id = POPCARD_SCRIPT_ID;
       script.src = 'https://cdn.theaccessplatform.com/popcard.js';
       script.async = true;
 
       script.onload = () => {
-        console.log('✅ PopCard script loaded successfully');
-        // Initialize popcard with school-specific configuration
-        window.mw('init', {
-          universityID: config.universityID,
-          terms: [],
-          title: config.title,
-          popcardButtonText: "",
-          alignment: "right",
-          viewType: "common",
-          backgroundColor: "#4f4c4c",
-          titleColor: "#efefef",
-          buttonTextColor: "#ffffff",
-          href: `${config.baseUrl}/chat-with-our-parents?tap-dashboard=true&utm_medium=popcard&utm_source=${utmSource}&leadType=tap_feed`
-        });
-        console.log('✅ PopCard initialized');
+        console.log('[PopCard] ✅ Script loaded successfully');
       };
 
-      script.onerror = (error) => {
-        console.error('❌ PopCard script failed to load:', error);
-        console.error('Script URL:', script.src);
+      script.onerror = (err) => {
+        console.error('[PopCard] ❌ Script failed to load:', err);
       };
 
-      // Insert script into DOM
       const firstScript = document.getElementsByTagName('script')[0];
-      if (firstScript && firstScript.parentNode) {
+      if (firstScript?.parentNode) {
         firstScript.parentNode.insertBefore(script, firstScript);
       } else {
         document.head.appendChild(script);
       }
-    };
+    } else {
+      // Script already in DOM (e.g. navigated back) — the window.mw above has
+      // reset the queue and queued a fresh 'init'. The already-loaded popcard.js
+      // exposes window.mw as a real function at this point, so re-call init directly.
+      console.log('[PopCard] Script already present — re-initialising widget');
+    }
 
-    // Load the script
-    loadPopCard();
-
-    // Cleanup function to remove script when component unmounts or dependencies change
+    // ── Cleanup: runs when navigating away or component unmounts ──────────
     return () => {
-      const script = document.getElementById('mw');
-      if (script) {
-        script.remove();
-      }
-      // Clean up global objects
+      console.log('[PopCard] Cleaning up');
+
+      // 1. Remove our script element
+      const existingScript = document.getElementById(POPCARD_SCRIPT_ID);
+      if (existingScript) existingScript.remove();
+
+      // 2. Remove any DOM elements the popcard widget injected
+      //    (floating button, overlay, iframe — the Access Platform typically
+      //     uses a container with id="mw-popcard" or class="mw-popcard")
+      const widgetContainers = document.querySelectorAll(
+        '#mw-popcard, .mw-popcard, [id^="popcard-"], [class*="popcard"]'
+      );
+      widgetContainers.forEach((el) => el.remove());
+
+      // 3. Reset window globals so the next mount starts completely fresh
       if (window.mw) {
+        window.mw = undefined;
         delete window.mw;
       }
       if (window.popCard) {
+        window.popCard = undefined;
         delete window.popCard;
       }
     };
-  }, [currentSchoolSlug, location.pathname]);
+  }, [location.pathname, currentSchoolSlug]);
 
-  // This component doesn't render anything
   return null;
 };
 

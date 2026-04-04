@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.2facb71b.css",
-    "main.js": "/static/js/main.30f1810f.js",
+    "main.css": "/static/css/main.ab7cdb29.css",
+    "main.js": "/static/js/main.90dde86f.js",
     "static/js/919.128a2a0c.chunk.js": "/static/js/919.128a2a0c.chunk.js",
     "static/media/EiMAdshootforThailandatDCSG-Sun-138.jpg": "/static/media/EiMAdshootforThailandatDCSG-Sun-138.4274e6cda593da2aac16.jpg",
     "static/media/student stories.jpg": "/static/media/student stories.9fcff4952c31203a27a0.jpg",
@@ -10,7 +10,7 @@
     "static/media/Sustainability & Global Citizenship.jpg": "/static/media/Sustainability & Global Citizenship.d043648473b6eee06ff6.jpg",
     "static/media/sustainability and global citizenship.JPG": "/static/media/sustainability and global citizenship.06cb96f2cd12b34da545.JPG",
     "static/media/The Greenhouse Innovation Hub.jpg": "/static/media/The Greenhouse Innovation Hub.225d285d83795148ff36.jpg",
-    "static/media/visit us.jpg": "/static/media/visit us.8b7d1105a19dc070638e.jpg",
+    "static/media/visit us.jpg": "/static/media/visit us.8f576077a0abe9574f68.jpg",
     "static/media/academic results.jpg": "/static/media/academic results.e1fb792cdb5457a5a52d.jpg",
     "static/media/DCSG__DUCKS_Geography.jpg": "/static/media/DCSG__DUCKS_Geography.ca9a616385984989c9d9.jpg",
     "static/media/DCSL_JS_Student_Question_Hand.jpg": "/static/media/DCSL_JS_Student_Question_Hand.1479a1f119f7e88742c8.jpg",
@@ -76,8 +76,8 @@
     "static/media/acre.jpg": "/static/media/acre.7301103ca84098c323ee.jpg",
     "static/media/Wechat_QRcode.webp": "/static/media/Wechat_QRcode.49292665b7a73aec99c6.webp",
     "static/media/WhyUniversityMatriculation.jpeg": "/static/media/WhyUniversityMatriculation.14b481e4bfdf1fcde6b7.jpeg",
+    "static/media/icomoon.svg?7b4acw": "/static/media/icomoon.197bf9bc113f70ea725e.svg",
     "static/media/sticky-beijing-mobile.svg": "/static/media/sticky-beijing-mobile.c39b17eb85fd6ea94c7a03ffd7176a04.svg",
-    "static/media/icomoon.svg?ayi0fe": "/static/media/icomoon.6620914cb2088af2c761.svg",
     "static/media/University Matriculation.jpeg": "/static/media/University Matriculation.122b93562d3e5eea1a9c.jpeg",
     "static/media/suzhou.jpeg": "/static/media/suzhou.062c56e1432dd0a0bea5.jpeg",
     "static/media/puxi.jpg": "/static/media/puxi.3c30cbfe20eb20e2ec4b.jpg",
@@ -96,25 +96,25 @@
     "static/media/rednote.webp": "/static/media/rednote.5ab3efa6c44f09a28823.webp",
     "static/media/loading_spinner.gif": "/static/media/loading_spinner.809834dd12314af7bf1a.gif",
     "static/media/ss-xian.webp": "/static/media/ss-xian.0a493c72185045bcdbb8.webp",
-    "static/media/icomoon.eot?ayi0fe": "/static/media/icomoon.cf03d7bbe5c164375b6e.eot",
-    "static/media/icomoon.woff?ayi0fe": "/static/media/icomoon.d501f9d482f980db1437.woff",
+    "static/media/icomoon.eot?7b4acw": "/static/media/icomoon.afcdb43825596a085cb8.eot",
+    "static/media/icomoon.woff?7b4acw": "/static/media/icomoon.755f609ff908046e054c.woff",
+    "static/media/icomoon.ttf?7b4acw": "/static/media/icomoon.bf67fbd32276fc22288b.ttf",
     "static/media/eim-logo-blue.svg": "/static/media/eim-logo-blue.08eaa73e2c6837972d6fdc0db6b53870.svg",
-    "static/media/icomoon.ttf?ayi0fe": "/static/media/icomoon.a2ccab8a824bae161696.ttf",
+    "index.html": "/index.html",
     "static/media/dci-group-logo-white.svg": "/static/media/dci-group-logo-white.5e7a14afb79092c12ffb095932ea679f.svg",
     "static/media/dci-group-logo.svg": "/static/media/dci-group-logo.28387561a7cf0c43e13f8224748149a6.svg",
-    "index.html": "/index.html",
     "static/media/slick.svg": "/static/media/slick.2630a3e3eab21c607e21.svg",
     "static/media/slick.eot": "/static/media/slick.a4e97f5a2a64f0ab1323.eot",
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/ico-star.svg": "/static/media/ico-star.e757cadbbbcce6ffe7f97efd83c86d3f.svg",
     "static/media/ico-star2.svg": "/static/media/ico-star2.fcd8cb15ce58b9e9ebeb676ca3ffc6ca.svg",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
-    "main.2facb71b.css.map": "/static/css/main.2facb71b.css.map",
-    "main.30f1810f.js.map": "/static/js/main.30f1810f.js.map",
+    "main.ab7cdb29.css.map": "/static/css/main.ab7cdb29.css.map",
+    "main.90dde86f.js.map": "/static/js/main.90dde86f.js.map",
     "919.128a2a0c.chunk.js.map": "/static/js/919.128a2a0c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2facb71b.css",
-    "static/js/main.30f1810f.js"
+    "static/css/main.ab7cdb29.css",
+    "static/js/main.90dde86f.js"
   ]
 }

@@ -19,23 +19,25 @@ import { useLocation } from 'react-router-dom';
  * @param {string} props.author - Page author
  */
 const SEO = ({
-  title = 'Dulwich International Schools',
-  description = 'We are the leading network of British international schools offering the globally IB program. Discover and achieve academic excellence with us.',
-  image = 'https://dulwich-azure-prod.oss-cn-shanghai.aliyuncs.com/pages/dcsg-holistic-education.jpg',
-  imageAlt = 'Dulwich International Schools',
+  title,
+  description,
+  image,
+  imageAlt,
   type = 'website',
   siteName = 'Dulwich International Schools',
   twitterCard = 'summary_large_image',
   twitterSite = '@DulwichColleges',
-  keywords = 'Dulwich, international school, education, Asia, IB programme',
-  author = 'Dulwich International Schools'
+  keywords,
+  author
 }) => {
   const location = useLocation();
-  const currentUrl = `${window.location.origin}${location.pathname}${location.search}`;
+  // Use production domain for canonical URL, fallback to current URL
+  const siteUrl = process.env.REACT_APP_SITE_URL || window.location.origin;
+  const currentUrl = `${siteUrl}${location.pathname}${location.search}`;
 
   // Ensure image URL is absolute
   const getAbsoluteImageUrl = (imgUrl) => {
-    if (!imgUrl) return image; // fallback to default
+    if (!imgUrl) return null;
     if (imgUrl.startsWith('http://') || imgUrl.startsWith('https://')) {
       return imgUrl;
     }
@@ -48,35 +50,41 @@ const SEO = ({
 
   const absoluteImageUrl = getAbsoluteImageUrl(image);
 
+  // Only render meta tags if values are provided (no fallbacks)
+  // This allows SSR-injected meta tags to remain without being overridden
+  if (!title && !description && !image) {
+    return null;
+  }
+
   return (
     <Helmet>
-      {/* Basic Meta Tags */}
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      <meta name="keywords" content={keywords} />
-      <meta name="author" content={author} />
+      {/* Basic Meta Tags - Only render if provided */}
+      {title && <title>{title}</title>}
+      {description && <meta name="description" content={description} />}
+      {keywords && <meta name="keywords" content={keywords} />}
+      {author && <meta name="author" content={author} />}
 
-      {/* Open Graph Tags (Facebook, LinkedIn, WhatsApp) */}
+      {/* Open Graph Tags (Facebook, LinkedIn, WhatsApp) - Only render if provided */}
       <meta property="og:type" content={type} />
-      <meta property="og:site_name" content={imageAlt} />
+      <meta property="og:site_name" content={siteName} />
       <meta property="og:url" content={currentUrl} />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      <meta property="og:image" content={absoluteImageUrl} />
-      <meta property="og:image:secure_url" content={absoluteImageUrl} />
-      <meta property="og:image:alt" content={imageAlt} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
+      {title && <meta property="og:title" content={title} />}
+      {description && <meta property="og:description" content={description} />}
+      {absoluteImageUrl && <meta property="og:image" content={absoluteImageUrl} />}
+      {absoluteImageUrl && <meta property="og:image:secure_url" content={absoluteImageUrl} />}
+      {imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+      {absoluteImageUrl && <meta property="og:image:width" content="1200" />}
+      {absoluteImageUrl && <meta property="og:image:height" content="630" />}
       <meta property="og:locale" content="en_US" />
 
-      {/* Twitter Card Tags */}
+      {/* Twitter Card Tags - Only render if provided */}
       <meta name="twitter:card" content={twitterCard} />
       <meta name="twitter:site" content={twitterSite} />
       <meta name="twitter:creator" content={twitterSite} />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={absoluteImageUrl} />
-      <meta name="twitter:image:alt" content={imageAlt} />
+      {title && <meta name="twitter:title" content={title} />}
+      {description && <meta name="twitter:description" content={description} />}
+      {absoluteImageUrl && <meta name="twitter:image" content={absoluteImageUrl} />}
+      {imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}
 
       {/* Additional SEO Tags */}
       <meta name="robots" content="index, follow" />

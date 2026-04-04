@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { MoveDiagonal } from 'lucide-react';
 import Icon from '../Icon';
 import Icon1 from '../Icon';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
@@ -64,6 +66,21 @@ const TaxonomyBlock = ({ content }) => {
   // Determine locale based on URL path
   const isChineseVersion = location.pathname.startsWith('/zh/') || location.pathname === '/zh';
   const locale = isChineseVersion ? 'zh' : 'en';
+
+  // Initialize AOS
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      easing: 'ease-out',
+      once: false,
+      mirror: false,
+    });
+  }, []);
+
+  // Refresh AOS when terms change
+  useEffect(() => {
+    AOS.refresh();
+  }, [allTerms]);
 
   const handleDropdownClose = () => {
     setIsDropdownClosing(true);
@@ -436,8 +453,14 @@ const TaxonomyBlock = ({ content }) => {
         {/* Terms Grid - Type 0: Website Layout */}
         {!loading && terms.length > 0 && taxonomyType === 0 && (
           <div className="grid text-left grid-cols-1 md:grid-cols-2 gap-8">
-            {terms.map((term) => (
-              <div key={term.id} className="flex gap-6">
+            {terms.map((term, index) => (
+              <div
+                key={term.id}
+                className="flex gap-6"
+                data-aos="fade-up"
+                data-aos-delay={index * 50}
+                data-aos-duration="200"
+              >
                 <div className="flex-shrink-0 text-left">
                   <img
                     src={term.image || 'https://via.placeholder.com/150'}
@@ -489,7 +512,13 @@ const TaxonomyBlock = ({ content }) => {
         {!loading && allTerms.length > 0 && taxonomyType === 1 && (
           <div className="grid text-left grid-cols-1 md:grid-cols-2 gap-6">
             {allTerms.slice(0, visibleCount).map((term, index) => (
-              <div key={term.id} className="flex items-center bg-white rounded-xl shadow-md overflow-hidden p-4 gap-4">
+              <div
+                key={term.id}
+                className="flex items-center bg-white rounded-xl shadow-md overflow-hidden p-4 gap-4"
+                data-aos="fade-up"
+                data-aos-delay={index * 50}
+                data-aos-duration="200"
+              >
                 <div className="flex-shrink-0">
                   <img
                     src={term.image || 'https://via.placeholder.com/120'}
@@ -572,28 +601,31 @@ const TaxonomyBlock = ({ content }) => {
 
         {/* Terms Grid - Type 2: Stories Layout */}
         {!loading && terms.length > 0 && taxonomyType === 2 && (
-          <div className="max-w-[1360px] grid grid-cols-1 md:grid-cols-3 gap-4 md:auto-rows-[300px]">
+          <div
+            className="max-w-[1360px] grid grid-cols-1 md:grid-cols-3 gap-4 md:auto-rows-[300px]"
+            style={{ gridAutoFlow: 'dense' }}
+          >
             {terms.map((term, index) => {
-              // Create more varied layout pattern
-              const patterns = [
-                { rowSpan: 2, colSpan: 1 },  // tall
-                { rowSpan: 2, colSpan: 1 },  // tall
-                { rowSpan: 1, colSpan: 1 },  // short
-                { rowSpan: 1, colSpan: 1 },  // short
-                { rowSpan: 1, colSpan: 2 },  // wide short
-                { rowSpan: 2, colSpan: 1 },  // tall
-              ];
-              const pattern = patterns[index % patterns.length];
+              // Balanced pattern in groups of 9 items (3 rows of 3)
+              // Row 1: tall, tall, short+short (fills 2 row-units)
+              // Row 2: short, short, tall (fills with row 1)
+              const positionInGroup = index % 9;
+              let rowSpan = 1;
+
+              if (positionInGroup === 0 || positionInGroup === 1 || positionInGroup === 5 || positionInGroup === 6 || positionInGroup === 8) {
+                rowSpan = 2; // tall cards at positions 0,1,5,6,8
+              }
 
               return (
                 <div
                   key={term.id}
                   className={`group bg-white rounded-lg overflow-hidden shadow-md cursor-pointer hover:shadow-2xl transition-all duration-500 ${
-                    pattern.rowSpan === 2 ? 'md:row-span-2' : 'md:row-span-1'
-                  } ${
-                    pattern.colSpan === 2 ? 'md:col-span-2' : 'md:col-span-1'
+                    rowSpan === 2 ? 'md:row-span-2' : 'md:row-span-1'
                   }`}
                   onClick={() => setSelectedStory(index)}
+                  data-aos="fade-up"
+                  data-aos-delay={index * 50}
+                  data-aos-duration="200"
                 >
                   <div className="flex flex-col h-full">
                     <div className="flex-1 overflow-hidden min-h-0">

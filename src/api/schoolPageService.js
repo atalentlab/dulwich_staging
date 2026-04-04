@@ -101,6 +101,21 @@ export const fetchSchoolPageBySlug = async (slug, school, locale) => {
       // Log for debugging
       console.log('🔍 Service - apiData.banner.page_layout_type:', apiData.banner?.page_layout_type);
 
+      // Check for redirect data - handle both formats
+      let redirectsData = null;
+      if (apiData.redirects) {
+        // Format 1: { redirects: { redirect: true, target: "...", status: "301" } }
+        redirectsData = apiData.redirects;
+      } else if (apiData.redirect === true && apiData.target) {
+        // Format 2: { redirect: true, target: "...", status: "301" } (fields at root level)
+        redirectsData = {
+          redirect: apiData.redirect,
+          target: apiData.target,
+          status: apiData.status || '301'
+        };
+        console.log('🔄 Redirect detected in API response:', redirectsData);
+      }
+
       const transformedData = {
         // School-specific header
         header: apiData.header || {},
@@ -112,6 +127,7 @@ export const fetchSchoolPageBySlug = async (slug, school, locale) => {
         banner: apiData.banner || {},
         meta: apiData.meta || null,
         blocks: apiData.blocks || [],
+        redirects: redirectsData,
 
         // School information
         school: apiData.school || { name: detectedSchool, slug: detectedSchool },
@@ -231,11 +247,25 @@ export const fetchSchoolHomepage = async (school, locale) => {
     const rawData = await response.json();
 
     if (rawData.success && rawData.data) {
+      // Check for redirect data - handle both formats
+      let redirectsData = null;
+      if (rawData.data.redirects) {
+        redirectsData = rawData.data.redirects;
+      } else if (rawData.data.redirect === true && rawData.data.target) {
+        redirectsData = {
+          redirect: rawData.data.redirect,
+          target: rawData.data.target,
+          status: rawData.data.status || '301'
+        };
+        console.log('🔄 Redirect detected in school homepage:', redirectsData);
+      }
+
       return {
         header: rawData.data.header || {},
         footer: rawData.data.footer || {},
         banner: rawData.data.banner || {},
         blocks: rawData.data.blocks || [],
+        redirects: redirectsData,
         school: rawData.data.school || { name: detectedSchool, slug: detectedSchool },
       };
     }

@@ -21,8 +21,8 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 // Static tags per school (mirrors SCHOOL_CTAS pattern)
 const jsontag = {
   // International schools
-  'Dulwich College Bangkok': ['IGCSE', 'IB Diploma'],
-  'Dulwich College Beijing': ['IGCSE'],
+  'Dulwich College Bangkok': ['IGCSE'],
+  'Dulwich College Beijing': ['IGCSE', 'IB Diploma'],
   'Dulwich College Shanghai Pudong': ['IGCSE', 'IB Diploma'],
   'Dulwich College Shanghai Puxi': ['IGCSE', 'IB Diploma'],
   'Dulwich College Suzhou': ['IGCSE', 'IB Diploma'],
@@ -167,12 +167,29 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
           const transformedSchools = data.data.map(school => {
             const schoolName = school.full_title || school.title || school.name;
 
+            // Map API type to display type
+            const mapTypeToDisplay = (apiType) => {
+              if (!apiType) return null;
+              const typeMapping = {
+                'College': isZh ? '国际学校' : 'International Schools',
+                'International College': isZh ? '国际学校' : 'International Schools',
+                'High School': isZh ? '国际高中课程' : 'Int. High School Programmes',
+                'International High School': isZh ? '国际高中课程' : 'Int. High School Programmes',
+                'Sister Schools': isZh ? '姊妹学校' : 'Sister Schools',
+                '国际学院': isZh ? '国际学校' : 'International Schools',
+                '国际高中': isZh ? '国际高中课程' : 'Int. High School Programmes',
+                '姊妹学校': isZh ? '姊妹学校' : 'Sister Schools',
+              };
+              return typeMapping[apiType] || apiType;
+            };
+
             return {
               name: schoolName,
               location: school.location,
               students: school.students_count || school.students,
               ages: school.ages,
               established: school.established,
+              type: mapTypeToDisplay(school.type),
               image_url: school.image_url,
               url: school.url,
               // Use API tags if available, otherwise fall back to jsontag mapping
@@ -351,7 +368,7 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
                       {school.students && (
                         <div className="flex items-center gap-3 text-[#3C3C3B]">
                           <Icon icon="Icon-Profile_Add" size={16} color="#3C3737" className="flex-shrink-0" />
-                          <span className="text-[14px] font-medium">{school.students.toLocaleString()} Students</span>
+                          <span className="text-[14px] font-medium">{school.students.toLocaleString()} {isZh ? '学生' : 'Students'}</span>
                         </div>
                       )}
 
@@ -359,7 +376,7 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
                       {school.ages && (
                         <div className="flex items-center gap-3 text-[#3C3C3B]">
                           <Icon icon="Age-Range" size={16} color="#3C3737" className="flex-shrink-0" />
-                          <span className="text-[14px] font-medium">Ages {school.ages}</span>
+                          <span className="text-[14px] font-medium">{isZh ? '年龄' : 'Ages'} {school.ages}</span>
                         </div>
                       )}
 
@@ -367,7 +384,7 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
                       {school.established && (
                         <div className="flex items-center gap-3 text-[#3C3C3B]">
                           <Icon icon="Icon-Schools" size={16} color="#3C3737" className="flex-shrink-0" />
-                          <span className="text-[14px] font-medium">Established {school.established}</span>
+                          <span className="text-[14px] font-medium">{isZh ? '成立于' : 'Established'} {school.established}</span>
                         </div>
                       )}
 
@@ -386,14 +403,25 @@ export default function SchoolListingCarouselPage({ title = "Find a School" }) {
                       )}
                     </div>
 
-                    <a
-                      href={school.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-center bg-[#D30013] hover:bg-[#B8000F] text-[16px] text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300"
-                    >
-                      Visit Website
-                    </a>
+                    {(() => {
+                      // Add /zh to URL if Chinese version and URL doesn't already have it
+                      // Skip adding /zh for Sister Schools (姊妹学校)
+                      const isSisterSchool = school.type === '姊妹学校' || school.type === 'Sister Schools';
+                      const schoolUrl = isZh && school.url && !school.url.endsWith('/zh') && !school.url.includes('/zh/') && !isSisterSchool
+                        ? school.url.replace(/\/$/, '') + '/zh'
+                        : school.url;
+
+                      return (
+                        <a
+                          href={schoolUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-center bg-[#D30013] hover:bg-[#B8000F] text-[16px] text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300"
+                        >
+                          {isZh ? '访问网站' : 'Visit Website'}
+                        </a>
+                      );
+                    })()}
                   </div>
                 </div>
               ))}

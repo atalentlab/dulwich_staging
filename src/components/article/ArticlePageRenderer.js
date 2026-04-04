@@ -25,8 +25,8 @@ const ArticlePageRenderer = ({ slug: propSlug, locale: propLocale }) => {
   const [selectedSchoolSlug, setSelectedSchoolSlug] = useState('');
   const [tagsOpen, setTagsOpen] = useState(false);
 
-  // Supported locales
-  const supportedLocales = ['zh', 'en', 'cn'];
+  // Supported locales (only zh/cn - English is default without prefix)
+  const supportedLocales = ['zh', 'cn'];
 
   // Parse URL to extract locale and slug
   const parseUrl = (pathname) => {

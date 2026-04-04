@@ -1241,10 +1241,24 @@
                 ]
               },
               {
+                "title": "Useful Documents",
+                "url": "/admissions/apply/useful-documents",
+                "schools": [
+                  "seoul"
+                ]
+              },
+              {
                 "title": "Scholarships",
                 "url": "/admissions/apply/scholarships",
                 "schools": [
                   "singapore"
+                ]
+              },
+              {
+                "title": "Scholarship",
+                "url": "/admissions/apply/the-pioneer-scholarship-programme",
+                "schools": [
+                  "bangkok"
                 ]
               }
               
@@ -1258,14 +1272,21 @@
                 "title": "Book a Tour",
                 "url": "/admissions/visit/visit-us?anchor=book-a-tour",
                 "excludeSchools": [
-                  "suzhou-high-school"
+                  "suzhou-high-school",
+                     "seoul"
                 ]
               },
               {
                 "title": "Open House",
                 "url": "/admissions/visit/visit-us?anchor=open-house",
                 "schools": [
-                  "beijing",
+                  "beijing"
+                ]
+              },
+              {
+                "title": "Join Group Tour",
+                "url": "/admissions/visit/visit-us?anchor=group-tour",
+                "schools": [
                   "seoul"
                 ]
               },

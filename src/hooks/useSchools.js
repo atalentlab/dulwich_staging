@@ -20,23 +20,13 @@ export const useSchools = (locale = 'en') => {
       // Process schools to handle International school (matching SchoolsContext behavior)
       const processedSchools = [];
 
-      // Add International as first option (if not already in list)
-      const hasInternational = schoolsList.some(s => s.slug === 'international');
-      if (!hasInternational) {
-        processedSchools.push({
-          id: -1,
-          title: 'International',
-          slug: 'international',
-          url: 'https://www.dulwich.org'
-        });
-      }
 
       // Add all other schools
       schoolsList.forEach(school => {
-        if (school.slug === 'international') {
+        if (school.slug === 'ss') {
           processedSchools.push({
             ...school,
-            title: 'International'
+            title: '國際學校'
           });
         } else {
           processedSchools.push(school);

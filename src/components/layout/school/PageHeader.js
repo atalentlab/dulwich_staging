@@ -36,6 +36,7 @@ import seoulStudentLeadership from '../../../assets/images/seoul/student leaders
 import seoulStudentStories from '../../../assets/images/seoul/student stories.jpg';
 import seoulUniversityMatriculation from '../../../assets/images/seoul/university matriculation.jpg';
 import seoulWellbeing from '../../../assets/images/seoul/wellbeing.jpg';
+import seoulVisitUs from '../../../assets/images/seoul/visit us.jpg';
 // Bangkok
 import bangkokSustainability from '../../../assets/images/bangkok/Sustainability & Global Citizenship.jpg';
 import bangkokAlumniStories from '../../../assets/images/bangkok/alumni stories.jpg';
@@ -132,6 +133,7 @@ const schoolCardImages = {
     'student-stories': seoulStudentStories,
     'meet-our-parents': seoulMeetOurParents,
     'how-to-apply': seoulHowToApply,
+    'visit-us': seoulVisitUs,
   },
   bangkok: {
     'sustainability': bangkokSustainability,
@@ -1733,11 +1735,19 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
           </a>
 
           {/* APPLY */}
-  
+          {getCurrentSchool() !== 'seoul' && (
             <a href={getCurrentSchool() === 'hengqin-high-school' ? "https://dulwichzhuhai.mike-x.com/zVFgO" :getCurrentSchool() === 'beijing' ? "https://dulwichbeijing.openapply.cn/apply/forms/19779?c_campaign=1963"  : (isChineseVersion ? "/zh/admissions/apply-now" : "/admissions/apply-now") } className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
              <Icon icon="Admissions" size={20} color="#D30013" />
-            <span className="text-[10px] text-[#3C3C3B]"> {isChineseVersion ? '上海浦东德威招生申请' : 'Apply Now'}</span>
+            <span className="text-[10px] text-[#3C3C3B]"> {isChineseVersion ? '上海浦东德威招生申请' : 'APPLY NOW'}</span>
           </a>
+          )}
+
+          {getCurrentSchool() === 'seoul' && (
+            <a href="/contact" className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
+             <Icon icon="Contact-Us_Icon" size={20} color="#D30013" />
+            <span className="text-[10px] text-[#3C3C3B]"> {isChineseVersion ? 'CONTACT US' : 'CONTACT US'}</span>
+          </a>
+          )}
         </div>
       </nav>
 

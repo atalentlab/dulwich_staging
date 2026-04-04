@@ -34,8 +34,8 @@ const TREE_NATION_CONFIG = {
 };
 
 // Assets base URL for dynamic images
-const ASSETS_BASE_URL = 'https://assets.dulwich.org';
-
+//const ASSETS_BASE_URL = 'https://files.dulwich.org/dulwich-staging';
+const ASSETS_BASE_URL = 'https://dulwich.blob.core.chinacloudapi.cn/dulwich-staging';
 // Static logo fallbacks mapped by school slug
 const STATIC_LOGO_FALLBACKS = {
   'singapore': singaporeLogo,
@@ -125,17 +125,17 @@ const CustomDropdown = ({ value, options, onChange, isOpen, setIsOpen, placehold
               <div
                 key={index}
                 onClick={() => handleSelect(option)}
-                className={`px-4 py-3 cursor-pointer transition-all duration-150 ${
+                className={`px-4 py-3 cursor-pointer transition-all duration-150 text-left ${
                   value === option
-                    ? 'bg-[#FFF5F5] text-[#D30013] font-semibold'
-                    : 'text-[#3C3C3B] hover:bg-[#FAF7F5]'
-                } ${index === 0 ? 'border-b border-gray-200 rounded-t-lg' : ''} ${index === options.length - 1 ? 'rounded-b-lg' : ''}`}
+                    ? 'text-[#fff] font-semibold bg-gradient-to-r from-[#D30013] to-[#FF4D5A]/10 rounded-lg'
+                    : 'text-[#3C3C3B] hover:text-[#fff] hover:bg-gradient-to-r from-[#D30013] to-[#FF4D5A]/60 rounded-lg'
+                } ${index === 0 ? 'rounded-t-lg' : ''} ${index === options.length -1 ? 'rounded-lg' : ''}`}
               >
-                <div className="flex items-center">
+                <div className="flex items-center justify-between">
+                {option}
                   {value === option && (
-                    <span className="mr-2 text-[#D30013] font-bold">✓</span>
+                    <span className="mr-2 text-[#D30013] font-bold rotate-3">✓</span>
                   )}
-                  {option}
                 </div>
               </div>
             ))}
@@ -196,7 +196,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
       if (currentSchoolData && currentSchoolData.title) {
         setSelectedOption(currentSchoolData.title);
       }
-    } else if (schoolInfo?.menu_title && schoolInfo.menu_title !== 'International') {
+    } else if (schoolInfo?.menu_title && schoolInfo.menu_title) {
       // Fallback to menuTitle from API if schools list hasn't loaded
       setSelectedOption(schoolInfo.menu_title);
     }
@@ -339,7 +339,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
       const schoolName = selectedSchool.replace('Dulwich College ', '').toUpperCase();
       setDisplaySchoolName(schoolName);
     } else {
-      setDisplaySchoolName('INTERNATIONAL');
+      setDisplaySchoolName('');
     }
   }, [selectedSchool, availableSchools, fetchedSchools]);
 
@@ -389,12 +389,12 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
     }
 
     // Use menuTitle from API if we're on a school site but schools list hasn't loaded yet
-    if (currentSchoolSlug && schoolInfo?.menu_title && schoolInfo.menu_title !== 'International') {
+    if (currentSchoolSlug && schoolInfo?.menu_title && schoolInfo.menu_title) {
       return schoolInfo.menu_title;
     }
 
     // Fall back to explicitly selected school prop (but skip International defaults)
-    if (selectedSchool && selectedSchool !== 'Dulwich International College' && selectedSchool !== 'International' && schoolsToUse && schoolsToUse.length > 0) {
+    if (selectedSchool && selectedSchool !== 'Dulwich International College' && selectedSchool && schoolsToUse && schoolsToUse.length > 0) {
       const found = schoolsToUse.find(school =>
         school.title === selectedSchool ||
         `Dulwich College ${school.title}` === selectedSchool ||
@@ -415,9 +415,9 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
 
     // Update state
     if (setSelectedSchool && setSelectedSchoolSlug) {
-      if (schoolName === t.international) {
-        setSelectedSchool('International');
-        setSelectedSchoolSlug('international');
+      if (schoolName) {
+        setSelectedSchool('menu_title');
+        setSelectedSchoolSlug('menu_title');
       } else {
         const schoolData = schoolDataMap[schoolName];
         if (schoolData) {
@@ -990,23 +990,28 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mt-[30px]">
               {/* Copyright - Left */}
               <a
-                href={currentSchoolSlug === 'singapore' ? undefined : 'https://beian.miit.gov.cn/#/Integrated/index'}
-                target={currentSchoolSlug === 'singapore' ? '_self' : '_blank'}
-                rel={currentSchoolSlug === 'singapore' ? undefined : 'noopener noreferrer'}
+                href={['singapore', 'seoul', 'bangkok'].includes(currentSchoolSlug) ? undefined : 'https://beian.miit.gov.cn/#/Integrated/index'}
+                target={['singapore', 'seoul', 'bangkok'].includes(currentSchoolSlug) ? '_self' : '_blank'}
+                rel={['singapore', 'seoul', 'bangkok'].includes(currentSchoolSlug) ? undefined : 'noopener noreferrer'}
                 className="text-[14px] hover:opacity-80 transition-opacity duration-200 text-[#FDFCF8]"
               >
                 {currentSchoolSlug === 'singapore' ? (
                   <p className="text-[14px] text-[#FDFCF8] hover:text-gray-300 text-left leading-relaxed transition-colors duration-200">
                     Dulwich College (Singapore) PEI Registration Number: 201027137D - Period of Registration: 09-01-2024 to 08-01-2028
                     <br />
-                    © 2026 Dulwich College Management International Limited, or its affiliates
+                    © 2026 Dulwich College Management International Limited, or its affiliates.
                   </p>
                 ) : (
                   <p className="text-[14px] text-[#FDFCF8] hover:text-gray-300 text-left leading-relaxed transition-colors duration-200">
-                    © 2026 Dulwich College Management International Limited, or its affiliates
-                    <br className="md:hidden" />
-                    <span className="hidden md:inline"> · </span>
-                    沪ICP备16016470号-4 · 沪公网安备31010602002392号
+                    © 2026 Dulwich College Management International Limited, or its affiliates.
+                    {/* Hide ICP numbers for Seoul and Bangkok only */}
+                    {!['seoul', 'bangkok'].includes(currentSchoolSlug) && (
+                      <>
+                        <br className="md:hidden" />
+                        <span className="hidden md:inline"> · </span>
+                        沪ICP备16016470号-4 · 沪公网安备31010602002392号
+                      </>
+                    )}
                   </p>
                 )}
               </a>

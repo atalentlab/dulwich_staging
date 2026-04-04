@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
@@ -13,9 +17,13 @@ const HolisticCurriculumBlock = ({ content }) => {
     'anchor-id': anchorId,
   } = content || {};
 
-  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
+  const sectionRef = useRef(null);
+  const pinRef = useRef(null);
+  const imageRef = useRef(null);
+  const overlayRef = useRef(null);
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const linksRef = useRef([]);
 
   // Support both nested-blocks (API format) and cta (legacy format)
   const rawLinks = nestedBlocks && nestedBlocks.length > 0
@@ -97,9 +105,6 @@ const HolisticCurriculumBlock = ({ content }) => {
     ? (image.startsWith('http') ? image : `${API_BASE_URL}${image}`)
     : 'https://images.unsplash.com/photo-1588072432836-e10032774350?w=1920&q=80';
 
-  console.log('HolisticCurriculumBlock - Image URL:', imageUrl);
-  console.log('HolisticCurriculumBlock - Content:', content);
-
   // Extract text from description HTML (if provided)
   const getTextFromHtml = (html) => {
     if (!html) return '';
@@ -110,203 +115,73 @@ const HolisticCurriculumBlock = ({ content }) => {
 
   const subtitleText = bodyContent || (description ? getTextFromHtml(description) : 'Learning that begins in the classroom and extends to the world');
 
-  const handleToggle = () => {
-    if (isAnimating) return; // Prevent double-clicks during animation
+  // GSAP ScrollTrigger pinning and animation
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Initial state - everything hidden except image
+      gsap.set(imageRef.current, { scale: 1, y: 0, opacity: 1 });
+      gsap.set(overlayRef.current, { opacity: 0 });
+      gsap.set(titleRef.current, { y: 50, opacity: 0 });
+      gsap.set(subtitleRef.current, { y: 50, opacity: 0 });
+      gsap.set(linksRef.current, { y: 30, opacity: 0 });
 
-    if (isOverlayVisible) {
-      // Closing animation
-      setIsAnimating(true);
-      setIsClosing(true);
-      setTimeout(() => {
-        setIsOverlayVisible(false);
-        setIsClosing(false);
-        setIsAnimating(false);
-      }, 300); // Match animation duration (0.3s)
-    } else {
-      // Opening animation
-      setIsAnimating(true);
-      setIsOverlayVisible(true);
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 300); // Match animation duration (0.3s)
-    }
-  };
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: '+=150%',
+          pin: pinRef.current,
+          scrub: 1,
+          anticipatePin: 1,
+          pinSpacing: true,
+        },
+      });
+
+      // Animate: Image zoom + fade out, overlay fade in, content slide up
+      tl.to(imageRef.current, {
+        scale: 1.1,
+        y: -50,
+        opacity: 0,
+        duration: 0.4
+      }, 0)
+        .to(overlayRef.current, {
+          opacity: 1,
+          duration: 0.3
+        }, 0.1)
+        .to(titleRef.current, {
+          y: 0,
+          opacity: 1,
+          duration: 0.3
+        }, 0.2)
+        .to(subtitleRef.current, {
+          y: 0,
+          opacity: 1,
+          duration: 0.3
+        }, 0.25)
+        .to(linksRef.current, {
+          y: 0,
+          opacity: 1,
+          duration: 0.3,
+          stagger: 0.05
+        }, 0.3);
+
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section data-id={anchorId} className="relative w-full px-4 sm:px-6 md:px-8 lg:px-0">
-      <style>{`
-        @keyframes slideUpFade {
-          from {
-            opacity: 0;
-            transform: translateY(50px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes fadeOut {
-          from {
-            opacity: 1;
-          }
-          to {
-            opacity: 0;
-          }
-        }
-
-        .holistic-container {
-          position: relative;
-          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .holistic-image {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .holistic-overlay {
-          border-radius: 8px;
-          width: 100%;
-          display: flex;
-          transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          will-change: opacity, transform;
-          opacity: 1;
-          transform: scale(1) translateY(0);
-        }
-
-        .holistic-overlay.closing {
-          opacity: 0;
-          transform: scale(0.98) translateY(10px);
-        }
-
-        .holistic-image {
-          transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          will-change: opacity;
-          opacity: 1;
-        }
-
-        .holistic-image.hiding {
-          opacity: 0;
-        }
-
-        .holistic-image.showing {
-          opacity: 1;
-        }
-
-        .holistic-overlay {
-          width: 100%;
-          height: 100%;
-        }
-
-        .holistic-container.expanding {
-          /* Container maintains consistent height during transition */
-        }
-
-        .holistic-title {
-          animation: slideUpFade 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-          opacity: 0;
-          animation-delay: 0.05s;
-        }
-
-        .holistic-subtitle {
-          animation: slideUpFade 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-          opacity: 0;
-          animation-delay: 0.1s;
-        }
-
-        .holistic-link {
-          opacity: 0;
-          animation: slideUpFade 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        ${curriculumLinks.map((_, index) => `
-          .holistic-link:nth-child(${index + 1}) { animation-delay: ${0.15 + index * 0.04}s; }
-        `).join('')}
-
-        .holistic-link:hover {
-          background-color: rgba(255, 255, 255, 0.15);
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .holistic-link:active {
-          transform: translateY(0) scale(0.98);
-        }
-
-        @media (max-width: 640px) {
-          .holistic-link {
-            font-size: 0.875rem;
-            padding: 0.5rem 1rem;
-          }
-
-          .holistic-container {
-            min-height: 550px;
-            background-position: center center !important;
-          }
-
-          .holistic-container.expanding {
-            min-height: 550px;
-          }
-        }
-
-        @media (min-width: 641px) and (max-width: 1024px) {
-          .holistic-container {
-            min-height: 650px;
-          }
-
-          .holistic-container.expanding {
-            min-height: 650px;
-          }
-        }
-
-        @media (min-width: 1025px) {
-          .holistic-container {
-            min-height: 750px;
-          }
-
-          .holistic-container.expanding {
-            min-height: 750px;
-          }
-        }
-      `}</style>
-
+    <section ref={sectionRef} data-id={anchorId}>
       <div
-        className={`holistic-container relative w-full max-w-[1600px] mx-auto cursor-pointer overflow-hidden rounded-lg mt-14 mb-2 ${
-          isOverlayVisible ? 'expanding' : ''
-        }`}
-        style={{
-          background: `#000000 url(${imageUrl}) no-repeat center center`,
-          backgroundSize: 'cover',
-        }}
-        onClick={handleToggle}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => e.key === 'Enter' && handleToggle()}
-        aria-expanded={isOverlayVisible}
-        aria-label="Toggle Holistic Curriculum"
+        ref={pinRef}
+        className="h-screen flex items-center justify-center bg-black relative overflow-hidden"
       >
-        {/* Full width image */}
+        {/* Background Image */}
         <img
+          ref={imageRef}
           src={imageUrl}
-          alt={title || "Holistic Curriculum - Students"}
-          className={`holistic-image rounded-lg ${
-            isOverlayVisible || isClosing ? 'hiding' : 'showing'
-          }`}
+          alt={title || "Holistic Curriculum"}
+          className="absolute inset-0 w-full h-full object-cover"
           loading="lazy"
           onError={(e) => {
             console.error('Image failed to load:', imageUrl);
@@ -314,39 +189,46 @@ const HolisticCurriculumBlock = ({ content }) => {
           }}
         />
 
-        {/* Overlay */}
-        {(isOverlayVisible || isClosing) && (
-          <div
-            className={`holistic-overlay absolute top-0 left-0 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 py-10 sm:py-12 md:py-16 lg:py-20 rounded-lg ${
-              isClosing ? 'closing' : ''
-            }`}
-            style={{
-              background:
-                'radial-gradient(ellipse at 60% 40%, #9B1C1C 0%, #7F1D1D 25%, #5C0A0A 55%, #3B0606 80%, #1A0202 100%)',
-            }}
-          >
-            <h2 className="holistic-title text-[#FDFCF8] text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 md:mb-6 text-center tracking-tight px-4">
-              {title}
-            </h2>
-            <p className="holistic-subtitle text-[#FDFCF8] text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl mb-8 sm:mb-10 md:mb-12 lg:mb-14 text-center max-w-3xl px-4" style={{ opacity: 0.85 }}>
-              {subtitleText}
-            </p>
-            <div className="flex flex-col items-center gap-3 sm:gap-4 md:gap-5 w-full max-w-md px-4 pb-6 sm:pb-8">
-              {curriculumLinks.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.href}
-                  className="holistic-link border border-[#FDFCF8] text-[#FDFCF8] text-xs xs:text-sm sm:text-base md:text-lg px-4 sm:px-6 md:px-8 py-1.5 sm:py-2 md:py-2.5 rounded-lg text-center transition-colors duration-200 w-full sm:w-auto"
-                  onClick={(e) => e.stopPropagation()}
-                  target={link.isExternal ? '_blank' : undefined}
-                  rel={link.isExternal ? 'noopener noreferrer' : undefined}
-                >
-                  {link.label}
-                </a>
-              ))}
+        {/* Content Overlay */}
+        <div
+          ref={overlayRef}
+          className="absolute inset-0 flex items-center justify-center"
+          style={{
+            background: 'radial-gradient(ellipse at 60% 40%, #9B1C1C 0%, #7F1D1D 25%, #5C0A0A 55%, #3B0606 80%, #1A0202 100%)',
+          }}
+        >
+          <div className="max-w-7xl w-full px-4 sm:px-6 md:px-8 lg:px-12 relative z-10">
+            <div className="flex flex-col items-center justify-center text-center">
+              <h2
+                ref={titleRef}
+                className="text-[#FDFCF8] text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 md:mb-6 tracking-tight px-4"
+              >
+                {title}
+              </h2>
+              <p
+                ref={subtitleRef}
+                className="text-[#FDFCF8] text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl mb-8 sm:mb-10 md:mb-12 lg:mb-14 max-w-3xl px-4"
+                style={{ opacity: 0.85 }}
+              >
+                {subtitleText}
+              </p>
+              <div className="flex flex-col items-center gap-3 sm:gap-4 md:gap-5 w-full max-w-md px-4">
+                {curriculumLinks.map((link, index) => (
+                  <a
+                    key={index}
+                    ref={el => (linksRef.current[index] = el)}
+                    href={link.href}
+                    className="border border-[#FDFCF8] text-[#FDFCF8] text-xs xs:text-sm sm:text-base md:text-lg px-4 sm:px-6 md:px-8 py-1.5 sm:py-2 md:py-2.5 rounded-lg text-center transition-all duration-300 w-full sm:w-auto hover:bg-white/10 hover:transform hover:scale-105"
+                    target={link.isExternal ? '_blank' : undefined}
+                    rel={link.isExternal ? 'noopener noreferrer' : undefined}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </section>
   );

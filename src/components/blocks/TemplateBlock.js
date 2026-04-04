@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
+import AOS from 'aos';
 import { fetchAllArticles, fetchArticleTags } from '../../api/articleService';
 import { fetchTeacherList } from '../../api/teacherService';
 import { getCurrentSchool } from '../../utils/schoolDetection';
 import loadingSpinner from '../../assets/images/loading_spinner.gif';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.dulwich-frontend.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 /**
  * TemplateBlock Component
@@ -33,7 +34,8 @@ const TemplateBlock = ({ content }) => {
   const tagFromState = location.state?.tag || null;
 
   // Parse locale from URL path (e.g. /zh/homepage/scroll-page → 'zh')
-  const supportedLocales = ['zh', 'en', 'cn'];
+  // Only zh/cn are supported in URL - English is default without prefix
+  const supportedLocales = ['zh', 'cn'];
   const pathSegments = location.pathname.replace(/^\/|\/$/g, '').split('/');
   const locale = supportedLocales.includes(pathSegments[0]?.toLowerCase())
     ? pathSegments[0].toLowerCase()
@@ -76,7 +78,8 @@ const TemplateBlock = ({ content }) => {
   const INITIAL_ARTICLES_COUNT = 18; // Show 18 articles initially (3 pages)
 
   // People Listing State
-  const [teachers, setTeachers] = useState([]);
+  const [teachers, setTeachers] = useState([]); // Currently displayed teachers (paginated)
+  const [allTeachers, setAllTeachers] = useState([]); // All teachers for filtering
   const [filteredTeachers, setFilteredTeachers] = useState([]);
   const [schools, setSchools] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -97,6 +100,21 @@ const TemplateBlock = ({ content }) => {
   const INITIAL_TEACHERS_COUNT = 20;
   const TEACHERS_PER_PAGE = 10;
 
+  // Initialize AOS for animations
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      once: false,
+      mirror: true
+    });
+  }, []);
+
+  // Refresh AOS when teachers change
+  useEffect(() => {
+    if (template === 'people-listing' && filteredTeachers.length > 0) {
+      AOS.refresh();
+    }
+  }, [filteredTeachers, template]);
 
   // Load Tags on Mount and when school/locale changes
   useEffect(() => {
@@ -313,64 +331,105 @@ const TemplateBlock = ({ content }) => {
           const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
           const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
 
-          const response = await fetchTeacherList({
+          // Fetch ALL teachers in one go with pagination - more efficient than double fetch
+          const firstPageResponse = await fetchTeacherList({
             school: schoolParam,
             locale: locale,
-            limit: INITIAL_TEACHERS_COUNT,
-            page_no: 1
+            page_no: 1,
+            limit: 500
           });
 
-          const teacherData = response.teachers || [];
-          setTeachers(teacherData);
-          setFilteredTeachers(teacherData);
+          const firstPageData = firstPageResponse.data?.people || [];
+          const total = firstPageResponse.data?.total || firstPageData.length;
+          const limit = firstPageResponse.data?.limit || 500;
+          const totalPages = Math.ceil(total / limit);
 
-          // Check if there are more teachers to load
-          if (teacherData.length < INITIAL_TEACHERS_COUNT) {
-            setHasMoreTeachers(false);
+          console.log(`📚 Loading teachers: Page 1/${totalPages}, Total: ${total}`);
+
+          // Show first 20 teachers immediately for fast initial render
+          const initialTeachers = firstPageData.slice(0, INITIAL_TEACHERS_COUNT);
+          setTeachers(initialTeachers);
+          setFilteredTeachers(initialTeachers);
+
+          // Store first page data for filtering
+          setAllTeachers(firstPageData);
+
+          // Hide loading immediately after first page - smooth UX
+          setLoading(false);
+
+          // Set pagination state
+          setTeacherPageNo(2);
+          setHasMoreTeachers(total > INITIAL_TEACHERS_COUNT);
+
+          // Extract schools and departments from first page for filters
+          const extractFilters = (teachersList) => {
+            const schoolsSet = new Set();
+            const departmentsSet = new Set();
+
+            teachersList.forEach(teacher => {
+              if (teacher.school && Array.isArray(teacher.school)) {
+                teacher.school.forEach(schoolName => schoolsSet.add(schoolName));
+              }
+              if (teacher.department && Array.isArray(teacher.department)) {
+                teacher.department.forEach(deptName => departmentsSet.add(deptName));
+              }
+            });
+
+            return {
+              schools: Array.from(schoolsSet).map((name, index) => ({ id: index, name })),
+              departments: Array.from(departmentsSet).map((name, index) => ({ id: index, name }))
+            };
+          };
+
+          // Set initial filters from first page
+          const { schools: initialSchools, departments: initialDepts } = extractFilters(firstPageData);
+          setSchools(initialSchools.sort((a, b) => a.name.localeCompare(b.name)));
+          setDepartments(initialDepts.sort((a, b) => a.name.localeCompare(b.name)));
+
+          // Fetch remaining pages in background if needed (non-blocking)
+          if (totalPages > 1) {
+            console.log(`📥 Fetching remaining ${totalPages - 1} pages in background...`);
+
+            const pagePromises = [];
+            for (let page = 2; page <= totalPages; page++) {
+              pagePromises.push(
+                fetchTeacherList({
+                  school: schoolParam,
+                  locale: locale,
+                  page_no: page,
+                  limit: limit
+                })
+              );
+            }
+
+            // This happens in background - UI is already responsive
+            Promise.all(pagePromises).then(remainingPages => {
+              let allTeachersData = [...firstPageData];
+
+              remainingPages.forEach(response => {
+                const pageData = response.data?.people || [];
+                allTeachersData = [...allTeachersData, ...pageData];
+              });
+
+              console.log(`✅ Background load complete: ${allTeachersData.length}/${total} teachers loaded`);
+
+              // Update all teachers for filtering
+              setAllTeachers(allTeachersData);
+
+              // Update filters with complete data
+              const { schools: allSchools, departments: allDepts } = extractFilters(allTeachersData);
+              setSchools(allSchools.sort((a, b) => a.name.localeCompare(b.name)));
+              setDepartments(allDepts.sort((a, b) => a.name.localeCompare(b.name)));
+            }).catch(err => {
+              console.error('Error loading remaining teachers:', err);
+              // Don't show error since we already have first page data
+            });
           }
-
-          // Extract unique schools and departments from all teachers
-          // We need to fetch all teachers for filter options
-          const allTeachersResponse = await fetchTeacherList({
-            school: schoolParam,
-            locale: locale,
-            limit: 1000, // Large number to get all teachers for filters
-            page_no: 1
-          });
-
-          const allTeachers = allTeachersResponse.teachers || [];
-          const schoolsSet = new Set();
-          const departmentsMap = new Map();
-
-          allTeachers.forEach(teacher => {
-            // Extract schools
-            if (teacher.school && Array.isArray(teacher.school)) {
-              teacher.school.forEach(s => {
-                schoolsSet.add(JSON.stringify({ id: s.id, name: s.name }));
-              });
-            }
-
-            // Extract departments
-            if (teacher.departments && Array.isArray(teacher.departments)) {
-              teacher.departments.forEach(d => {
-                if (!departmentsMap.has(d.id)) {
-                  departmentsMap.set(d.id, { id: d.id, name: d.name });
-                }
-              });
-            }
-          });
-
-          const uniqueSchools = Array.from(schoolsSet).map(s => JSON.parse(s));
-          const uniqueDepartments = Array.from(departmentsMap.values());
-
-          setSchools(uniqueSchools.sort((a, b) => a.name.localeCompare(b.name)));
-          setDepartments(uniqueDepartments.sort((a, b) => a.name.localeCompare(b.name)));
 
         } catch (err) {
           console.error('Error loading teachers:', err);
           setError('Failed to load teacher directory');
           setTeachers([]);
-        } finally {
           setLoading(false);
         }
       }
@@ -382,82 +441,111 @@ const TemplateBlock = ({ content }) => {
   // Filter teachers based on selected filters and search
   useEffect(() => {
     if (template === 'people-listing') {
-      let filtered = [...teachers];
+      // When filters are active, search across ALL teachers
+      if (selectedSchool || selectedDepartment || searchQuery.trim()) {
+        if (allTeachers.length === 0) return; // Wait for allTeachers to load
 
-      // Apply school filter
-      if (selectedSchool) {
-        filtered = filtered.filter(teacher =>
-          teacher.school && teacher.school.some(s => s.id === parseInt(selectedSchool))
-        );
-      }
+        console.log('🔍 Filtering teachers. Total available:', allTeachers.length);
+        let filtered = [...allTeachers];
 
-      // Apply department filter
-      if (selectedDepartment) {
-        filtered = filtered.filter(teacher =>
-          teacher.departments && teacher.departments.some(d => d.id === parseInt(selectedDepartment))
-        );
-      }
-
-      // Apply search filter
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase();
-        filtered = filtered.filter(teacher =>
-          teacher.name.toLowerCase().includes(query) ||
-          (teacher.job_title && teacher.job_title.toLowerCase().includes(query))
-        );
-      }
-
-      setFilteredTeachers(filtered);
-    }
-  }, [teachers, selectedSchool, selectedDepartment, searchQuery, template]);
-
-  // Load More Teachers (Pagination)
-  const handleLoadMoreTeachers = async () => {
-    if (loadingMoreTeachers || !hasMoreTeachers) return;
-
-    setLoadingMoreTeachers(true);
-    const nextPage = teacherPageNo + 1;
-
-    try {
-      const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
-      const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
-
-      const response = await fetchTeacherList({
-        school: schoolParam,
-        locale: locale,
-        limit: TEACHERS_PER_PAGE,
-        page_no: nextPage
-      });
-
-      const newTeachers = response.teachers || [];
-
-      if (newTeachers.length > 0) {
-        setTeachers(prev => [...prev, ...newTeachers]);
-        setTeacherPageNo(nextPage);
-
-        if (newTeachers.length < TEACHERS_PER_PAGE) {
-          setHasMoreTeachers(false);
+        // Apply school filter - compare by school name
+        if (selectedSchool) {
+          const selectedSchoolName = schools.find(s => s.id.toString() === selectedSchool)?.name;
+          if (selectedSchoolName) {
+            filtered = filtered.filter(teacher =>
+              teacher.school && teacher.school.includes(selectedSchoolName)
+            );
+          }
         }
 
-        // Scroll to load more button after new content is added
-        setTimeout(() => {
-          if (teacherLoadMoreButtonRef.current) {
-            teacherLoadMoreButtonRef.current.scrollIntoView({
-              behavior: 'smooth',
-              block: 'end',
-              inline: 'nearest'
-            });
+        // Apply department filter - compare by department name
+        if (selectedDepartment) {
+          const selectedDeptName = departments.find(d => d.id.toString() === selectedDepartment)?.name;
+          if (selectedDeptName) {
+            filtered = filtered.filter(teacher =>
+              teacher.department && teacher.department.includes(selectedDeptName)
+            );
           }
-        }, 500);
+        }
+
+        // Apply search filter
+        if (searchQuery.trim()) {
+          const query = searchQuery.toLowerCase();
+          filtered = filtered.filter(teacher =>
+            teacher.name.toLowerCase().includes(query) ||
+            (teacher.job_title && teacher.job_title.toLowerCase().includes(query))
+          );
+        }
+
+        console.log('✅ Filtered teachers count:', filtered.length);
+        setFilteredTeachers(filtered);
+        setHasMoreTeachers(false); // Disable pagination when filtering
       } else {
-        setHasMoreTeachers(false);
+        // No filters - show paginated results from teachers state
+        setFilteredTeachers(teachers);
+        // Pagination is already managed by the fetch logic
       }
-    } catch (err) {
-      console.error('Error loading more teachers:', err);
-    } finally {
-      setLoadingMoreTeachers(false);
     }
-  };
+  }, [teachers, allTeachers, selectedSchool, selectedDepartment, searchQuery, template, schools, departments]);
+
+  // Load More Teachers (Pagination) - No API calls, just slice from allTeachers
+  const handleLoadMoreTeachers = useCallback(() => {
+    if (loadingMoreTeachers || !hasMoreTeachers || allTeachers.length === 0) return;
+
+    setLoadingMoreTeachers(true);
+
+    // Small delay for smooth UX
+    setTimeout(() => {
+      // Calculate how many teachers to show
+      const currentCount = teachers.length;
+      const nextCount = currentCount + TEACHERS_PER_PAGE;
+
+      console.log(`📄 Loading more teachers: ${currentCount} -> ${nextCount} (Total available: ${allTeachers.length})`);
+
+      // Slice more teachers from allTeachers
+      const moreTeachers = allTeachers.slice(0, nextCount);
+      setTeachers(moreTeachers);
+
+      // Check if we've reached the end
+      if (nextCount >= allTeachers.length) {
+        setHasMoreTeachers(false);
+        console.log('✅ All teachers loaded');
+      }
+
+      setLoadingMoreTeachers(false);
+    }, 300);
+  }, [loadingMoreTeachers, hasMoreTeachers, allTeachers, teachers.length, TEACHERS_PER_PAGE]);
+
+  // Infinite Scroll Observer for Teachers
+  useEffect(() => {
+    if (template !== 'people-listing') return;
+    if (!teacherLoadMoreButtonRef.current) return;
+    if (!hasMoreTeachers || loadingMoreTeachers) return;
+    if (selectedSchool || selectedDepartment || searchQuery) return; // Don't auto-load when filters are active
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && hasMoreTeachers && !loadingMoreTeachers) {
+          console.log('🔍 Intersection detected, loading more teachers...');
+          handleLoadMoreTeachers();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '200px', // Trigger 200px before reaching the sentinel for smoother UX
+        threshold: 0.1
+      }
+    );
+
+    observer.observe(teacherLoadMoreButtonRef.current);
+
+    return () => {
+      if (teacherLoadMoreButtonRef.current) {
+        observer.unobserve(teacherLoadMoreButtonRef.current);
+      }
+    };
+  }, [hasMoreTeachers, loadingMoreTeachers, selectedSchool, selectedDepartment, searchQuery, template, handleLoadMoreTeachers]);
 
   // Load More Articles (Pagination)
   const handleLoadMore = async () => {
@@ -710,9 +798,7 @@ const TemplateBlock = ({ content }) => {
                   className="flex items-center justify-between w-full px-4 py-3 bg-[#FAF7F5] border-2 border-gray-300 rounded-lg hover:border-red-600 transition-colors"
                 >
                   <div className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                    </svg>
+                    <i className="icon-tag-21 text-gray-600 text-xl"></i>
                     <span className="text-[#3C3C3B] font-medium text-base">Tags</span>
                   </div>
                   <svg className={`w-5 h-5 text-[#9E1422] transition-transform duration-300 ${showDepartmentFilter ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -813,7 +899,7 @@ const TemplateBlock = ({ content }) => {
                         onWheel={(e) => e.stopPropagation()}
                         onTouchMove={(e) => e.stopPropagation()}
                       >
-                        {[...teachers]
+                        {[...allTeachers]
                           .sort((a, b) => a.name.localeCompare(b.name))
                           .filter(teacher =>
                             teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -822,7 +908,7 @@ const TemplateBlock = ({ content }) => {
                           .map(teacher => (
                             <div
                               key={teacher.id}
-                              className="w-full text-left px-4 py-3 text-sm hover:bg-gray-50 transition-all duration-150 rounded-md mb-1 cursor-pointer"
+                              className="w-full text-left px-4 py-3 text-sm hover:bg-gradient-to-r from-[#FF4D5A]/10 to-[#ec7b84] transition-all duration-150 rounded-md mb-1 cursor-pointer"
                               onClick={() => {
                                 // Scroll to the teacher card
                                 const teacherCard = document.getElementById(`teacher-${teacher.id}`);
@@ -843,7 +929,7 @@ const TemplateBlock = ({ content }) => {
                               )}
                             </div>
                           ))}
-                        {[...teachers]
+                        {[...allTeachers]
                           .filter(teacher =>
                             teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                             (teacher.job_title && teacher.job_title.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -903,7 +989,7 @@ const TemplateBlock = ({ content }) => {
                                 setShowDepartmentFilter(false);
                                 setSchoolSearchQuery('');
                               }}
-                              className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 transition-all duration-150 flex items-center justify-between rounded-md mb-1 ${
+                              className={`w-full text-left px-4 py-3 text-sm hover:bg-gradient-to-r from-[#FF4D5A]/10 to-[#ec7b84] transition-all duration-150 flex items-center justify-between rounded-md mb-1 ${
                                 selectedSchool === school.id.toString() ? 'bg-red-50 text-red-700 font-medium' : 'text-gray-700'
                               }`}
                             >
@@ -973,7 +1059,7 @@ const TemplateBlock = ({ content }) => {
                                 setShowDepartmentFilter(false);
                                 setDepartmentSearchQuery('');
                               }}
-                              className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 transition-all duration-150 flex items-center justify-between rounded-md mb-1 ${
+                              className={`w-full text-left px-4 py-3 text-sm hover:bg-gradient-to-r from-[#FF4D5A]/10 to-[#ec7b84] transition-all duration-150 flex items-center justify-between rounded-md mb-1 ${
                                 selectedDepartment === dept.id.toString() ? 'bg-red-50 text-red-700 font-medium' : 'text-gray-700'
                               }`}
                             >
@@ -1077,6 +1163,9 @@ const TemplateBlock = ({ content }) => {
           key={`teacher-card-${teacherId}-${index}`}
           id={`teacher-${teacherId}`}
           className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-[#F2EDE9] hover:shadow-lg transition-all duration-300"
+          data-aos="zoom-out-up"
+          data-aos-delay={index % 10 * 50}
+          data-aos-duration="600"
         >
 
           {/* Card Header - Clickable Area */}
@@ -1107,12 +1196,12 @@ const TemplateBlock = ({ content }) => {
                     <span className={`inline-block px-3 py-2 text-xs font-semibold rounded-lg ${getSchoolColor(
                       // If school filter is active, show the selected school; otherwise show the first school
                       selectedSchool
-                        ? teacher.school.find(s => s.id === parseInt(selectedSchool))?.name || teacher.school[0].name
-                        : teacher.school[0].name
+                        ? schools.find(s => s.id.toString() === selectedSchool)?.name || teacher.school[0]
+                        : teacher.school[0]
                     )}`}>
                       {selectedSchool
-                        ? teacher.school.find(s => s.id === parseInt(selectedSchool))?.name || teacher.school[0].name
-                        : teacher.school[0].name}
+                        ? schools.find(s => s.id.toString() === selectedSchool)?.name || teacher.school[0]
+                        : teacher.school[0]}
                     </span>
                   </div>
                 )}
@@ -1165,7 +1254,7 @@ const TemplateBlock = ({ content }) => {
 
               {/* Joined */}
               {teacher.joined && (
-                <div className="mb-4 text-left">
+                <div className="mb-4 text-center mt-4">
                   <h4 className="text-[#9E1422] font-bold mb-1 text-sm">Joined</h4>
                   <p className="text-[#3C3C3B] text-sm">{teacher.joined}</p>
                 </div>
@@ -1211,16 +1300,33 @@ const TemplateBlock = ({ content }) => {
               )}
 
               {/* Departments */}
-              {teacher.departments && teacher.departments.length > 0 && (
+              {teacher.department && teacher.department.length > 0 && (
                 <div className='p-6 text-left'>
-                  <h4 className="text-[#9E1422] font-bold mb-2 text-sm">Department{teacher.departments.length > 1 ? 's' : ''}</h4>
+                  <h4 className="text-[#9E1422] font-bold mb-2 text-sm">Department{teacher.department.length > 1 ? 's' : ''}</h4>
                   <div className="flex flex-wrap gap-2">
-                    {teacher.departments.map(dept => (
-                      <span key={dept.id} className="px-3 py-1 bg-[#FAF7F5] border border-[#9E1422] text-[#3C3C3B]  text-xs rounded-full">
-                        {dept.name}
+                    {teacher.department.map((deptName, idx) => (
+                      <span key={idx} className="px-3 py-1 bg-[#FAF7F5] border border-[#9E1422] text-[#3C3C3B]  text-xs rounded-full">
+                        {deptName}
                       </span>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Read More Button */}
+              {teacher.slug && (
+                <div className="p-6 flex justify-end">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const localePrefix = locale && locale !== 'en' ? `/${locale}` : '';
+                      navigate(`${localePrefix}/community/teachers/${teacher.slug}`);
+                    }}
+                    className="px-6 py-2 bg-[#D30013] text-white text-sm font-semibold rounded-lg hover:bg-[#B8000F] transition-colors duration-300"
+                  >
+                    {locale === 'zh' ? '阅读更多' : 'Read More'}
+                  </button>
                 </div>
               )}
             </div>
@@ -1241,18 +1347,11 @@ const TemplateBlock = ({ content }) => {
   </div>
 )}
 
-{/* Load More Teachers Button */}
+{/* Infinite Scroll Sentinel for Teachers */}
 {filteredTeachers.length > 0 && hasMoreTeachers && !selectedSchool && !selectedDepartment && !searchQuery && (
   <div ref={teacherLoadMoreButtonRef} className="text-center mt-8 min-h-[120px] flex items-center justify-center">
-    {loadingMoreTeachers ? (
+    {loadingMoreTeachers && (
       <img src={loadingSpinner} alt="Loading..." className="h-[100px] w-[100px]" />
-    ) : (
-      <button
-        onClick={handleLoadMoreTeachers}
-        className="px-8 py-3 bg-[#d30014] text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
-      >
-        Load More
-      </button>
     )}
   </div>
 )}
@@ -1292,9 +1391,7 @@ const TemplateBlock = ({ content }) => {
                 className="flex items-center justify-between w-[352px] h-[64px] px-5 bg-white border rounded-lg transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-[#3C3C3B] " fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                  </svg>
+                  <i className="icon-tag-21 text-[#3C3C3B] text-xl"></i>
                   <span className="text-base font-semibold text-[#3C3C3B] ">Tags</span>
                 </div>
                 <svg
@@ -1319,8 +1416,8 @@ const TemplateBlock = ({ content }) => {
                       key={tag.id}
                       onClick={(e) => handleTagClick(tag.id, e)}
                       className={`block w-full text-left px-4 py-3 text-base border-b border-gray-200 last:border-b-0 transition ${selectedTags.includes(String(tag.id))
-                        ? 'bg-gray-300 text-[#3C3737] font-medium'
-                        : 'bg-white text-[#3C3C3B] hover:bg-gray-100'
+                        ? 'bg-gradient-to-r from-[#FF4D5A]/10 to-[#ec7b84] text-[#3C3737] font-medium'
+                        : 'bg-white text-[#3C3C3B] hover:bg-gradient-to-r from-[#FF4D5A]/10 to-[#ec7b84] rounded-sm'
                         }`}
                     >
                       {tag.title}

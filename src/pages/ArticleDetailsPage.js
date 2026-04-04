@@ -21,8 +21,8 @@ function ArticleDetailsPage() {
   const queryLocale = searchParams.get('locale');
   const querySchool = searchParams.get('school');
 
-  // Supported locales
-  const supportedLocales = ['zh', 'en', 'cn'];
+  // Supported locales (only zh/cn - English is default without prefix)
+  const supportedLocales = ['zh', 'cn'];
 
   // Parse URL to extract locale and slug
   const parseUrl = (pathname) => {

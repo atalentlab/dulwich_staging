@@ -1,17 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-/* IcoMoon Icon Font */
-@font-face {
-  font-family: 'icomoon';
-  src: url('./assets/icomoon/fonts/icomoon.eot?ayi0fe');
-  src: url('./assets/icomoon/fonts/icomoon.eot?ayi0fe#iefix') format('embedded-opentype'),
-    url('./assets/icomoon/fonts/icomoon.ttf?ayi0fe') format('truetype'),
-    url('./assets/icomoon/fonts/icomoon.woff?ayi0fe') format('woff'),
-    url('./assets/icomoon/fonts/icomoon.svg?ayi0fe#icomoon') format('svg');
-  font-weight: normal;
-  font-style: normal;
-  font-display: block;
-}
+/* Import IcoMoon Icon Font Styles */
+@import './assets/icomoon/style.css';
 
 @tailwind base;
 @tailwind components;
