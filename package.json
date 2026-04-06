@@ -53,10 +53,12 @@
     "build:serve": "react-scripts build && node server.js"
   },
   "reactSnap": {
-    "include": [
-      "/",
-      "/zh"
-    ],
+ "include": ["/", "/zh"],
+  "timeout": 120000,
+  "skipThirdPartyRequests": false,
+  "puppeteer": {
+    "waitUntil": "networkidle0"
+  },
     "puppeteerArgs": [
       "--no-sandbox",
       "--disable-setuid-sandbox"
