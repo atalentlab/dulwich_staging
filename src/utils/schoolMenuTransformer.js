@@ -44,13 +44,37 @@ const processSubsection = (subsection) => {
   const sections = [];
   const childItems = subsection.items || [];
 
-  // If subsection has child items, create a section for them
-  if (childItems.length > 0) {
+  if (childItems.length === 0) {
+    return sections;
+  }
+
+  // Separate highlighted and regular items
+  const highlightedItems = childItems.filter(child => child.highlight_menu);
+  const regularItems = childItems.filter(child => !child.highlight_menu);
+
+  // Create highlighted section if there are highlighted items
+  if (highlightedItems.length > 0) {
+    sections.push({
+      id: 'highlighted',
+      heading: 'HIGHLIGHTED',
+      style: 'highlighted',
+      links: highlightedItems.map(child => ({
+        title: child.title,
+        url: child.url,
+        image: child.highlight_menu?.image,
+        imageUrl: child.highlight_menu?.image,
+        description: child.highlight_menu?.description
+      }))
+    });
+  }
+
+  // Create regular section if there are regular items
+  if (regularItems.length > 0) {
     sections.push({
       id: createSlug(subsection.title),
       heading: subsection.title.toUpperCase(),
       style: 'regular',
-      links: childItems.map(child => ({
+      links: regularItems.map(child => ({
         title: child.title,
         url: child.url
       }))

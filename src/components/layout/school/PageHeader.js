@@ -1930,10 +1930,10 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                     {filteredLinks.map((link, j) => (
                                       <a key={j} href={link.url} className={`block group card-stagger-${j + 1}`}>
                                         <div className="bg-white rounded text-left overflow-hidden shadow-sm border border-[#F2EDE9] hover:shadow-md transition-all duration-300">
-                                          {link.image && (
+                                          {(link.imageUrl || link.image) && (
                                             <div className="aspect-[4/3] overflow-hidden relative">
                                               <img
-                                                src={getCardImage(link.image, imageMap[link.image])}
+                                                src={link.imageUrl || getCardImage(link.image, imageMap[link.image])}
                                                 alt={link.title}
                                                 className="w-full h-full min-w-[168px] object-cover group-hover:scale-105 transition-transform duration-300"
                                               />

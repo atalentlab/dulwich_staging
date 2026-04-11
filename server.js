@@ -49,8 +49,8 @@ const fetchSitemapXML = async (url) => {
   }
 };
 
-// Helper function to extract URLs from sitemap XML
-const extractUrlsFromSitemap = (xmlContent) => {
+// Helper function to extract URLs from sitemap XML and replace domain
+const extractUrlsFromSitemap = (xmlContent, targetDomain) => {
   if (!xmlContent) return [];
 
   // Extract all <url> blocks from the XML
@@ -59,14 +59,23 @@ const extractUrlsFromSitemap = (xmlContent) => {
   let match;
 
   while ((match = urlRegex.exec(xmlContent)) !== null) {
-    urls.push(`  <url>${match[1]}</url>`);
+    let urlBlock = match[1];
+
+    // Replace any localhost or CMS domain URLs with the target domain
+    // This handles localhost:4000, cms.dulwich.org, or any other CMS domain
+    urlBlock = urlBlock.replace(
+      /(https?:\/\/)[^\/]+/g,
+      targetDomain
+    );
+
+    urls.push(`  <url>${urlBlock}</url>`);
   }
 
   return urls;
 };
 
 // Helper function to get all URLs from all sitemap types for a school
-const getSchoolSitemapUrls = async (schoolSlug) => {
+const getSchoolSitemapUrls = async (schoolSlug, targetDomain) => {
   const sitemapTypes = ['pages', 'news', 'people'];
   const allUrls = [];
 
@@ -76,7 +85,7 @@ const getSchoolSitemapUrls = async (schoolSlug) => {
 
     const xmlContent = await fetchSitemapXML(url);
     if (xmlContent) {
-      const urls = extractUrlsFromSitemap(xmlContent);
+      const urls = extractUrlsFromSitemap(xmlContent, targetDomain);
       allUrls.push(...urls);
       console.log(`✅ Found ${urls.length} URLs in sitemap-${type}.xml for ${schoolSlug}`);
     }
@@ -86,7 +95,7 @@ const getSchoolSitemapUrls = async (schoolSlug) => {
 };
 
 // Helper function to get group sitemap URLs (for main domain)
-const getGroupSitemapUrls = async () => {
+const getGroupSitemapUrls = async (targetDomain) => {
   const sitemapTypes = ['pages', 'news'];
   const allUrls = [];
 
@@ -96,7 +105,7 @@ const getGroupSitemapUrls = async () => {
 
     const xmlContent = await fetchSitemapXML(url);
     if (xmlContent) {
-      const urls = extractUrlsFromSitemap(xmlContent);
+      const urls = extractUrlsFromSitemap(xmlContent, targetDomain);
       allUrls.push(...urls);
       console.log(`✅ Found ${urls.length} URLs in group sitemap-${type}.xml`);
     }
@@ -257,10 +266,15 @@ const generateSitemap = async (req, res) => {
       }
     }
 
+    // Build target domain from request
+    const protocol = req.protocol;
+    const host = req.get('host');
+    const targetDomain = `${protocol}://${host}`;
+
     // If a specific school is detected, return only that school's URLs
     if (school) {
       console.log(`📍 Detected school: ${school}`);
-      const urls = await getSchoolSitemapUrls(school);
+      const urls = await getSchoolSitemapUrls(school, targetDomain);
 
       // Build the sitemap urlset for this school
       let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -283,7 +297,7 @@ const generateSitemap = async (req, res) => {
       console.log('📍 No specific school detected, generating group sitemap');
 
       // Fetch group sitemap URLs
-      const urls = await getGroupSitemapUrls();
+      const urls = await getGroupSitemapUrls(targetDomain);
 
       // Build the sitemap urlset for group pages
       let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
