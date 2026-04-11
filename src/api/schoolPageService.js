@@ -410,3 +410,98 @@ export const fetchMainMenu = async (school, locale) => {
     throw error;
   }
 };
+
+/**
+ * Fetches preview page data for School pages
+ * @param {string} slug - The preview slug (e.g., 'ldx500q2s11775127037')
+ * @param {string} school - The school identifier (e.g., 'beijing-cms')
+ * @param {string} locale - The locale/language code (e.g., 'zh', 'en') - optional
+ * @returns {Promise<Object>} Preview page data with header, footer, and blocks
+ *
+ * API Format: /api/school/preview/page?slug={slug}&school={school}&locale={locale}
+ */
+// In-flight request cache — prevents duplicate API calls from StrictMode / multiple instances
+const _pendingSchoolPreviewPageRequests = {};
+
+export const fetchSchoolPreviewPage = async (slug, school, locale) => {
+  if (!slug) {
+    throw new Error('Preview slug is required');
+  }
+
+  if (!school) {
+    throw new Error('School identifier is required');
+  }
+
+  // Build URL with required parameters
+  const params = new URLSearchParams();
+  params.append('slug', slug);
+  params.append('school', school);
+
+  // Add optional locale parameter
+  if (locale) {
+    params.append('locale', locale);
+  }
+
+  const url = `${API_BASE_URL}/api/school/preview/page?${params.toString()}`;
+
+  // Return existing in-flight promise if same request is already pending
+  if (_pendingSchoolPreviewPageRequests[url]) {
+    return _pendingSchoolPreviewPageRequests[url];
+  }
+
+  const promise = (async () => {
+    try {
+      console.log('🔍 Fetching school preview page from:', url);
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const error = new Error(`HTTP error! status: ${response.status}`);
+        error.status = response.status;
+        error.statusText = response.statusText;
+        throw error;
+      }
+
+      const rawData = await response.json();
+
+      console.log('✅ School Preview Page API Response:', rawData);
+
+      // Transform API response
+      if (rawData.success && rawData.data) {
+        const apiData = rawData.data;
+
+        return {
+          // School-specific header
+          header: apiData.header || {},
+
+          // School-specific footer
+          footer: apiData.footer || {},
+
+          // Page content
+          banner: apiData.banner || {},
+          meta: apiData.meta || null,
+          blocks: apiData.blocks || [],
+
+          // School information
+          school: apiData.school || { name: school, slug: school },
+        };
+      }
+
+      throw new Error('Invalid API response format');
+    } catch (error) {
+      console.error('❌ Error fetching school preview page data:', error);
+      throw error;
+    } finally {
+      // Remove from cache once resolved or rejected
+      delete _pendingSchoolPreviewPageRequests[url];
+    }
+  })();
+
+  _pendingSchoolPreviewPageRequests[url] = promise;
+  return promise;
+};

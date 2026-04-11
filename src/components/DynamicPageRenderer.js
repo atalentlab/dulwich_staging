@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
 import { getCurrentSchool, isSchoolSite } from '../utils/schoolDetection';
 import PageRenderer from './PageRenderer';
 import SchoolPageRenderer from './school/SchoolPageRenderer';
@@ -21,30 +20,14 @@ import SchoolPageRenderer from './school/SchoolPageRenderer';
  *   → PageRenderer with slug="about-dulwich/vision-and-values"
  */
 const DynamicPageRenderer = () => {
-  const location = useLocation();
-  const [detectionComplete, setDetectionComplete] = useState(false);
-  const [school, setSchool] = useState(null);
-  const [isSchool, setIsSchool] = useState(false);
+  // Detect school synchronously to avoid an extra "null -> page" render pass.
+  const school = getCurrentSchool();
+  const isSchool = isSchoolSite();
 
-  useEffect(() => {
-    // Detect school from hostname
-    const detectedSchool = getCurrentSchool();
-    const schoolSite = isSchoolSite();
-
-    setSchool(detectedSchool);
-    setIsSchool(schoolSite);
-    setDetectionComplete(true);
-
-    // Log detection for debugging
-    console.log('Hostname:', window.location.hostname);
-    console.log('Detected School:', detectedSchool);
-    console.log('Is School Site:', schoolSite);
-  }, []);
-
-  // Show loading while detecting
-  if (!detectionComplete) {
-    return null; // Or a loading component
-  }
+  // Log detection for debugging
+  console.log('Hostname:', window.location.hostname);
+  console.log('Detected School:', school);
+  console.log('Is School Site:', isSchool);
 
   // Render school page if school detected
   if (isSchool && school) {

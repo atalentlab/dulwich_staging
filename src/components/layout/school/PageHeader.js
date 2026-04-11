@@ -26,6 +26,8 @@ import { getCurrentSchool, getSchoolUrl } from '../../../utils/schoolDetection';
 import schoolPortals from '../../../assets/config/schoolPortals.json';
 import schoolNavData from '../../../assets/menu/school-navigation.json';
 import sitemapIcon from '../../../assets/images/sitemap.png';
+import { useDynamicMenu } from '../../../hooks/useDynamicMenu';
+import { transformSchoolMenuData } from '../../../utils/schoolMenuTransformer';
 
 // ─── School-specific card images ─────────────────────────────────────────────
 // Seoul
@@ -207,7 +209,7 @@ const schoolCardImages = {
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
-function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSelectedSchoolSlug, setChatOpen, chatOpen, headerScrolled }) {
+function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSelectedSchoolSlug, setChatOpen, chatOpen, headerScrolled, pageLayoutType }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
@@ -432,8 +434,20 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
     navigate(newPath + search + hash);
   };
 
-  // Nav data — switches between en/zh based on URL language
-  const nav = isChineseVersion ? schoolNavData.zh : schoolNavData.en;
+  // Fetch dynamic menu data from API
+  const currentLocale = isChineseVersion ? 'zh' : 'en';
+  const currentSchool = getCurrentSchool();
+  const schoolParam = currentSchool ? `${currentSchool}-cms` : null;
+  const { data: dynamicMenuData, isLoading: isMenuLoading, error: menuError } = useDynamicMenu(currentLocale, schoolParam);
+
+  // Transform API data to navigation structure, fallback to static JSON if API fails
+  const nav = React.useMemo(() => {
+    if (dynamicMenuData?.success) {
+      return transformSchoolMenuData(dynamicMenuData);
+    }
+    // Fallback to static JSON
+    return isChineseVersion ? schoolNavData.zh : schoolNavData.en;
+  }, [dynamicMenuData, isChineseVersion]);
 
   // Helpers: look up nav items, sections, cards, and school-filtered links by id
   const getNavItem = (id) => nav.navItems.find(n => n.id === id) || {};
@@ -461,9 +475,14 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
   };
 
   // Returns school-specific image for a card, falling back to provided default
-  const getCardImage = (cardId, fallback) => {
+  const getCardImage = (cardIdOrUrl, fallback) => {
+    // If it's a URL (from dynamic API), use it directly
+    if (cardIdOrUrl && (cardIdOrUrl.startsWith('http://') || cardIdOrUrl.startsWith('https://'))) {
+      return cardIdOrUrl;
+    }
+    // Otherwise lookup school-specific image
     const school = getCurrentSchool();
-    return (school && schoolCardImages[school]?.[cardId]) || fallback;
+    return (school && schoolCardImages[school]?.[cardIdOrUrl]) || fallback;
   };
 
   const filterLinks = (links = []) => {
@@ -576,6 +595,74 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
   }, [isSearchFocused]);
   const school = getCurrentSchool();
   const parentPortalUrl = schoolPortals[school];
+  const normalizedLayoutType = pageLayoutType !== undefined && pageLayoutType !== null
+    ? parseInt(pageLayoutType, 10)
+    : null;
+  const homeHref = school === 'singapore' ? 'https://singapore.dulwich.org/' : (isChineseVersion ? '/zh/' : '/');
+  const schoolLogoBySlug = {
+    singapore: sing,
+    suzhou,
+    'suzhou-high-school': suzhouHighSchool,
+    'hengqin-high-school': hengqinHighSchool,
+    seoul,
+    'shanghai-puxi': puxi,
+    'shanghai-pudong': pudong,
+    bangkok,
+    beijing,
+  };
+  const schoolLogoAltBySlug = {
+    singapore: 'Dulwich College Singapore',
+    suzhou: 'Dulwich College Suzhou',
+    'suzhou-high-school': 'Dulwich College Suzhou High School',
+    'hengqin-high-school': 'Dulwich College Hengqin High School',
+    seoul: 'Dulwich College Seoul',
+    'shanghai-puxi': 'Dulwich College Shanghai Puxi',
+    'shanghai-pudong': 'Dulwich College Shanghai Pudong',
+    bangkok: 'Dulwich College Bangkok',
+    beijing: 'Dulwich College Beijing',
+  };
+  const schoolLogoSrc = schoolLogoBySlug[school];
+  const schoolLogoAlt = schoolLogoAltBySlug[school] || 'Dulwich College';
+
+  if (normalizedLayoutType === 4) {
+    return (
+      <>
+        {/* DESKTOP MINIMAL HEADER */}
+        <header className="hidden lg:block fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+          <div className="px-4 py-4">
+            <div className="max-w-[1120px] mx-auto flex items-center justify-start gap-4">
+             
+              {schoolLogoSrc && (
+                <img
+                  src={schoolLogoSrc}
+                  alt={schoolLogoAlt}
+                  className="h-12 w-[270px] cursor-pointer transition-all duration-200"
+                  onClick={() => window.location.href = homeHref}
+                />
+              )}
+            </div>
+          </div>
+        </header>
+
+        {/* MOBILE MINIMAL HEADER */}
+        <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+          <div className="px-4 py-3">
+            <div className="flex items-center justify-start gap-3">
+        
+              {schoolLogoSrc && (
+                <img
+                  src={schoolLogoSrc}
+                  alt={schoolLogoAlt}
+                  className="w-[220px] cursor-pointer"
+                  onClick={() => window.location.href = homeHref}
+                />
+              )}
+            </div>
+          </div>
+        </header>
+      </>
+    );
+  }
 
   return (
     <>
@@ -1070,7 +1157,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                     <img src={getCardImage(card.image, WhyAcademicResults)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
                                     <div className='mt-5'>
                                       <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                      <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                      <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.heading}</button>
                                     </div>
                                   </div>
                                 </a>
@@ -1084,7 +1171,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, whyUniversity)} alt={card.heading} className="w-full h-40 object-cover rounded-lg" />
                                       <div className="mt-5">
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>
@@ -1097,7 +1184,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, whyUniversity)} alt={card.heading} className="w-full h-40 object-cover rounded-lg" />
                                       <div className="mt-5">
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>
@@ -1178,7 +1265,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, imageMap[card.image] || excelImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
                                       <div className='mt-5'>
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>
@@ -1191,7 +1278,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, imageMap[card.image] || excelImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
                                       <div className='mt-5'>
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>
@@ -1204,7 +1291,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, imageMap[card.image] || excelImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
                                       <div className='mt-5'>
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>
@@ -1217,7 +1304,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, imageMap[card.image] || excelImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
                                       <div className='mt-5'>
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>
@@ -1231,7 +1318,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, Learningwel)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
                                       <div className="mt-5">
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>
@@ -1279,8 +1366,8 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                 {/* OUR COMMUNITY Section */}
                                 <div className='text-left'>
                                   <ul className="space-y-4">
-                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{getSection(communityNav, 'our-community').heading}</h3>
-                                    {filterLinks(getSection(communityNav, 'our-community').links).map((link, i) => (
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest">{getSection(communityNav, 'our-members').heading}</h3>
+                                    {filterLinks(getSection(communityNav, 'our-members').links).map((link, i) => (
                                       <li key={i}>
                                         <a href={link.url} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
                                           {link.title}
@@ -1312,7 +1399,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, imageMap[card.image] || mmpImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
                                       <div className='mt-5'>
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>
@@ -1325,7 +1412,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, imageMap[card.image] || mmpImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
                                       <div className='mt-5'>
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>
@@ -1338,7 +1425,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, imageMap[card.image] || communityStudentstories)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
                                       <div className="mt-5">
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>
@@ -1351,7 +1438,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, imageMap[card.image] || communityStudentstories)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
                                       <div className="mt-5">
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>
@@ -1433,7 +1520,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, excelImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
                                       <div className='mt-5'>
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>
@@ -1447,7 +1534,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                       <img src={getCardImage(card.image, admissionsImage)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
                                       <div className="mt-5">
                                         <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.buttonText}</button>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200">{card.heading}</button>
                                       </div>
                                     </div>
                                   </a>

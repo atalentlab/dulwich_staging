@@ -65,8 +65,13 @@ const SCHOOL_PORTAL_LINKS = {
 // Custom Dropdown Component
 const CustomDropdown = ({ value, options, onChange, isOpen, setIsOpen, placeholder }) => {
   const [isClosing, setIsClosing] = useState(false);
+  const dropdownRef = React.useRef(null);
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setIsClosing(true);
     setTimeout(() => {
       setIsOpen(false);
@@ -83,8 +88,29 @@ const CustomDropdown = ({ value, options, onChange, isOpen, setIsOpen, placehold
     }, 180);
   };
 
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        handleClose();
+      }
+    };
+
+    // Add event listener
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <div className="relative" style={{ isolation: 'isolate' }}>
+    <div ref={dropdownRef} className="relative" style={{ isolation: 'isolate' }}>
       <button
         onClick={() => !isClosing && setIsOpen(!isOpen)}
         className="w-full px-4 py-2.5 bg-[#FFFFFF] border border-[#EBE4DD] rounded-lg text-left flex items-center justify-between hover:border-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent"
@@ -163,6 +189,36 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   // Get schools using React Query hook (ensures fresh fetch)
   const { schools: fetchedSchools, isLoading: schoolsLoading } = useSchools(locale);
 
+  // Static schools that are not in the API (only for Chinese locale)
+  const staticSchools = isChineseVersion ? [
+    {
+      id: -1,
+      slug: 'bangkok',
+      title: 'Bangkok',
+      url: 'https://bangkok.dulwich.org/',
+      name_zh: '曼谷'
+    },
+    {
+      id: -2,
+      slug: 'singapore',
+      title: 'Singapore',
+      url: 'https://singapore.dulwich.org/',
+      name_zh: '新加坡'
+    },
+    {
+      id: -3,
+      slug: 'seoul',
+      title: 'Seoul',
+      url: 'https://seoul.dulwich.org/',
+      name_zh: '首尔'
+    }
+  ] : [];
+
+  // Combine static schools first, then API schools (only in Chinese locale)
+  const combinedSchools = useMemo(() => {
+    return [...staticSchools, ...fetchedSchools];
+  }, [fetchedSchools, isChineseVersion]);
+
   // State for the left dropdown - will be set to current school name
   const [selectedOption, setSelectedOption] = useState('');
   const [displaySchoolName, setDisplaySchoolName] = useState('INTERNATIONAL');
@@ -189,18 +245,23 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
 
   // Sync selectedOption with current school on mount and when schools load
   useEffect(() => {
-    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
+    const schoolsToUse = combinedSchools.length > 0 ? combinedSchools : availableSchools;
 
     if (currentSchoolSlug && schoolsToUse && schoolsToUse.length > 0) {
       const currentSchoolData = schoolsToUse.find(s => s.slug === currentSchoolSlug);
       if (currentSchoolData && currentSchoolData.title) {
-        setSelectedOption(currentSchoolData.title);
+        // For Chinese version, use name_zh if available
+        if (isChineseVersion && currentSchoolData.name_zh) {
+          setSelectedOption(currentSchoolData.name_zh);
+        } else {
+          setSelectedOption(currentSchoolData.title);
+        }
       }
     } else if (schoolInfo?.menu_title && schoolInfo.menu_title) {
       // Fallback to menuTitle from API if schools list hasn't loaded
       setSelectedOption(schoolInfo.menu_title);
     }
-  }, [fetchedSchools, availableSchools, currentSchoolSlug, schoolInfo]);
+  }, [combinedSchools, availableSchools, currentSchoolSlug, schoolInfo, isChineseVersion]);
 
   // Schools are now provided by SchoolsContext (no duplicate API calls)
 
@@ -320,15 +381,19 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   // Update display name based on selected school or current URL
   useEffect(() => {
     const currentSchoolSlug = getCurrentSchool();
-    // Use fetchedSchools from API, fallback to availableSchools from props
-    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
+    // Use combinedSchools (API + static schools), fallback to availableSchools from props
+    const schoolsToUse = combinedSchools.length > 0 ? combinedSchools : availableSchools;
 
     if (currentSchoolSlug && schoolsToUse) {
       const currentSchoolData = schoolsToUse.find(s => s.slug === currentSchoolSlug);
       if (currentSchoolData) {
         setDisplaySchoolName(currentSchoolData.title.toUpperCase());
-        // Auto-select the current school in the dropdown
-        setSelectedOption(currentSchoolData.title);
+        // Auto-select the current school in the dropdown (use Chinese label if available)
+        if (isChineseVersion && currentSchoolData.name_zh) {
+          setSelectedOption(currentSchoolData.name_zh);
+        } else {
+          setSelectedOption(currentSchoolData.title);
+        }
         return;
       }
     }
@@ -341,38 +406,49 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
     } else {
       setDisplaySchoolName('');
     }
-  }, [selectedSchool, availableSchools, fetchedSchools]);
+  }, [selectedSchool, availableSchools, combinedSchools, isChineseVersion]);
 
-  // Generate options from fetchedSchools (without "Please select")
+  // Generate options from combined schools (without "Please select")
   const selectOptions = useMemo(() => {
-    // Use fetchedSchools from API, fallback to availableSchools from props
-    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
+    // Use combinedSchools (API + static schools)
+    const schoolsToUse = combinedSchools.length > 0 ? combinedSchools : availableSchools;
 
     if (schoolsToUse && schoolsToUse.length > 0) {
-      return schoolsToUse.map(school => school.title);
+      return schoolsToUse.map(school => {
+        // For Chinese version, use name_zh if available (for static schools)
+        if (isChineseVersion && school.name_zh) {
+          return school.name_zh;
+        }
+        return school.title;
+      });
     }
 
     return [];
-  }, [fetchedSchools, availableSchools]);
+  }, [combinedSchools, availableSchools, isChineseVersion]);
 
-  // Create a mapping for school data lookup
+  // Create a mapping for school data lookup (including Chinese labels)
   const schoolDataMap = useMemo(() => {
     const map = {};
-    // Use fetchedSchools from API, fallback to availableSchools from props
-    const schoolsToUse = fetchedSchools.length > 0 ? fetchedSchools : availableSchools;
+    // Use combinedSchools (API + static schools), fallback to availableSchools from props
+    const schoolsToUse = combinedSchools.length > 0 ? combinedSchools : availableSchools;
 
     if (schoolsToUse && schoolsToUse.length > 0) {
       schoolsToUse.forEach(school => {
+        // Map English title
         map[school.title] = school;
+        // Map Chinese label if available
+        if (school.name_zh) {
+          map[school.name_zh] = school;
+        }
       });
     }
     return map;
-  }, [fetchedSchools, availableSchools]);
+  }, [combinedSchools, availableSchools]);
 
   // Compute the current school title for the dropdown value
   const currentSchoolTitle = useMemo(() => {
-    // Use fetchedSchools from API, fallback to availableSchools from props
-    const schoolsToUse = (fetchedSchools && fetchedSchools.length > 0) ? fetchedSchools : availableSchools;
+    // Use combinedSchools (API + static schools), fallback to availableSchools from props
+    const schoolsToUse = (combinedSchools && combinedSchools.length > 0) ? combinedSchools : availableSchools;
 
     // Prioritize selectedOption if it's already set (from useEffect)
     if (selectedOption && selectedOption !== '') {
@@ -385,7 +461,13 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
         (s.slug && s.slug.toLowerCase() === currentSchoolSlug.toLowerCase()) ||
         (s.title && s.title.toLowerCase() === currentSchoolSlug.toLowerCase())
       );
-      if (current) return current.title;
+      if (current) {
+        // For Chinese version, use name_zh if available
+        if (isChineseVersion && current.name_zh) {
+          return current.name_zh;
+        }
+        return current.title;
+      }
     }
 
     // Use menuTitle from API if we're on a school site but schools list hasn't loaded yet
@@ -400,12 +482,18 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
         `Dulwich College ${school.title}` === selectedSchool ||
         (school.slug && school.slug.toLowerCase() === selectedSchool.toLowerCase())
       );
-      if (found) return found.title;
+      if (found) {
+        // For Chinese version, use name_zh if available
+        if (isChineseVersion && found.name_zh) {
+          return found.name_zh;
+        }
+        return found.title;
+      }
     }
 
     // Default to empty string (will show current school)
     return schoolInfo?.menu_title || '';
-  }, [selectedSchool, fetchedSchools, availableSchools, currentSchoolSlug, selectedOption, schoolInfo]);
+  }, [selectedSchool, combinedSchools, availableSchools, currentSchoolSlug, selectedOption, schoolInfo, isChineseVersion]);
 
   // Handle selection change
   const handleSelectChange = (schoolName) => {
@@ -766,55 +854,63 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                         )}
 
                         {/* Row 2 */}
-                        <a
-                          href={socialLinks.youtube}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-start"
-                          aria-label="YouTube"
-                          onMouseEnter={() => setHoveredIcon('youtube-alt')}
-                          onMouseLeave={() => setHoveredIcon(null)}
-                        >
-                          <Icon icon="Icon-Social-YT" size={24} color={hoveredIcon === 'youtube-alt' ? '#D30013' : 'white'} />
-                        </a>
+                        {socialLinks.youtube && socialLinks.youtube !== '#' && (
+                          <a
+                            href={socialLinks.youtube}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-start"
+                            aria-label="YouTube"
+                            onMouseEnter={() => setHoveredIcon('youtube-alt')}
+                            onMouseLeave={() => setHoveredIcon(null)}
+                          >
+                            <Icon icon="Icon-Social-YT" size={24} color={hoveredIcon === 'youtube-alt' ? '#D30013' : 'white'} />
+                          </a>
+                        )}
                         </div>
                         <div className="grid grid-cols-3 gap-x-6 gap-y-6 mt-6">
 
-                        <a
-                          href={socialLinks.facebook}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-start"
-                          aria-label="Facebook"
-                          onMouseEnter={() => setHoveredIcon('facebook-alt')}
-                          onMouseLeave={() => setHoveredIcon(null)}
-                        >
-                          <Icon icon="Icon-Social-FB" size={24} color={hoveredIcon === 'facebook-alt' ? '#D30013' : 'white'} />
-                        </a>
-                        <a
-                          href={socialLinks.instagram}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-start"
-                          aria-label="Instagram"
-                          onMouseEnter={() => setHoveredIcon('instagram-alt')}
-                          onMouseLeave={() => setHoveredIcon(null)}
-                        >
-                          <Icon icon="Icon-Social-IG" size={24} color={hoveredIcon === 'instagram-alt' ? '#D30013' : 'white'} />
-                        </a>
+                        {socialLinks.facebook && socialLinks.facebook !== '#' && (
+                          <a
+                            href={socialLinks.facebook}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-start"
+                            aria-label="Facebook"
+                            onMouseEnter={() => setHoveredIcon('facebook-alt')}
+                            onMouseLeave={() => setHoveredIcon(null)}
+                          >
+                            <Icon icon="Icon-Social-FB" size={24} color={hoveredIcon === 'facebook-alt' ? '#D30013' : 'white'} />
+                          </a>
+                        )}
+                        {socialLinks.instagram && socialLinks.instagram !== '#' && (
+                          <a
+                            href={socialLinks.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-start"
+                            aria-label="Instagram"
+                            onMouseEnter={() => setHoveredIcon('instagram-alt')}
+                            onMouseLeave={() => setHoveredIcon(null)}
+                          >
+                            <Icon icon="Icon-Social-IG" size={24} color={hoveredIcon === 'instagram-alt' ? '#D30013' : 'white'} />
+                          </a>
+                        )}
 
                         {/* Row 3 */}
-                        <a
-                          href={socialLinks.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-start"
-                          aria-label="LinkedIn"
-                          onMouseEnter={() => setHoveredIcon('linkedin-alt')}
-                          onMouseLeave={() => setHoveredIcon(null)}
-                        >
-                          <Icon icon="Icon-Social-LI" size={24} color={hoveredIcon === 'linkedin-alt' ? '#D30013' : 'white'} />
-                        </a>
+                        {socialLinks.linkedin && socialLinks.linkedin !== '#' && (
+                          <a
+                            href={socialLinks.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-start"
+                            aria-label="LinkedIn"
+                            onMouseEnter={() => setHoveredIcon('linkedin-alt')}
+                            onMouseLeave={() => setHoveredIcon(null)}
+                          >
+                            <Icon icon="Icon-Social-LI" size={24} color={hoveredIcon === 'linkedin-alt' ? '#D30013' : 'white'} />
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -903,42 +999,50 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
 
                 {/* Row 2: Instagram, Facebook, YouTube, LinkedIn */}
                 <div className="flex items-center justify-between w-[90%]">
-                  <a
-                    href={socialLinks.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-all duration-300 hover:opacity-70 hover:scale-110"
-                    aria-label="Instagram"
-                  >
-                    <Icon icon="Icon-Social-IG" size={28} color="white" />
-                  </a>
-                  <a
-                    href={socialLinks.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-all duration-300 hover:opacity-70 hover:scale-110"
-                    aria-label="Facebook"
-                  >
-                    <Icon icon="Icon-Social-FB" size={28} color="white" />
-                  </a>
-                  <a
-                    href={socialLinks.youtube}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-all duration-300 hover:opacity-70 hover:scale-110"
-                    aria-label="YouTube"
-                  >
-                    <Icon icon="Icon-Social-YT" size={28} color="white" />
-                  </a>
-                  <a
-                    href={socialLinks.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-all duration-300 hover:opacity-70 hover:scale-110"
-                    aria-label="LinkedIn"
-                  >
-                    <Icon icon="Icon-Social-LI" size={28} color="white" />
-                  </a>
+                  {socialLinks.instagram && socialLinks.instagram !== '#' && (
+                    <a
+                      href={socialLinks.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-all duration-300 hover:opacity-70 hover:scale-110"
+                      aria-label="Instagram"
+                    >
+                      <Icon icon="Icon-Social-IG" size={28} color="white" />
+                    </a>
+                  )}
+                  {socialLinks.facebook && socialLinks.facebook !== '#' && (
+                    <a
+                      href={socialLinks.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-all duration-300 hover:opacity-70 hover:scale-110"
+                      aria-label="Facebook"
+                    >
+                      <Icon icon="Icon-Social-FB" size={28} color="white" />
+                    </a>
+                  )}
+                  {socialLinks.youtube && socialLinks.youtube !== '#' && (
+                    <a
+                      href={socialLinks.youtube}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-all duration-300 hover:opacity-70 hover:scale-110"
+                      aria-label="YouTube"
+                    >
+                      <Icon icon="Icon-Social-YT" size={28} color="white" />
+                    </a>
+                  )}
+                  {socialLinks.linkedin && socialLinks.linkedin !== '#' && (
+                    <a
+                      href={socialLinks.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-all duration-300 hover:opacity-70 hover:scale-110"
+                      aria-label="LinkedIn"
+                    >
+                      <Icon icon="Icon-Social-LI" size={28} color="white" />
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

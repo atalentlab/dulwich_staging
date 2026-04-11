@@ -12,8 +12,13 @@ import dcLogo from '../../assets/images/article-logo.svg';
 // Custom Dropdown Component
 const CustomDropdown = ({ value, options, onChange, isOpen, setIsOpen }) => {
   const [isClosing, setIsClosing] = useState(false);
+  const dropdownRef = React.useRef(null);
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setIsClosing(true);
     setTimeout(() => {
       setIsOpen(false);
@@ -30,8 +35,29 @@ const CustomDropdown = ({ value, options, onChange, isOpen, setIsOpen }) => {
     }, 180);
   };
 
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        handleClose();
+      }
+    };
+
+    // Add event listener
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <div className="relative" style={{ isolation: 'isolate' }}>
+    <div ref={dropdownRef} className="relative" style={{ isolation: 'isolate' }}>
       <button
         onClick={() => !isClosing && setIsOpen(!isOpen)}
         className="w-full px-4 py-2.5 bg-[#FFFFFF] border border-[#EBE4DD] rounded-[4px] text-left flex items-center justify-between hover:border-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent"
@@ -112,6 +138,31 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
   const [selectedOption, setSelectedOption] = useState(nav.pleaseSelect);
 
 
+  // Static schools that are not in the API (only for Chinese locale)
+  const staticSchools = isChineseVersion ? [
+    {
+      id: -1,
+      slug: 'bangkok',
+      title: 'Bangkok',
+      url: 'https://bangkok.dulwich.org/',
+      name_zh: '曼谷'
+    },
+    {
+      id: -2,
+      slug: 'singapore',
+      title: 'Singapore',
+      url: 'https://singapore.dulwich.org/',
+      name_zh: '新加坡'
+    },
+    {
+      id: -3,
+      slug: 'seoul',
+      title: 'Seoul',
+      url: 'https://seoul.dulwich.org/',
+      name_zh: '首尔'
+    }
+  ] : [];
+
   // Always fetch schools from API with the current locale
   useEffect(() => {
     const controller = new AbortController();
@@ -125,11 +176,15 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
         const json = await response.json();
         const rawSchools = json?.success && Array.isArray(json?.data) ? json.data : [];
         // Filter out the 'international' entry — not shown in dropdown
-        const processed = rawSchools.filter(s => s.slug !== 'international');
-        setSchoolsList(processed);
+        const apiSchools = rawSchools.filter(s => s.slug !== 'international');
+
+        // Combine static schools first, then API schools (only in Chinese locale)
+        const combined = [...staticSchools, ...apiSchools];
+        setSchoolsList(combined);
       } catch (err) {
         if (err?.name === 'AbortError') return;
-        setSchoolsList([]);
+        // If API fails, show API schools or static schools based on locale
+        setSchoolsList(staticSchools);
       }
     })();
 
@@ -150,14 +205,20 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
         `Dulwich College ${school.title}` === selectedSchool ||
         school.slug === (typeof selectedSchool === 'string' && selectedSchool.toLowerCase())
       );
-      if (found) return found.title;
+      if (found) {
+        // For Chinese version, use name_zh if available
+        if (isChineseVersion && found.name_zh) {
+          return found.name_zh;
+        }
+        return found.title;
+      }
     }
     // If we have a selectedOption from manual selection, use it as fallback
     if (selectedOption && selectedOption !== nav.pleaseSelect) {
       return selectedOption;
     }
     return nav.pleaseSelect;
-  }, [selectedSchool, schoolsList, selectedOption, nav.pleaseSelect]);
+  }, [selectedSchool, schoolsList, selectedOption, nav.pleaseSelect, isChineseVersion]);
 
   // State for social icon hover
   const [hoveredIcon, setHoveredIcon] = useState(null);
@@ -184,17 +245,28 @@ function PageFooter({ sectionRefs, selectedSchool, setSelectedSchool, setSelecte
   // Generate options from schoolsList (from API / context / props)
   const selectOptions = useMemo(() => {
     if (schoolsList && schoolsList.length > 0) {
-      return schoolsList.map(school => school.title);
+      return schoolsList.map(school => {
+        // For Chinese version, use name_zh if available (for static schools)
+        if (isChineseVersion && school.name_zh) {
+          return school.name_zh;
+        }
+        return school.title;
+      });
     }
     return [];
-  }, [schoolsList]);
+  }, [schoolsList, isChineseVersion]);
 
-  // Create a mapping for school data lookup
+  // Create a mapping for school data lookup (including Chinese labels)
   const schoolDataMap = useMemo(() => {
     const map = {};
     if (schoolsList && schoolsList.length > 0) {
       schoolsList.forEach(school => {
+        // Map English title
         map[school.title] = school;
+        // Map Chinese label if available
+        if (school.name_zh) {
+          map[school.name_zh] = school;
+        }
       });
     }
     return map;

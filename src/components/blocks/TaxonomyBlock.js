@@ -340,7 +340,7 @@ const TaxonomyBlock = ({ content }) => {
       `}</style>
       <div className="max-w-[1376px] mx-auto">
         {/* Header with Title and Filter */}
-        <div className="flex text-left mx-auto items-start mb-4">
+        <div className="flex text-left mx-auto items-start mb-8 relative z-10">
           {title && (
             <h2
               className="flex m-auto max-w-[1120px] w-[100%] text-left text-[28px] sm:text-[32px] md:text-[40px] lg:text-[50px] font-bold text-[#9E1422]"
@@ -349,7 +349,7 @@ const TaxonomyBlock = ({ content }) => {
           )}
 
           {search === "1" && (
-            <div className="relative text-left" ref={dropdownRef} style={{ isolation: 'isolate' }}>
+            <div className="relative text-left z-20" ref={dropdownRef} style={{ isolation: 'isolate' }}>
               <button
                 onClick={() => !isDropdownClosing && setIsDropdownOpen(!isDropdownOpen)}
                 className="bg-[#eaeaea] text-[#3C3737] border rounded-lg px-6 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent cursor-pointer min-w-[200px] text-left font-medium hover:bg-[#D30013] transition-colors"
@@ -371,7 +371,7 @@ const TaxonomyBlock = ({ content }) => {
                 <>
                   {/* Backdrop overlay with fade animations */}
                   <div
-                    className={`fixed inset-0 bg-black z-[100] transition-opacity duration-150 ${
+                    className={`fixed inset-0 bg-black z-[9998] transition-opacity duration-150 ${
                       isDropdownClosing ? 'opacity-0' : 'opacity-30'
                     }`}
                     onClick={handleDropdownClose}
@@ -380,7 +380,7 @@ const TaxonomyBlock = ({ content }) => {
 
                   {/* Dropdown Menu with slide animations and smooth scroll */}
                   <div
-                    className={`absolute z-[101] w-full min-w-[200px] mt-2 bg-white border border-gray-300 rounded-lg shadow-2xl max-h-[400px] overflow-y-auto overflow-x-hidden transition-all duration-150 ease-out ${
+                    className={`absolute z-[9999] w-full min-w-[200px] mt-2 bg-white border border-gray-300 rounded-lg shadow-2xl max-h-[400px] overflow-y-auto overflow-x-hidden transition-all duration-150 ease-out ${
                       isDropdownClosing ? 'opacity-0 scale-95 translate-y-[-4px]' : 'opacity-100 scale-100 translate-y-0'
                     }`}
                     onClick={(e) => e.stopPropagation()}

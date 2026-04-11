@@ -18,6 +18,8 @@ import logo from '../../assets/images/dci-group-logo.svg';
 import sitemapIcon from '../../assets/images/sitemap.png';
 import { getCurrentSchool } from '../../utils/schoolDetection';
 import rawNavigationData from '../../assets/menu/header-navigation.json';
+import { useDynamicMenu } from '../../hooks/useDynamicMenu';
+import { transformMenuData } from '../../utils/menuTransformer';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
@@ -56,8 +58,18 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
   const mobileMenuScrollRef = React.useRef(null);
   const [schoolsList, setSchoolsList] = useState([]);
 
-  // Pick locale data — updates whenever isChineseVersion changes
-  const nav = isChineseVersion ? rawNavigationData.zh : rawNavigationData.en;
+  // Fetch dynamic menu data from API
+  const currentLocale = isChineseVersion ? 'zh' : 'en';
+  const { data: dynamicMenuData, isLoading: isMenuLoading, error: menuError } = useDynamicMenu(currentLocale);
+
+  // Transform API data to navigation structure, fallback to static JSON if API fails
+  const nav = React.useMemo(() => {
+    if (dynamicMenuData?.success) {
+      return transformMenuData(dynamicMenuData);
+    }
+    // Fallback to static JSON
+    return isChineseVersion ? rawNavigationData.zh : rawNavigationData.en;
+  }, [dynamicMenuData, isChineseVersion]);
 
   // ── All useEffect hooks MUST be called before any conditional returns ─────
 
@@ -670,7 +682,7 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                                       </h3>
                                       <div className="text-left overflow-hidden">
                                         <img
-                                          src={imageMap[card.imageKey]}
+                                          src={card.imageUrl || imageMap[card.imageKey]}
                                           alt={card.imageAlt}
                                           className="w-full h-40 object-cover rounded-lg overflow-hidden"
                                         />
@@ -679,7 +691,7 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                                             {card.description}
                                           </p>
                                           <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-[#9E1422] hover:text-white transition-all duration-200">
-                                            {card.buttonText}
+                                            {card.heading}
                                           </button>
                                         </div>
                                       </div>
@@ -989,10 +1001,10 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                                     {sec.links.map((link, j) => (
                                       <a key={j} href={link.url} className={`block group card-stagger-${j + 1}`}>
                                         <div className="bg-white rounded text-left overflow-hidden shadow-sm border border-[#F2EDE9] hover:shadow-md transition-all duration-300">
-                                          {link.image && (
+                                          {(link.imageUrl || link.image) && (
                                             <div className="aspect-[4/3] overflow-hidden relative">
                                               <img
-                                                src={imageMap[link.image] || link.image}
+                                                src={link.imageUrl || imageMap[link.image] || link.image}
                                                 alt={link.title}
                                                 className="w-full h-full min-w-[168px] object-cover group-hover:scale-105 transition-transform duration-300"
                                               />

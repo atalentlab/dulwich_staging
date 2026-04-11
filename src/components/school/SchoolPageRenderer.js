@@ -96,6 +96,9 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
   // Fetch school page data using React Query
   const { data, isLoading, error, isFetching } = useSchoolPageBySlug(pageSlug, school, locale);
 
+  // Check if this is the initial load (no cached data)
+  const isInitialLoading = isLoading && !data;
+
   // Dynamically update SEO meta tags — meta object takes priority over banner
   // OG Image priority: header_image > cover_image > media > background_image
   const getOgImage = () => {
@@ -145,7 +148,7 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
   const schoolName = school ? school.charAt(0).toUpperCase() + school.slice(1) : '';
 
   // Handle smooth scrolling to anchors - only after data is loaded
-  useSmoothScroll(!isLoading && !!data);
+  useSmoothScroll(!isInitialLoading && !!data);
 
   // Validation: School is required
   if (!school) {
@@ -164,8 +167,8 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
     );
   }
 
-  // Loading state
-  if (isLoading) {
+  // Loading state - only show loader on initial load, not on background refetch
+  if (isInitialLoading) {
     return <Loading />;
   }
 
@@ -193,6 +196,10 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
 
     // Render OG tags BEFORE redirect so WhatsApp can scrape them
     // Use banner data from API if available
+    const redirectPageLayoutType =
+      data?.banner?.page_layout_type ||
+      data?.data?.banner?.page_layout_type ||
+      data?.page_layout_type;
     const redirectSeoTitle = data?.meta?.meta_title || data?.banner?.meta_title || data?.banner?.title || `Dulwich College ${schoolName}`;
     const redirectSeoDescription = data?.meta?.meta_description || data?.banner?.meta_description || data?.banner?.description || '';
     const redirectSeoImage = getOgImage();
@@ -208,6 +215,7 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
           url={redirectSeoUrl}
           locale={locale === 'zh' ? 'zh_CN' : 'en_US'}
           siteName={`Dulwich College ${schoolName}`}
+          pageLayoutType={redirectPageLayoutType}
         />
 
         {/* Client-side redirect */}
@@ -306,6 +314,7 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
           url={seoUrl}
           locale={locale === 'zh' ? 'zh_CN' : 'en_US'}
           siteName={`Dulwich College ${schoolName}`}
+          pageLayoutType={pageLayoutType}
         />
 
         <PageHeader
@@ -348,6 +357,7 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
           url={seoUrl}
           locale={locale === 'zh' ? 'zh_CN' : 'en_US'}
           siteName={`Dulwich College ${schoolName}`}
+          pageLayoutType={pageLayoutType}
         />
 
         <PageHeader
@@ -389,6 +399,7 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
         url={seoUrl}
         locale={locale === 'zh' ? 'zh_CN' : 'en_US'}
         siteName={`Dulwich College ${schoolName}`}
+        pageLayoutType={pageLayoutType}
       />
 
       {/* School-specific Header */}

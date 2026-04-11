@@ -236,31 +236,61 @@ const SearchModal = ({
                         </div>
 
                         {/* Pagination Controls */}
-                        {(searchResults.page > 1 || !searchResults.noMore) && (
-                          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8 pt-6 border-t-2 border-gray-200">
-                            <button
-                              onClick={() => handleSearchPageChange(currentSearchPage - 1)}
-                              disabled={currentSearchPage === 1}
-                              className="w-full sm:w-auto px-5 py-2.5 text-sm font-medium border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-[#D30013] hover:text-[#D30013] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 disabled:hover:text-inherit transition-all duration-200 flex items-center justify-center gap-2"
-                            >
-                              <Icon icon="Icon-Chevron-Large" size={14} style={{ transform: 'rotate(180deg)' }} />
-                              Previous
-                            </button>
+                        {(searchResults.page > 1 || !searchResults.noMore) && (() => {
+                          const currentPage = searchResults.page || currentSearchPage;
+                          const totalPages = searchResults.totalPages || Math.ceil((searchResults.total || 100) / 10);
+                          const maxVisiblePages = 7;
 
-                            <span className="px-4 py-2 text-sm font-medium text-gray-700">
-                              Page {searchResults.page || currentSearchPage}
-                            </span>
+                          // Calculate page range to show
+                          let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                          let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
-                            <button
-                              onClick={() => handleSearchPageChange(currentSearchPage + 1)}
-                              disabled={searchResults.noMore}
-                              className="w-full sm:w-auto px-5 py-2.5 text-sm font-medium border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-[#D30013] hover:text-[#D30013] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 disabled:hover:text-inherit transition-all duration-200 flex items-center justify-center gap-2"
-                            >
-                              Next
-                              <Icon icon="Icon-Chevron-Large" size={14} />
-                            </button>
-                          </div>
-                        )}
+                          // Adjust start if we're near the end
+                          if (endPage - startPage < maxVisiblePages - 1) {
+                            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+                          }
+
+                          const pages = [];
+                          for (let i = startPage; i <= endPage; i++) {
+                            pages.push(i);
+                          }
+
+                          const hasNextPage = !searchResults.noMore && currentPage < totalPages;
+
+                          return (
+                            <div className="flex items-center justify-center gap-3 mt-8 pt-6 border-t-2 border-gray-200 flex-wrap">
+                              {/* Previous Button */}
+                              <button
+                                onClick={() => handleSearchPageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                className="px-5 py-2.5 text-sm font-medium text-[#3C3737] bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-[#D30013] hover:text-[#D30013] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 disabled:hover:text-[#3C3737] transition-all duration-200 flex items-center gap-2"
+                              >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                                </svg>
+                                Previous
+                              </button>
+
+                              {/* Current Page / Total Pages Indicator */}
+                              <div className="px-6 py-2.5 text-sm font-medium text-[#3C3737]">
+                                Page {currentPage} / {totalPages}
+                              </div>
+
+                              {/* Next Button - Hidden if no next page */}
+                              {hasNextPage && (
+                                <button
+                                  onClick={() => handleSearchPageChange(currentPage + 1)}
+                                  className="px-5 py-2.5 text-sm font-medium text-[#3C3737] bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-[#D30013] hover:text-[#D30013] transition-all duration-200 flex items-center gap-2"
+                                >
+                                  Next
+                                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                  </svg>
+                                </button>
+                              )}
+                            </div>
+                          );
+                        })()}
                       </>
                     ) : (
                       <div className="py-16 text-center">
@@ -319,7 +349,7 @@ const SearchModal = ({
           <div className="px-6 lg:px-8 py-5 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white flex-shrink-0">
             <button
               onClick={() => setShowSearchResults(false)}
-              className="w-full py-3.5 px-6 text-base font-semibold text-[#D30013] border-2 border-[#D30013] rounded-xl hover:bg-[#D30013] hover:text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md"
+              className="w-[200px] py-2.5 px-6 text-base font-semibold text-[#D30013] border-2 border-[#D30013] rounded-xl hover:bg-[#D30013] hover:text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md"
             >
               {nav.searchResultsClose || 'Close'}
             </button>

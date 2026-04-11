@@ -1,0 +1,609 @@
+/**
+ * SchoolDetailPage Styles
+ * Comprehensive styling for the school detail page
+ */
+
+/* Loading State */
+.school-detail-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #D30013;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.school-detail-error {
+  min-height: 100vh;
+}
+
+.error-container {
+  max-width: 600px;
+  margin: 4rem auto;
+  padding: 3rem;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.error-container h1 {
+  color: #D30013;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.error-container p {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.btn-back {
+  background-color: #D30013;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+  background-color: #B8000F;
+}
+
+/* Main Page Layout */
+.school-detail-page {
+  width: 100%;
+}
+
+/* Hero Section */
+.school-hero {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.6)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-overlay .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+  color: white;
+  z-index: 1;
+}
+
+.school-name {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.school-location {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.95;
+}
+
+.school-tags {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.school-tags .tag {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+  padding: 0.5rem 1.25rem;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Quick Facts Section */
+.quick-facts-section {
+  background-color: #f8f9fa;
+  padding: 4rem 0;
+}
+
+.quick-facts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.fact-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.fact-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.fact-card h3 {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.fact-card p {
+  color: #333;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.additional-facts {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.fact-item {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.fact-item:last-child {
+  border-bottom: none;
+}
+
+.fact-item strong {
+  color: #333;
+  margin-right: 0.5rem;
+}
+
+/* About Section */
+.about-section {
+  padding: 5rem 0;
+  background-color: white;
+}
+
+.about-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #1a1a1a;
+}
+
+.description-content {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #444;
+}
+
+.description-content p {
+  margin-bottom: 1.5rem;
+}
+
+/* Programs Section */
+.programs-section {
+  padding: 5rem 0;
+  background-color: #f8f9fa;
+}
+
+.programs-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.programs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.program-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.program-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.program-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.program-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #D30013;
+}
+
+.program-card p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.program-age {
+  display: inline-block;
+  background-color: #e9ecef;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #495057;
+  font-weight: 600;
+}
+
+/* Facilities Section */
+.facilities-section {
+  padding: 5rem 0;
+  background-color: white;
+}
+
+.facilities-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.facilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.facility-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.facility-item:hover {
+  background-color: #e9ecef;
+}
+
+.facility-icon {
+  font-size: 1.5rem;
+}
+
+/* Admissions Section */
+.admissions-section {
+  padding: 5rem 0;
+  background-color: #f8f9fa;
+}
+
+.admissions-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #1a1a1a;
+}
+
+.admissions-content {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #444;
+  margin-bottom: 3rem;
+}
+
+.admissions-content p {
+  margin-bottom: 1.5rem;
+}
+
+.admissions-cta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #D30013;
+  color: white;
+  border: 2px solid #D30013;
+}
+
+.btn-primary:hover {
+  background-color: #B8000F;
+  border-color: #B8000F;
+}
+
+.btn-secondary {
+  background-color: white;
+  color: #D30013;
+  border: 2px solid #D30013;
+}
+
+.btn-secondary:hover {
+  background-color: #D30013;
+  color: white;
+}
+
+/* Contact Section */
+.contact-section {
+  padding: 5rem 0;
+  background-color: white;
+}
+
+.contact-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.contact-item {
+  text-align: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.contact-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.contact-item h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+}
+
+.contact-item p {
+  color: #333;
+  font-size: 1.125rem;
+}
+
+.contact-item a {
+  color: #D30013;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contact-item a:hover {
+  color: #B8000F;
+  text-decoration: underline;
+}
+
+/* CTA Section */
+.cta-section {
+  padding: 6rem 0;
+  background: linear-gradient(135deg, #D30013 0%, #B8000F 100%);
+  color: white;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.cta-section p {
+  font-size: 1.25rem;
+  margin-bottom: 3rem;
+  opacity: 0.95;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary-large,
+.btn-secondary-large {
+  padding: 1.25rem 3rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.125rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+  border: 2px solid white;
+  cursor: pointer;
+}
+
+.btn-primary-large {
+  background-color: white;
+  color: #D30013;
+}
+
+.btn-primary-large:hover {
+  background-color: transparent;
+  color: white;
+}
+
+.btn-secondary-large {
+  background-color: transparent;
+  color: white;
+}
+
+.btn-secondary-large:hover {
+  background-color: white;
+  color: #D30013;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .school-name {
+    font-size: 2.5rem;
+  }
+
+  .school-location {
+    font-size: 1.25rem;
+  }
+
+  .school-hero {
+    height: 400px;
+  }
+
+  .about-section h2,
+  .programs-section h2,
+  .facilities-section h2,
+  .admissions-section h2,
+  .contact-section h2 {
+    font-size: 2rem;
+  }
+
+  .cta-section h2 {
+    font-size: 2rem;
+  }
+
+  .cta-section p {
+    font-size: 1.125rem;
+  }
+
+  .quick-facts-grid,
+  .programs-grid,
+  .facilities-grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admissions-cta {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .school-name {
+    font-size: 2rem;
+  }
+
+  .school-location {
+    font-size: 1rem;
+  }
+
+  .school-hero {
+    height: 300px;
+  }
+
+  .school-tags .tag {
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem;
+  }
+
+  .quick-facts-section,
+  .about-section,
+  .programs-section,
+  .facilities-section,
+  .admissions-section,
+  .contact-section {
+    padding: 3rem 0;
+  }
+
+  .cta-section {
+    padding: 4rem 0;
+  }
+}

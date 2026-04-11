@@ -278,7 +278,7 @@ const MainCampusMapBlock = ({ content }) => {
                 {schoolData.header_image && (
                   <div className="w-full h-32 md:h-40 lg:h-48 overflow-hidden rounded-t-xl bg-gray-100">
                     <img
-                      src={`https://dulwich-azure-prod.oss-cn-shanghai.aliyuncs.com/${schoolData.listing_image}`}
+                      src={`https://dulwich.blob.core.chinacloudapi.cn/dulwich-staging/${schoolData.listing_image}`}
                       alt={schoolData.title}
                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                     />

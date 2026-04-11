@@ -10,16 +10,22 @@ const PORT = process.env.PORT || 3001;
 // API base URL - use production CMS
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
-// Serve static files from the React app (but not HTML files)
-app.use(express.static(path.join(__dirname, 'build'), {
-  index: false, // Don't serve index.html automatically
-  setHeaders: (res, filePath) => {
-    // Don't cache HTML files
-    if (filePath.endsWith('.html')) {
-      res.setHeader('Cache-Control', 'no-store');
-    }
+// Serve static files from the React app (but not HTML, robots.txt, or sitemap.xml files)
+app.use((req, res, next) => {
+  // Skip static file serving for robots.txt and sitemap.xml routes
+  if (req.path === '/robots.txt' || req.path === '/sitemap.xml' || req.path === '/zh/sitemap.xml') {
+    return next();
   }
-}));
+  express.static(path.join(__dirname, 'build'), {
+    index: false, // Don't serve index.html automatically
+    setHeaders: (res, filePath) => {
+      // Don't cache HTML files
+      if (filePath.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'no-store');
+      }
+    }
+  })(req, res, next);
+});
 
 // Helper function to escape HTML
 const escapeHtml = (text) => {
@@ -30,6 +36,73 @@ const escapeHtml = (text) => {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+};
+
+// Helper function to fetch and parse sitemap XML
+const fetchSitemapXML = async (url) => {
+  try {
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching ${url}:`, error.message);
+    return null;
+  }
+};
+
+// Helper function to extract URLs from sitemap XML
+const extractUrlsFromSitemap = (xmlContent) => {
+  if (!xmlContent) return [];
+
+  // Extract all <url> blocks from the XML
+  const urlRegex = /<url>([\s\S]*?)<\/url>/g;
+  const urls = [];
+  let match;
+
+  while ((match = urlRegex.exec(xmlContent)) !== null) {
+    urls.push(`  <url>${match[1]}</url>`);
+  }
+
+  return urls;
+};
+
+// Helper function to get all URLs from all sitemap types for a school
+const getSchoolSitemapUrls = async (schoolSlug) => {
+  const sitemapTypes = ['pages', 'news', 'people'];
+  const allUrls = [];
+
+  for (const type of sitemapTypes) {
+    const url = `${API_BASE_URL}/sitemap-${type}.xml?subdomain=${schoolSlug}-cms`;
+    console.log(`📡 Fetching sitemap-${type}.xml for ${schoolSlug}`);
+
+    const xmlContent = await fetchSitemapXML(url);
+    if (xmlContent) {
+      const urls = extractUrlsFromSitemap(xmlContent);
+      allUrls.push(...urls);
+      console.log(`✅ Found ${urls.length} URLs in sitemap-${type}.xml for ${schoolSlug}`);
+    }
+  }
+
+  return allUrls;
+};
+
+// Helper function to get group sitemap URLs (for main domain)
+const getGroupSitemapUrls = async () => {
+  const sitemapTypes = ['pages', 'news'];
+  const allUrls = [];
+
+  for (const type of sitemapTypes) {
+    const url = `${API_BASE_URL}/group/sitemap-${type}.xml`;
+    console.log(`📡 Fetching group sitemap-${type}.xml`);
+
+    const xmlContent = await fetchSitemapXML(url);
+    if (xmlContent) {
+      const urls = extractUrlsFromSitemap(xmlContent);
+      allUrls.push(...urls);
+      console.log(`✅ Found ${urls.length} URLs in group sitemap-${type}.xml`);
+    }
+  }
+
+  return allUrls;
 };
 
 // Helper function to inject meta tags
@@ -164,6 +237,167 @@ const fetchPageData = async (slug, locale = 'en', school = null) => {
   }
 };
 
+// Helper function to generate sitemap
+const generateSitemap = async (req, res) => {
+  try {
+    console.log('📄 Generating sitemap.xml');
+
+    // Detect school from hostname (subdomain)
+    const hostname = req.hostname;
+    let school = null;
+
+    // List of all school slugs (without -cms suffix)
+    const schools = ['singapore', 'shanghai-puxi', 'shanghai-pudong', 'suzhou', 'suzhou-high-school', 'hengqin-high-school', 'beijing', 'seoul', 'bangkok'];
+
+    // Check if hostname is a school subdomain
+    for (const s of schools) {
+      if (hostname.startsWith(s + '.') || hostname === s || hostname.includes(s)) {
+        school = s;
+        break;
+      }
+    }
+
+    // If a specific school is detected, return only that school's URLs
+    if (school) {
+      console.log(`📍 Detected school: ${school}`);
+      const urls = await getSchoolSitemapUrls(school);
+
+      // Build the sitemap urlset for this school
+      let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
+      sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n';
+
+      urls.forEach(url => {
+        sitemap += url + '\n';
+      });
+
+      sitemap += '</urlset>';
+
+      // Set appropriate headers
+      res.header('Content-Type', 'application/xml');
+      res.header('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
+      res.send(sitemap);
+
+      console.log(`✅ Sitemap for ${school} generated successfully with ${urls.length} URLs`);
+    } else {
+      // No specific school detected, return group sitemap URLs
+      console.log('📍 No specific school detected, generating group sitemap');
+
+      // Fetch group sitemap URLs
+      const urls = await getGroupSitemapUrls();
+
+      // Build the sitemap urlset for group pages
+      let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
+      sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n';
+
+      urls.forEach(url => {
+        sitemap += url + '\n';
+      });
+
+      sitemap += '</urlset>';
+
+      // Set appropriate headers
+      res.header('Content-Type', 'application/xml');
+      res.header('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
+      res.send(sitemap);
+
+      console.log(`✅ Group sitemap generated successfully with ${urls.length} URLs`);
+    }
+  } catch (error) {
+    console.error('Error generating sitemap:', error);
+    res.status(500).send('Error generating sitemap');
+  }
+};
+
+// Helper function to generate robots.txt
+const generateRobotsTxt = (req, res) => {
+  try {
+    const hostname = req.hostname;
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    // List of all school slugs
+    const schools = ['singapore', 'shanghai-puxi', 'shanghai-pudong', 'suzhou', 'suzhou-high-school', 'hengqin-high-school', 'beijing', 'seoul', 'bangkok'];
+
+    // Detect if this is a school site
+    let school = null;
+    for (const s of schools) {
+      if (hostname.startsWith(s + '.') || hostname === s || hostname.includes(s)) {
+        school = s;
+        break;
+      }
+    }
+
+    let robotsTxt = '';
+
+    if (isProduction) {
+      // Production robots.txt - different for school vs group
+      if (school) {
+        // School site robots.txt
+        robotsTxt = `User-agent: AdsBot-Google
+Allow: /
+
+User-agent: *
+Disallow: /search/
+Disallow: /ajax/
+Disallow: /preview/
+Disallow: /zh/preview/
+Disallow: /my/preview/
+
+Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml
+`;
+      } else {
+        // Group site robots.txt
+        robotsTxt = `User-agent: AdsBot-Google
+Allow: /
+
+User-agent: *
+Disallow: /search/
+Disallow: /ajax/
+Disallow: /cms/
+Disallow: /careers/search
+Disallow: /preview/
+Disallow: /zh/preview/
+Disallow: /my/preview/
+Disallow: /lp/
+Disallow: /zh/lp/
+
+Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml
+`;
+      }
+    } else {
+      // Development robots.txt - block all crawlers
+      if (school) {
+        // School site development
+        robotsTxt = `User-agent: *
+Disallow: /
+`;
+      } else {
+        // Group site development
+        robotsTxt = `User-agent: AdsBot-Google
+Allow: /
+
+User-agent: *
+Disallow: /
+Disallow: /lp/
+Disallow: /zh/lp/
+`;
+      }
+    }
+
+    res.header('Content-Type', 'text/plain');
+    res.send(robotsTxt);
+  } catch (error) {
+    console.error('Error generating robots.txt:', error);
+    res.status(500).send('Error generating robots.txt');
+  }
+};
+
+// Robots.txt route - must be before sitemap routes
+app.get('/robots.txt', generateRobotsTxt);
+
+// Sitemap routes - must be before the catch-all route
+app.get('/sitemap.xml', generateSitemap);
+app.get('/zh/sitemap.xml', generateSitemap);
+
 // Handle all routes
 app.get('*', async (req, res) => {
   try {
@@ -176,7 +410,7 @@ app.get('*', async (req, res) => {
     let school = null;
 
     // List of school subdomains
-    const schools = ['singapore', 'shanghai', 'suzhou', 'beijing', 'seoul', 'yangon'];
+    const schools = ['singapore', 'shanghai-puxi', 'shanghai-pudong', 'suzhou', 'suzhou-high-school', 'hengqin-high-school', 'beijing', 'seoul', 'bangkok'];
 
     // Check if hostname is a school subdomain
     for (const s of schools) {

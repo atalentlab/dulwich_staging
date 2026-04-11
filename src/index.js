@@ -53,18 +53,16 @@ function SchoolsProviderWrapper({ children }) {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <LocaleProvider defaultLocale="en">
-            <SchoolsProviderWrapper>
-              <App />
-            </SchoolsProviderWrapper>
-          </LocaleProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </HelmetProvider>
-  </React.StrictMode>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <LocaleProvider defaultLocale="en">
+          <SchoolsProviderWrapper>
+            <App />
+          </SchoolsProviderWrapper>
+        </LocaleProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
+  </HelmetProvider>
 );
 reportWebVitals();

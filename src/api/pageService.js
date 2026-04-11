@@ -192,3 +192,89 @@ export const fetchPageData = async (pageSlug = 'home', locale = 'en') => {
   }
 };
 
+/**
+ * Fetches preview page data for Group pages
+ * @param {string} slug - The preview slug (e.g., 'mkjrrn5lf51775126879')
+ * @param {string} locale - The locale/language code (e.g., 'zh', 'en') - optional
+ * @returns {Promise<Object>} Preview page data with header, footer, and blocks
+ *
+ * API Format: /api/preview/page?slug={slug}&locale={locale}
+ */
+// In-flight request cache — prevents duplicate API calls from StrictMode / multiple instances
+const _pendingPreviewPageRequests = {};
+
+export const fetchPreviewPage = async (slug, locale) => {
+  if (!slug) {
+    throw new Error('Preview slug is required');
+  }
+
+  // Build URL with required slug parameter
+  const params = new URLSearchParams();
+  params.append('slug', slug);
+
+  // Add optional locale parameter
+  if (locale) {
+    params.append('locale', locale);
+  }
+
+  const url = `${API_BASE_URL}/api/preview/page?${params.toString()}`;
+
+  // Return existing in-flight promise if same request is already pending
+  if (_pendingPreviewPageRequests[url]) {
+    return _pendingPreviewPageRequests[url];
+  }
+
+  const promise = (async () => {
+    try {
+      console.log('🔍 Fetching preview page from:', url);
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const error = new Error(`HTTP error! status: ${response.status}`);
+        error.status = response.status;
+        error.statusText = response.statusText;
+        throw error;
+      }
+
+      const rawData = await response.json();
+
+      console.log('✅ Preview Page API Response:', rawData);
+
+      // Transform API response
+      if (rawData.success && rawData.data) {
+        const { banner, meta, blocks, schools, articles } = rawData.data;
+
+        return {
+          banner: banner || {},
+          meta: meta || null,
+          blocks: blocks || [],
+          // Static header and footer for all pages
+          header: STATIC_HEADER,
+          footer: {
+            ...STATIC_FOOTER,
+            schools: schools || [],
+            articles: articles || []
+          },
+        };
+      }
+
+      throw new Error('Invalid API response format');
+    } catch (error) {
+      console.error('❌ Error fetching preview page data:', error);
+      throw error;
+    } finally {
+      // Remove from cache once resolved or rejected
+      delete _pendingPreviewPageRequests[url];
+    }
+  })();
+
+  _pendingPreviewPageRequests[url] = promise;
+  return promise;
+};
+

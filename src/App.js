@@ -12,6 +12,7 @@ import ArticlePageRenderer from './components/article/ArticlePageRenderer';
 import TeacherDetailsPage from './pages/TeacherDetailsPage';
 import CookiePolicyPage from './pages/CookiePolicyPage';
 import SitemapPage from './pages/SitemapPage';
+import PreviewPage from './pages/PreviewPage';
 import CookieConsentBanner from './components/common/CookieConsentBanner';
 import StickyOurDulwich from './components/common/StickyOurDulwich';
 import SeoulPopCard from './components/SeoulPopCard';
@@ -99,6 +100,10 @@ function App() {
 
           {/* SEO Testing Route */}
           <Route path="/test-seo" element={<SEOExamplePage />} />
+
+          {/* Preview routes for Group and School pages */}
+          <Route path="/preview/page/:slug" element={<PreviewPage />} />
+          <Route path="/preview/page" element={<PreviewPage />} />
 
           {/* Article detail routes */}
           <Route path="/article/:slug" element={<ArticlePageRenderer />} />

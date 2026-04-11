@@ -602,9 +602,27 @@ function LiveWorldWiseGrid({ content }) {
                               {item.age_limit}
                             </p>
                           )}
-                          <p className="text-white/80 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
-                            {stripHtml(item.content)}
-                          </p>
+                          <div
+                            className="text-white prose prose-lg max-w-2xl mx-auto
+                              prose-headings:text-white prose-headings:font-bold
+                              prose-h1:text-3xl prose-h1:mb-4
+                              prose-h2:text-2xl prose-h2:mb-3
+                              prose-h3:text-xl prose-h3:mb-2
+                              prose-p:!text-white prose-p:text-sm sm:prose-p:text-base md:prose-p:text-lg prose-p:leading-relaxed prose-p:mb-2
+                              prose-strong:text-white prose-strong:font-bold
+                              prose-em:text-white/90 prose-em:italic
+                              prose-a:text-white prose-a:underline hover:prose-a:text-white/80
+                              prose-ul:list-disc prose-ul:text-white/80 prose-ul:ml-6 prose-ul:pl-6 prose-ul:space-y-2
+                              prose-ol:list-decimal prose-ol:text-white/80 prose-ol:ml-6 prose-ol:pl-6 prose-ol:space-y-2
+                              prose-li:text-white/80 prose-li:leading-relaxed prose-li:marker:text-white
+                              prose-blockquote:border-l-4 prose-blockquote:border-white/40 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-white/70
+                              [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:pl-6 [&_ul]:space-y-2 [&_ul]:text-white/80
+                              [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:pl-6 [&_ol]:space-y-2 [&_ol]:text-white/80
+                              [&_li]:text-white/80 [&_li]:leading-relaxed [&_li]:mb-2
+                              [&_li::marker]:text-white [&_li::marker]:font-bold
+                              [&_p]:!text-white"
+                            dangerouslySetInnerHTML={{ __html: item.content }}
+                          />
                           {item['cta-text'] && getCtaUrl(item) && (
                             <div className="pt-1 sm:pt-2">
                               <a

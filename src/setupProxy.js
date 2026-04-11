@@ -1,11 +1,11 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
-  // ── OG Image and Proxy Fetch proxy → Express server.js on :4000 ───────────
-  // Allows localhost:3000/og-image-gen, /og-image, and /proxy-fetch to work during development.
+  // ── OG Image, Proxy Fetch, Sitemap, and Robots.txt proxy → Express server.js on :4000 ───────────
+  // Allows localhost:3000/og-image-gen, /og-image, /proxy-fetch, /sitemap.xml, and /robots.txt to work during development.
   // Requires: node server.js running on port 4000 in a separate terminal.
   app.use(
-    ['/og-image-gen', '/og-image', '/proxy-fetch'],
+    ['/og-image-gen', '/og-image', '/proxy-fetch', '/sitemap.xml', '/zh/sitemap.xml', '/robots.txt'],
     createProxyMiddleware({
       target: 'http://localhost:4000',
       changeOrigin: false,

@@ -209,12 +209,6 @@ code {
   color: #B8000F;
 }
 
-.prose strong,
-.prose b {
-  font-weight: 600;
-  color: #1a1a1a;
-}
-
 .prose h1,
 .prose h2,
 .prose h3,

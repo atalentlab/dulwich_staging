@@ -13,6 +13,7 @@ import { Helmet } from 'react-helmet-async';
  * @param {string} props.type - OG type (default: 'website')
  * @param {string} props.locale - Page locale (default: 'en_US')
  * @param {string} props.siteName - Site name (default: 'Dulwich College International')
+ * @param {number|string} [props.pageLayoutType] - CMS layout type; type 4 = landing page (noindex)
  * @param {Object} props.twitter - Twitter specific config
  */
 const DynamicSEO = ({
@@ -23,8 +24,14 @@ const DynamicSEO = ({
   type = 'website',
   locale = 'en_US',
   siteName = 'Dulwich College International',
-  twitter = {}
+  twitter = {},
+  pageLayoutType
 }) => {
+  const isLandingPage =
+    pageLayoutType === 4 || pageLayoutType === '4';
+  const robotsContent = isLandingPage
+    ? 'noindex,nofollow,noarchive'
+    : 'index, follow';
   // Static fallback values
   const FALLBACK_TITLE = 'Dulwich College International';
   const FALLBACK_DESCRIPTION = '';
@@ -55,6 +62,7 @@ const DynamicSEO = ({
       {/* Basic Meta Tags */}
       <title>{finalTitle}</title>
       <meta name="description" content={finalDescription} />
+      <meta name="robots" content={robotsContent} />
       <link rel="canonical" href={finalUrl} />
 
       {/* Open Graph Meta Tags */}
@@ -80,7 +88,6 @@ const DynamicSEO = ({
       <meta name="twitter:creator" content={twitterCreator} />
 
       {/* Additional useful meta tags */}
-      <meta name="robots" content="index, follow" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Helmet>
   );

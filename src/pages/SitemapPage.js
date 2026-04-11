@@ -58,7 +58,7 @@ const MenuItem = ({ item, level = 0 }) => {
         </a>
       ) : (
         <span
-          className={`text-[#9e1422] block font-extrabold ${textSize} ${level > 0 ? 'py-0.5' : 'py-3'}`}
+          className={`text-[#fff] block font-extrabold bg-gradient-to-r from-[#D30013] to-[#FF4D5A]/60 rounded-lg ${textSize} ${level > 0 ? 'py-0.5' : 'py-3 px-3'}`}
         >
           {level > 0 && <span className="mr-2 text-[#3C3737] font-light">{bulletStyle}</span>}
           {displayName}

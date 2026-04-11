@@ -92,16 +92,35 @@ const StarRating = ({ rating = 5 }) => {
 };
 
 // Stats Card Component
-const StatsCard = ({ value, label, prefix, suffix, isRating, decimals, aosAnimation, aosDelay }) => (
-  <div
-    className="bg-[#FAF7F5] h-full border border-[#F2EDE9] rounded-lg py-6 px-3 sm:py-8 sm:px-4 flex flex-col items-center justify-center text-center hover:bg-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
-    {...(aosAnimation && {
-      'data-aos': aosAnimation,
-      'data-aos-duration': '700',
-      'data-aos-delay': aosDelay || '0',
-      'data-aos-easing': 'ease-out-back'
-    })}
-  >
+const StatsCard = ({ value, label, prefix, suffix, isRating, decimals, aosAnimation, aosDelay }) => {
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    const node = cardRef.current;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setHasAnimated(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (node) observer.observe(node);
+    return () => { if (node) observer.unobserve(node); };
+  }, []);
+
+  return (
+    <div
+      ref={cardRef}
+      className={`bg-[#FAF7F5] h-full border border-[#F2EDE9] rounded-lg py-6 px-3 sm:py-8 sm:px-4 flex flex-col items-center justify-center text-center hover:bg-white hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 ${!hasAnimated ? 'opacity-0' : 'opacity-100'}`}
+      {...(aosAnimation && {
+        'data-aos': aosAnimation,
+        'data-aos-duration': '700',
+        'data-aos-delay': aosDelay || '0',
+        'data-aos-easing': 'ease-out-back'
+      })}
+    >
     {isRating && (
       <div className="mb-3">
         <StarRating rating={value} />
@@ -118,7 +137,8 @@ const StatsCard = ({ value, label, prefix, suffix, isRating, decimals, aosAnimat
       {label}
     </div>
   </div>
-);
+  );
+};
 
 // Main StatisticBlock Component
 const StatisticBlock = ({ content }) => {
@@ -130,7 +150,21 @@ const StatisticBlock = ({ content }) => {
     (a, b) => (parseInt(a.weight) || 0) - (parseInt(b.weight) || 0)
   );
 
+  // Don't render if no items
   if (sortedItems.length === 0) return null;
+
+  // Check if we have valid data - items must have both score and content
+  const hasValidData = sortedItems.every(item => {
+    return item.score !== undefined &&
+           item.score !== null &&
+           item.score !== '' &&
+           item.content !== undefined &&
+           item.content !== null &&
+           item.content !== '';
+  });
+
+  // Don't render block if data is incomplete
+  if (!hasValidData) return null;
 
   return (
     <section className="py-6 sm:py-5 md:py-6 px-4 sm:px-6 lg:px-8 bg-white">

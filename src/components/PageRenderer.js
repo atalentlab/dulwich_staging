@@ -133,6 +133,9 @@ const PageRenderer = ({ slug: fixedSlug, locale: fixedLocale }) => {
   // Fetch page data using React Query
   const { data, isLoading, error, isFetching } = usePageBySlug(slug, locale);
 
+  // Check if this is the initial load (no cached data)
+  const isInitialLoading = isLoading && !data;
+
   // Dynamically update SEO meta tags — meta object takes priority over banner
   // OG Image priority: header_image > cover_image > media > background_image
   const getOgImage = () => {
@@ -179,10 +182,10 @@ const PageRenderer = ({ slug: fixedSlug, locale: fixedLocale }) => {
   // SEO is now handled by DynamicSEO component in each layout section
 
   // Handle smooth scrolling to anchors - only after data is loaded
-  useSmoothScroll(!isLoading && !!data);
+  useSmoothScroll(!isInitialLoading && !!data);
 
-  // Loading state
-  if (isLoading) {
+  // Loading state - only show loader on initial load, not on background refetch
+  if (isInitialLoading) {
     return <Loading />;
   }
 
@@ -210,6 +213,10 @@ const PageRenderer = ({ slug: fixedSlug, locale: fixedLocale }) => {
     console.log('➡️ Redirecting to:', redirectTarget);
 
     // Render OG tags BEFORE redirect for WhatsApp/social bots
+    const redirectPageLayoutType =
+      data?.banner?.page_layout_type ||
+      data?.data?.banner?.page_layout_type ||
+      data?.page_layout_type;
     const redirectSeoTitle = data?.meta?.meta_title || data?.banner?.meta_title || data?.banner?.title || 'Dulwich International Schools';
     const redirectSeoDescription = data?.meta?.meta_description || data?.banner?.meta_description || data?.banner?.description || '';
     const redirectSeoImage = getOgImage();
@@ -224,6 +231,7 @@ const PageRenderer = ({ slug: fixedSlug, locale: fixedLocale }) => {
           image={redirectSeoImage}
           url={redirectSeoUrl}
           locale={locale === 'zh' ? 'zh_CN' : 'en_US'}
+          pageLayoutType={redirectPageLayoutType}
         />
 
         {/* Client-side redirect */}
@@ -286,7 +294,10 @@ const PageRenderer = ({ slug: fixedSlug, locale: fixedLocale }) => {
   const seoImage = getOgImage();
   const seoUrl = `${window.location.origin}${location.pathname}`;
 
-  const pageLayoutType = data?.banner?.page_layout_type;
+  const pageLayoutType =
+    data?.banner?.page_layout_type ||
+    data?.data?.banner?.page_layout_type ||
+    data?.page_layout_type;
 
   // ── Layout type 5: full-viewport section-by-section scrolling ─────────────
   if (pageLayoutType === 5) {
@@ -299,6 +310,7 @@ const PageRenderer = ({ slug: fixedSlug, locale: fixedLocale }) => {
           image={seoImage}
           url={seoUrl}
           locale={locale === 'zh' ? 'zh_CN' : 'en_US'}
+          pageLayoutType={pageLayoutType}
         />
 
         <PageHeader
@@ -340,6 +352,7 @@ const PageRenderer = ({ slug: fixedSlug, locale: fixedLocale }) => {
           image={seoImage}
           url={seoUrl}
           locale={locale === 'zh' ? 'zh_CN' : 'en_US'}
+          pageLayoutType={pageLayoutType}
         />
 
         <PageHeader
@@ -380,6 +393,7 @@ const PageRenderer = ({ slug: fixedSlug, locale: fixedLocale }) => {
         image={seoImage}
         url={seoUrl}
         locale={locale === 'zh' ? 'zh_CN' : 'en_US'}
+        pageLayoutType={pageLayoutType}
       />
 
       {/* International Header */}
