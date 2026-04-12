@@ -2,16 +2,17 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
   // ── OG Image, Proxy Fetch, Sitemap, and Robots.txt proxy → Express server.js on :4000 ───────────
-  // Allows localhost:3000/og-image-gen, /og-image, /proxy-fetch, /sitemap.xml, and /robots.txt to work during development.
+  // Allows localhost:4001/og-image-gen, /og-image, /proxy-fetch, /sitemap.xml, and /robots.txt to work during development.
   // Requires: node server.js running on port 4000 in a separate terminal.
+  const EXPRESS_SERVER_PORT = process.env.EXPRESS_SERVER_PORT || 4000;
   app.use(
     ['/og-image-gen', '/og-image', '/proxy-fetch', '/sitemap.xml', '/zh/sitemap.xml', '/robots.txt'],
     createProxyMiddleware({
-      target: 'http://localhost:4000',
-      changeOrigin: false,
+      target: `http://localhost:${EXPRESS_SERVER_PORT}`,
+      changeOrigin: true,
       onError: function(err, req, res) {
-        console.error('Express server proxy error (is server.js running on :4000?):', err.message);
-        res.status(502).send('Express server not running. Start it with: node server.js');
+        console.error(`Express server proxy error (is server.js running on :${EXPRESS_SERVER_PORT}?):`, err.message);
+        res.status(502).send(`Express server not running on port ${EXPRESS_SERVER_PORT}. Start it with: node server.js`);
       }
     })
   );

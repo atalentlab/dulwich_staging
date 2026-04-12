@@ -5,7 +5,7 @@ const fs = require('fs');
 const axios = require('axios');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.EXPRESS_PORT || process.env.PORT || 4000;
 
 // API base URL - use production CMS
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
