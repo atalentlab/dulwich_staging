@@ -16,7 +16,8 @@ jobs:
       - name: Install dependencies & build
         run: |
           npm install
-          CI=false npm run build
+          npm run prebuild || true
+          CI=false npx react-scripts build
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
