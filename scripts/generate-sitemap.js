@@ -1,9 +1,30 @@
 #!/usr/bin/env node
 
 /**
- * Generate static sitemap.xml files for all school subdomains
+ * Generate static sitemap.xml files for schools or group site
+ *
  * This script fetches sitemap data from the CMS API and generates
- * static sitemap.xml files for each school during build time.
+ * static sitemap.xml files during build time.
+ *
+ * Usage:
+ * - Group site (dulwich.org): npm run build:group
+ * - School site: npm run build:beijing or npm run build:singapore
+ *
+ * Environment Variables:
+ * - SCHOOL: School slug (beijing, singapore, shanghai-puxi, shanghai-pudong, suzhou, suzhou-high-school, hengqin-high-school, seoul, bangkok)
+ * - DEPLOY_DOMAIN: (Optional) Override the deployment domain (default: https://{school}.dulwich.org)
+ * - REACT_APP_SCHOOL: Alternative school slug variable
+ *
+ * Examples:
+ * - npm run build:group                   # Build group site (dulwich.org)
+ * - npm run build:beijing                 # Build Beijing site with sitemap
+ * - npm run build:singapore               # Build Singapore site with sitemap
+ * - SCHOOL=beijing npm run build          # Build Beijing with default domain
+ * - SCHOOL=beijing DEPLOY_DOMAIN=https://beijing.dulwich-frontend.atalent.xyz npm run build  # Build Beijing with custom domain
+ *
+ * Sitemap APIs Used:
+ * - Group: https://cms.dulwich.org/group/sitemap-{pages|news}.xml
+ * - Schools: https://cms.dulwich.org/sitemap-{pages|news|people}.xml?subdomain={school}-cms
  */
 
 const fs = require('fs');
@@ -117,20 +138,49 @@ const main = async () => {
     fs.mkdirSync(publicDir, { recursive: true });
   }
 
-  // Generate group sitemap (placeholder - will be replaced by server.js in production)
-  console.log('📄 Generating group sitemap (placeholder)...');
-  const groupUrls = await generateGroupSitemap('https://www.dulwich.org');
+  // Check if SCHOOL environment variable is set to generate school-specific sitemap
+  // Also check for common school-related env vars used in different deployment platforms
+  const schoolSlug = process.env.SCHOOL ||
+                      process.env.REACT_APP_SCHOOL ||
+                      process.env.NEXT_PUBLIC_SCHOOL ||
+                      process.env.VITE_SCHOOL;
 
-  let groupSitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
-  groupSitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n';
-  groupUrls.forEach(url => {
-    groupSitemap += url + '\n';
-  });
-  groupSitemap += '</urlset>';
+  if (schoolSlug) {
+    // Generate school-specific sitemap
+    console.log(`📄 Generating sitemap for school: ${schoolSlug}...\n`);
 
-  const groupSitemapPath = path.join(publicDir, 'sitemap.xml');
-  fs.writeFileSync(groupSitemapPath, groupSitemap);
-  console.log(`✅ Group sitemap saved to ${groupSitemapPath}\n`);
+    // Use environment-specific domain or default to dulwich.org
+    const deployDomain = process.env.DEPLOY_DOMAIN || `https://${schoolSlug}.dulwich.org`;
+    const schoolUrls = await generateSchoolSitemap(schoolSlug, deployDomain);
+
+    let schoolSitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    schoolSitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n';
+    schoolUrls.forEach(url => {
+      schoolSitemap += url + '\n';
+    });
+    schoolSitemap += '</urlset>';
+
+    const sitemapPath = path.join(publicDir, 'sitemap.xml');
+    fs.writeFileSync(sitemapPath, schoolSitemap);
+    console.log(`\n✅ School sitemap for ${schoolSlug} saved to ${sitemapPath}`);
+    console.log(`   Total URLs: ${schoolUrls.length}\n`);
+  } else {
+    // Generate group sitemap (for main dulwich.org site)
+    console.log('📄 Generating group sitemap (no SCHOOL env variable set)...\n');
+    const groupUrls = await generateGroupSitemap('https://www.dulwich.org');
+
+    let groupSitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    groupSitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n';
+    groupUrls.forEach(url => {
+      groupSitemap += url + '\n';
+    });
+    groupSitemap += '</urlset>';
+
+    const groupSitemapPath = path.join(publicDir, 'sitemap.xml');
+    fs.writeFileSync(groupSitemapPath, groupSitemap);
+    console.log(`\n✅ Group sitemap saved to ${groupSitemapPath}`);
+    console.log(`   Total URLs: ${groupUrls.length}\n`);
+  }
 
   console.log('✅ Sitemap generation complete!\n');
 };

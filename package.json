@@ -45,12 +45,19 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "prebuild": "node scripts/generate-sitemap.js",
     "build": "react-scripts build",
+    "postbuild": "react-snap",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "node server.js",
     "build:serve": "react-scripts build && node server.js",
-    "snap": "react-snap"
+    "generate:sitemap": "node scripts/generate-sitemap.js",
+    "generate:sitemap:beijing": "SCHOOL=beijing node scripts/generate-sitemap.js",
+    "generate:sitemap:singapore": "SCHOOL=singapore node scripts/generate-sitemap.js",
+    "build:beijing": "SCHOOL=beijing npm run build",
+    "build:singapore": "SCHOOL=singapore npm run build",
+    "build:group": "npm run build"
   },
   "reactSnap": {
     "include": [
@@ -92,5 +99,3 @@
     "tailwindcss": "^3.4.18"
   }
 }
-
-
