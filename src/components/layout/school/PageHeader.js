@@ -1078,7 +1078,8 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
 
                                     return (
                                       <div key={si} className={`text-left ${isHighlightedSection ? 'col-span-2' : ''}`}>
-                                        {sec.heading && (
+                                        {/* Show heading only for non-highlighted sections */}
+                                        {sec.heading && !isHighlightedSection && (
                                           <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-4 tracking-widest uppercase">
                                             {sec.heading}
                                           </h3>
@@ -1102,6 +1103,10 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                           <div className={`grid grid-cols-2 gap-6 ${regularLinks.length > 0 ? 'mt-6' : ''}`}>
                                             {highlightedLinks.map((link, i) => (
                                               <div key={i} className="flex flex-col">
+                                                {/* Card title as heading */}
+                                                <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-4 tracking-widest uppercase">
+                                                  {link.title}
+                                                </h3>
                                                 {link.imageUrl && (
                                                   <div className="aspect-[16/10] overflow-hidden relative rounded-lg mb-4">
                                                     <img
