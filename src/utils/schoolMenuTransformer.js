@@ -86,7 +86,20 @@ const processSubsection = (subsection) => {
   const highlightedItems = childItems.filter(child => child.highlight_menu);
   const regularItems = childItems.filter(child => !child.highlight_menu);
 
-  // Create highlighted section if there are highlighted items
+  // Create regular section FIRST if there are regular items
+  if (regularItems.length > 0) {
+    sections.push({
+      id: getStableSubsectionId(subsection),
+      heading: subsection.title,
+      style: 'regular',
+      links: regularItems.map(child => ({
+        title: child.title,
+        url: child.url
+      }))
+    });
+  }
+
+  // Create highlighted section LAST if there are highlighted items
   if (highlightedItems.length > 0) {
     sections.push({
       id: 'highlighted',
@@ -97,20 +110,8 @@ const processSubsection = (subsection) => {
         url: child.url,
         image: child.highlight_menu?.image,
         imageUrl: child.highlight_menu?.image,
-        description: child.highlight_menu?.description
-      }))
-    });
-  }
-
-  // Create regular section if there are regular items
-  if (regularItems.length > 0) {
-    sections.push({
-      id: getStableSubsectionId(subsection),
-      heading: subsection.title,
-      style: 'regular',
-      links: regularItems.map(child => ({
-        title: child.title,
-        url: child.url
+        description: child.highlight_menu?.description,
+        isHighlighted: true
       }))
     });
   }
@@ -162,11 +163,22 @@ export const transformToSchoolNav = (apiData) => {
     const items = menuItem.items || [];
     const sections = [];
     const allCards = [];
+    const allHighlightedLinks = [];
 
     // Process each subsection (2nd level items)
     items.forEach(subsection => {
       const subsectionSections = processSubsection(subsection);
-      sections.push(...subsectionSections);
+
+      // Separate regular and highlighted sections
+      subsectionSections.forEach(sec => {
+        if (sec.style === 'highlighted') {
+          // Collect highlighted links instead of adding section
+          allHighlightedLinks.push(...sec.links);
+        } else {
+          // Add regular sections
+          sections.push(sec);
+        }
+      });
 
       // Collect highlighted items from this subsection for cards
       const highlightedInSubsection = collectHighlightedItems(subsection.items || []);
@@ -181,6 +193,16 @@ export const transformToSchoolNav = (apiData) => {
         });
       });
     });
+
+    // Add ONE highlighted section at the end with all collected highlighted links
+    if (allHighlightedLinks.length > 0) {
+      sections.push({
+        id: 'highlighted',
+        heading: 'HIGHLIGHTED',
+        style: 'highlighted',
+        links: allHighlightedLinks
+      });
+    }
 
     // Sort cards by weight
     allCards.sort((a, b) => a.weight - b.weight);

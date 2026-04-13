@@ -1066,85 +1066,69 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                           <NavigationMenu.Content className={`nav-content fixed left-0 right-0 ${isScrolled ? 'top-[72px]' : 'top-[138px]'} w-full z-[60]`}>
                             <div className="w-full bg-white">
                               <div className="w-[1120px] mx-auto px-4 py-8">
-                                <div className="grid grid-cols-4 gap-8 mb-8" style={{
-                                      display: 'grid',
-                                      gridTemplateColumns: ' 1fr 1fr 1fr 1fr',
-                                      gap: '24px'
-                                    }}>
+                                {/* 4-column grid - regular sections + highlighted section spanning 2 columns */}
+                                <div className="grid grid-cols-4 gap-8 mb-8">
+                                  {(navItem.sections || []).map((sec, si) => {
+                                    const filteredLinks = filterLinks(sec.links || []);
+                                    const regularLinks = filteredLinks.filter(link => !link.isHighlighted);
+                                    const highlightedLinks = filteredLinks.filter(link => link.isHighlighted);
 
-                                  {/* Left column: ALL sections stacked vertically (headings + links) */}
-                                  {(navItem.sections || []).filter(sec => sec.style !== 'highlighted').length > 0 && (
-                                    <div className="text-left">
-                                      {(navItem.sections || []).filter(sec => sec.style !== 'highlighted').map((sec, si) => {
-                                        const filteredLinks = filterLinks(sec.links || []);
-                                        const regularLinks = filteredLinks.filter(link => !link.isHighlighted);
-                                        const highlightedLinks = filteredLinks.filter(link => link.isHighlighted);
+                                    // Check if this is a highlighted section
+                                    const isHighlightedSection = sec.style === 'highlighted' || highlightedLinks.length > 0;
 
-                                        return (
-                                          <div key={si} className={si > 0 ? 'mt-6' : ''}>
-                                            {sec.heading && (
-                                              <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-4 tracking-widest uppercase">
-                                                {sec.heading}
-                                              </h3>
-                                            )}
+                                    return (
+                                      <div key={si} className={`text-left ${isHighlightedSection ? 'col-span-2' : ''}`}>
+                                        {sec.heading && (
+                                          <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-4 tracking-widest uppercase">
+                                            {sec.heading}
+                                          </h3>
+                                        )}
 
-                                            {/* Regular links */}
-                                            {regularLinks.length > 0 && (
-                                              <ul className="space-y-3" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                                                {regularLinks.map((link, i) => (
-                                                  <li key={i}>
-                                                    <a href={link.url || '#'} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
-                                                      {link.title}
-                                                    </a>
-                                                  </li>
-                                                ))}
-                                              </ul>
-                                            )}
+                                        {/* Regular links */}
+                                        {regularLinks.length > 0 && (
+                                          <ul className="space-y-3" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                            {regularLinks.map((link, i) => (
+                                              <li key={i}>
+                                                <a href={link.url || '#'} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                                  {link.title}
+                                                </a>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        )}
 
-                                            {/* Highlighted items as cards */}
-                                            {highlightedLinks.length > 0 && (
-                                              <div className={`grid grid-cols-2 gap-4 ${regularLinks.length > 0 ? 'mt-4' : ''}`}>
-                                                {highlightedLinks.map((link, i) => (
-                                                  <a key={i} href={link.url} className="block group">
-                                                    <div className="bg-white rounded text-left overflow-hidden shadow-sm border border-[#F2EDE9] hover:shadow-md transition-all duration-300">
-                                                      {link.imageUrl && (
-                                                        <div className="aspect-[4/3] overflow-hidden relative">
-                                                          <img
-                                                            src={link.imageUrl}
-                                                            alt={link.title}
-                                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                          />
-                                                        </div>
-                                                      )}
-                                                      <div className="h-[36px] px-2 flex items-center justify-between bg-white">
-                                                        <span className="text-[12px] leading-3 font-semibold text-[#D30013]">{link.title}</span>
-                                                        <Icon icon="Icon-Chevron-Large" size={15} color="#D30013" className="font-semibold flex-shrink-0 group-hover:translate-x-1 transition-transform" />
-                                                      </div>
-                                                    </div>
-                                                  </a>
-                                                ))}
+                                        {/* Highlighted items as cards in 2-column grid */}
+                                        {highlightedLinks.length > 0 && (
+                                          <div className={`grid grid-cols-2 gap-6 ${regularLinks.length > 0 ? 'mt-6' : ''}`}>
+                                            {highlightedLinks.map((link, i) => (
+                                              <div key={i} className="flex flex-col">
+                                                {link.imageUrl && (
+                                                  <div className="aspect-[16/10] overflow-hidden relative rounded-lg mb-4">
+                                                    <img
+                                                      src={link.imageUrl}
+                                                      alt={link.title}
+                                                      className="w-full h-full object-cover"
+                                                    />
+                                                  </div>
+                                                )}
+                                                {link.description && (
+                                                  <p className="text-sm text-[#3C3C3B] mb-4 leading-relaxed">
+                                                    {link.description}
+                                                  </p>
+                                                )}
+                                                <a
+                                                  href={link.url}
+                                                  className="inline-block px-6 py-2.5 text-sm text-[#D30013] border border-[#D30013] rounded hover:bg-[#D30013] hover:text-white transition-all duration-200 text-center"
+                                                >
+                                                  {link.title}
+                                                </a>
                                               </div>
-                                            )}
+                                            ))}
                                           </div>
-                                        );
-                                      })}
-                                    </div>
-                                  )}
-
-                                  {/* Highlight cards - each in its own column */}
-                                  {(navItem.cards || []).filter(card => showCard(card)).map((card, index) => (
-                                    <a key={card.id || index} href={card.url} className="flex flex-col">
-                                      <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-2 uppercase tracking-widest min-h-[32px] flex items-start">{card.heading}</h3>
-                                      <div className="text-left overflow-hidden flex flex-col flex-1">
-                                        <img src={getCardImage(card.image)} alt={card.heading} className="w-full h-40 object-cover rounded-lg overflow-hidden" />
-                                        <div className="mt-5 flex flex-col flex-1">
-                                          <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">{card.description}</p>
-                                          <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white transition-all duration-200 mt-auto">{card.heading}</button>
-                                        </div>
+                                        )}
                                       </div>
-                                    </a>
-                                  ))}
-
+                                    );
+                                  })}
                                 </div>
 
                                 {/* Bottom Section */}
