@@ -464,10 +464,11 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
         page: pageNumber.toString()
       });
 
-      // Add school parameter if available
+      // Add school parameter with -cms suffix if available
       const currentSchoolSlug = getCurrentSchool();
       if (currentSchoolSlug) {
-        searchParams.append('school', `${currentSchoolSlug}`);
+        const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+        searchParams.append('school', `${currentSchoolSlug}${cmsSuffix}`);
       }
 
       // Add locale parameter for Chinese version
@@ -1104,11 +1105,11 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                             {highlightedLinks.map((link, i) => (
                                               <div key={i} className="flex flex-col">
                                                 {/* Card title as heading */}
-                                                <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-4 tracking-widest uppercase">
+                                                <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-4 tracking-widest uppercase h-8 flex items-start">
                                                   {link.title}
                                                 </h3>
                                                 {link.imageUrl && (
-                                                  <div className="aspect-[16/10] overflow-hidden relative rounded-lg mb-4">
+                                                  <div className="w-full h-40 overflow-hidden relative rounded-lg mb-4">
                                                     <img
                                                       src={link.imageUrl}
                                                       alt={link.title}
@@ -1123,7 +1124,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                                 )}
                                                 <a
                                                   href={link.url}
-                                                  className="inline-block px-6 py-2.5 text-sm text-[#D30013] border border-[#D30013] rounded hover:bg-[#D30013] hover:text-white transition-all duration-200 text-center"
+                                                  className="block w-full px-6 py-2.5 text-sm text-[#D30013] border border-[#D30013] rounded hover:bg-[#D30013] hover:text-white transition-all duration-200 text-center"
                                                 >
                                                   {link.buttonText || link.title}
                                                 </a>
