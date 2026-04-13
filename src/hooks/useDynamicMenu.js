@@ -11,7 +11,8 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.atale
 const fetchDynamicMenu = async (locale = 'en', school = null) => {
   const params = new URLSearchParams({ locale });
   if (school) {
-    params.append('school', school);
+    // Add -cms suffix for dynamic_menu API
+    params.append('school', `${school}-cms`);
   }
   const response = await fetch(`${API_BASE_URL}/api/dynamic_menu?${params.toString()}`);
   if (!response.ok) {
