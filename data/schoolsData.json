@@ -1,0 +1,470 @@
+{
+  "carousel": {
+    "title": "Carousel",
+    "items": [
+      {
+        "name": "Dulwich College Beijing",
+        "image_url": "https://assets.dulwich.org/thumbs/schools/fit/300x162/lr002864.jpg",
+        "established": 2005,
+        "ages": "3 to 18",
+        "students": 1570,
+        "district": "Shunyi District",
+        "location": "Beijing, China",
+        "tags": ["IGCSE", "IB Diploma"],
+        "content": "Largest student body in Beijing. Purpose-built theatre and Olympic-standard sports facilities.",
+        "url": "https://beijing.dulwich.org"
+      },
+      {
+        "name": "Dulwich College Shanghai Pudong",
+        "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/9df0942bee622ece96723eb58bd03ab6ec4c2e8f.jpg",
+        "established": 2003,
+        "ages": "2 to 18",
+        "students": 1600,
+        "location": "Shanghai (Pudong), China",
+        "tags": ["IGCSE", "IB Diploma"],
+        "content": "Leading international school with strong academic pathways.",
+        "url": "https://shanghai-pudong.dulwich.org"
+      },
+      {
+        "name": "Dulwich College Shanghai Puxi",
+        "image_url": "https://assets.dulwich.org/thumbs/schools/fit/472x256/dsc-8200-edit-20220510-102752-86.jpg",
+        "established": 2016,
+        "ages": "2 to 18",
+        "students": 450,
+        "location": "Shanghai (Puxi), China",
+        "tags": ["IGCSE", "IB Diploma"],
+        "content": "Excellence in education with comprehensive curriculum.",
+        "url": "https://shanghai-puxi.dulwich.org"
+      },
+      {
+        "name": "Dulwich College Suzhou",
+        "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/9df0942bee622ece96723eb58bd03ab6ec4c2e8f.jpg",
+        "established": 2007,
+        "ages": "2 to 18",
+        "students": 900,
+        "location": "Suzhou, China",
+        "tags": ["IGCSE", "IB Diploma"],
+        "content": "Innovative learning environment with world-class facilities.",
+        "url": "https://suzhou.dulwich.org"
+      },
+      {
+        "name": "Dulwich College (Singapore)",
+        "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/ef41358bfee08b4ff9a9c1bd801c8c7737d18931.png",
+        "established": 2014,
+        "ages": "2 to 18",
+        "students": 2890,
+        "location": "Singapore",
+        "tags": ["IGCSE", "IB Diploma"],
+        "content": "Premier international education in the heart of Singapore.",
+        "url": "https://singapore.dulwich.org"
+      },
+      {
+        "name": "Dulwich College Seoul",
+        "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/ef41358bfee08b4ff9a9c1bd801c8c7737d18931.png",
+        "established": 2010,
+        "ages": "2 to 18",
+        "students": 650,
+        "location": "Seoul, South Korea",
+        "tags": ["IGCSE", "IB Diploma"],
+        "content": "Bilingual education with global perspective.",
+        "url": "https://seoul.dulwich.org"
+      },
+      {
+        "name": "Dulwich International High School Programme Suzhou",
+        "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/AxxKvKJHe5dxWwt5hhVlixWgoGiKjUg1jwXOu8v6.jpeg",
+        "established": 2012,
+        "ages": "14 to 19",
+        "students": 700,
+        "location": "Suzhou, China",
+        "tags": ["IB Diploma"],
+        "content": "Specialized high school programme preparing students for university.",
+        "url": "https://suzhou-high-school.dulwich.org"
+      },
+      {
+        "name": "Dulwich International High School Programme Hengqin",
+        "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/wechat-image-20210902150627-20210922-151534-393.jpg",
+        "established": 2010,
+        "ages": "14 to 18",
+        "students": 250,
+        "location": "Hengqin, China",
+        "tags": ["IB Diploma"],
+        "content": "Rigorous academic program with international focus.",
+        "url": "https://hengqin.dulwich.org"
+      },
+      {
+        "name": "Dulwich College Bangkok",
+        "image_url": "https://assets.dulwich.org/thumbs/schools/fit/472x256/23004-dulwich-college-bangkok-main-road-20250121-20250211-141857-258-1.jpeg",
+        "established": 2025,
+        "ages": "3 to 18",
+        "students": 5000,
+        "location": "Bangkok, Thailand",
+        "tags": ["IGCSE"],
+        "content": "Newest addition to the Dulwich family with state-of-the-art facilities.",
+        "url": "https://bangkok.dulwich.org"
+      },
+      {
+        "name": "Dehong Shanghai International Chinese School",
+        "image_url": "https://www.dulwich.eimstaging.com/images/backgrounds/Dehong_Shanghai.jpeg",
+        "established": 2017,
+        "ages": "6 to 17",
+        "students": 800,
+        "location": "Shanghai, China",
+        "tags": ["Chinese Curriculum"],
+        "content": "Blending Chinese national curriculum with international education.",
+        "url": "https://shanghai.dehong.cn"
+      },
+      {
+        "name": "Dehong Beijing International School",
+        "image_url": "https://www.dulwich.eimstaging.com/images/backgrounds/Dehong_Beijing.jpeg",
+        "established": 2019,
+        "ages": "3 to 16",
+        "students": "400+",
+        "location": "Beijing, China",
+        "tags": ["Chinese Curriculum"],
+        "content": "Chinese-language education with international perspective.",
+        "url": "https://beijing.dehong.cn"
+      },
+      {
+        "name": "Dehong Xi'an School",
+        "image_url": "https://www.dulwich.eimstaging.com/images/backgrounds/Dehong_Xian.jpeg",
+        "established": 2019,
+        "ages": "6 to 12",
+        "students": 350,
+        "location": "Xi'an, China",
+        "tags": ["Chinese Curriculum"],
+        "content": "Quality Chinese education in historic Xi'an.",
+        "url": "https://xian.dehong.cn"
+      }
+    ]
+  },
+  "zh": {
+    "carousel": {
+      "title": "轮播图",
+      "items": [
+        {
+          "name": "北京德威英国国际学校",
+          "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/lr002864.jpg",
+          "established": 2005,
+          "ages": "3至18岁",
+          "students": 1570,
+          "district": "顺义区",
+          "location": "中国北京",
+          "tags": ["IGCSE", "IB文凭"],
+          "content": "北京最大的学生群体。专用剧院和奥运标准体育设施。",
+          "url": "https://beijing.dulwich.org"
+        },
+        {
+          "name": "上海浦东德威英国国际学校",
+          "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/9df0942bee622ece96723eb58bd03ab6ec4c2e8f.jpg",
+          "established": 2003,
+          "ages": "2至18岁",
+          "students": 1600,
+          "location": "中国上海（浦东）",
+          "tags": ["IGCSE", "IB文凭"],
+          "content": "领先的国际学校，拥有完善的学术路径。",
+          "url": "https://shanghai-pudong.dulwich.org"
+        },
+        {
+          "name": "上海浦西德威国际学校",
+          "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/9df0942bee622ece96723eb58bd03ab6ec4c2e8f.jpg",
+          "established": 2016,
+          "ages": "2至18岁",
+          "students": 450,
+          "location": "中国上海（浦西）",
+          "tags": ["IGCSE", "IB文凭"],
+          "content": "卓越的教育，全面的课程。",
+          "url": "https://shanghai-puxi.dulwich.org"
+        },
+        {
+          "name": "苏州德威学院",
+          "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/9df0942bee622ece96723eb58bd03ab6ec4c2e8f.jpg",
+          "established": 2007,
+          "ages": "2至18岁",
+          "students": 900,
+          "location": "中国苏州",
+          "tags": ["IGCSE", "IB文凭"],
+          "content": "拥有世界一流设施的创新学习环境。",
+          "url": "https://suzhou.dulwich.org"
+        },
+        {
+          "name": "德威学院（新加坡）",
+          "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/ef41358bfee08b4ff9a9c1bd801c8c7737d18931.png",
+          "established": 2014,
+          "ages": "2至18岁",
+          "students": 2890,
+          "location": "新加坡",
+          "tags": ["IGCSE", "IB文凭"],
+          "content": "新加坡中心地带的顶级国际教育。",
+          "url": "https://singapore.dulwich.org"
+        },
+        {
+          "name": "德威学院首尔分校",
+          "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/ef41358bfee08b4ff9a9c1bd801c8c7737d18931.png",
+          "established": 2010,
+          "ages": "2至18岁",
+          "students": 650,
+          "location": "韩国首尔",
+          "tags": ["IGCSE", "IB文凭"],
+          "content": "具有全球视野的双语教育。",
+          "url": "https://seoul.dulwich.org"
+        },
+        {
+          "name": "苏州德威国际高中课程",
+          "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/AxxKvKJHe5dxWwt5hhVlixWgoGiKjUg1jwXOu8v6.jpeg",
+          "established": 2012,
+          "ages": "14至19岁",
+          "students": 700,
+          "location": "中国苏州",
+          "tags": ["IB文凭"],
+          "content": "为学生升入大学而开设的专业高中课程。",
+          "url": "https://suzhou-high-school.dulwich.org"
+        },
+        {
+          "name": "德威国际高中课程横琴分校",
+          "image_url": "https://dulwich-eimstaging.oss-cn-shanghai.aliyuncs.com/thumbs/schools/fit/472x256/wechat-image-20210902150627-20210922-151534-393.jpg",
+          "established": 2010,
+          "ages": "14至18岁",
+          "students": 250,
+          "location": "中国横琴",
+          "tags": ["IB文凭"],
+          "content": "注重国际视野的严谨学术课程。",
+          "url": "https://hengqin.dulwich.org"
+        },
+        {
+          "name": "曼谷德威国际学校",
+          "image_url": "https://assets.dulwich.org/thumbs/schools/fit/472x256/23004-dulwich-college-bangkok-main-road-20250121-20250211-141857-258-1.jpeg",
+          "established": 2025,
+          "ages": "3 至18岁",
+          "students": 5000,
+          "location": "曼谷",
+          "tags": ["IGCSE"],
+          "content": "拥有最先进设施的德威学院最新成员。",
+          "url": "https://bangkok.dulwich.org"
+        },
+        {
+          "name": "上海德宏国际中文学校",
+          "image_url": "https://www.dulwich.eimstaging.com/images/backgrounds/Dehong_Shanghai.jpeg",
+          "established": 2017,
+          "ages": "6至17岁",
+          "students": 800,
+          "location": "中国上海",
+          "tags": ["中文课程"],
+          "content": "融合中国国家课程与国际教育。",
+          "url": "https://shanghai.dehong.cn"
+        },
+        {
+          "name": "北京德宏国际中文学校",
+          "image_url": "https://www.dulwich.eimstaging.com/images/backgrounds/Dehong_Beijing.jpeg",
+          "established": 2019,
+          "ages": "2至11岁和16岁",
+          "students": 360,
+          "location": "中国北京",
+          "tags": ["中文课程"],
+          "content": "具有国际视野的汉语教育。",
+          "url": "https://beijing.dehong.cn"
+        },
+        {
+          "name": "德宏西安学校",
+          "image_url": "https://www.dulwich.eimstaging.com/images/backgrounds/Dehong_Xian.jpeg",
+          "established": 2019,
+          "ages": "6至12岁",
+          "students": 350,
+          "location": "中国西安",
+          "tags": ["IGCSE','IB课程"],
+          "content": "历史悠久的优质汉语教育。",
+          "url": "https://xian.dehong.cn"
+        }
+      ]
+    },
+ "listing": {
+  "title": "学校列表",
+  "items": [
+    {
+      "name": "曼谷德威国际学校",
+      "image_url": "https://dulwich.blob.core.chinacloudapi.cn/dulwich-staging/schools/23004-dulwich-college-bangkok-main-road-20250121.jpeg",
+      "established": 2019,
+      "ages": "3至18岁",
+      "students": 100,
+      "location": "曼谷",
+      "tags": ["IGCSE"],
+      "content": "历史悠久的优质汉语教育。",
+      "url": "https://bangkok.dulwich.org/",
+      "ctas": [
+        {
+          "label": "访问网站",
+          "url": "https://bangkok.dulwich.org/"
+        }
+      ]
+    },
+
+    {
+      "name": "(新加坡)德威英国国际学校",
+      "image_url": "https://dulwich.blob.core.chinacloudapi.cn/dulwich-staging/schools/07cef8d6a163cfc39b5e4944a4ac66bb63633831.jpg",
+      "established": 2014,
+      "ages": "2至18岁",
+      "students": 2890,
+      "location": "(新加坡)德威英国国际学校",
+      "tags": ["IGCSE","IB课程"],
+      "content": "融合中国国家课程与国际教育。",
+      "url": "https://singapore.dulwich.org/",
+      "ctas": [
+        {
+          "label": "访问网站",
+          "url": "https://singapore.dulwich.org/"
+        }
+      ]
+      
+    },
+    {
+      "name": "首尔德威英国国际学校",
+      "image_url": "https://dulwich.blob.core.chinacloudapi.cn/dulwich-staging/schools/s5HgU8Hl2eWVxtJG61yWeI6Kgj9lgGejXIsP1Z23.jpeg",
+      "established": 2019,
+      "ages": "3至18岁",
+      "students": 750,
+      "location": "韩国首尔",
+      "tags": ["IGCSE","IB课程"],
+      "content": "具有国际视野的汉语教育。",
+      "url": "https://seoul.dulwich.org/",
+      "ctas": [
+        {
+          "label": "访问网站",
+          "url": "https://seoul.dulwich.org/"
+        }
+      ]
+    },
+  
+
+    {
+      "heading": "姊妹学校",
+      "subHeading": "结合中国课程与IB文凭的双语课程"
+    },
+
+    {
+      "name": "上海德宏国际中文学校",
+      "image_url": "https://www.dulwich.eimstaging.com/images/backgrounds/Dehong_Shanghai.jpeg",
+      "established": 2017,
+      "ages": "6至17岁",
+      "students": 800,
+      "location": "中国上海",
+      "type": "姊妹学校",
+     
+      "content": "融合中国国家课程与国际教育。",
+      "url": "https://shanghai.dehong.cn",
+      "ctas": [
+        {
+          "label": "访问网站",
+          "url": "https://shanghai.dehong.cn/zh/admissions-application"
+        }
+      ]
+    },
+
+    {
+      "name": "北京德宏国际中文学校",
+      "image_url": "https://www.dulwich.eimstaging.com/images/backgrounds/Dehong_Beijing.jpeg",
+      "established": 2019,
+      "ages": "2至11岁和16岁",
+      "students": 360,
+      "location": "中国北京",
+      "type": "姊妹学校",
+   
+      "content": "具有国际视野的汉语教育。",
+      "url": "https://beijing.dehong.cn",
+      "ctas": [
+        {
+          "label": "访问网站",
+          "url": "https://beijing.dehong.cn/zh/admissions/application"
+        }
+      ]
+    },
+
+    {
+      "name": "德宏西安学校",
+      "image_url": "https://www.dulwich.eimstaging.com/images/backgrounds/Dehong_Xian.jpeg",
+      "established": 2019,
+      "ages": "6至12岁",
+      "students": 350,
+      "location": "中国西安",
+      "type": "姊妹学校",
+ 
+      "content": "历史悠久的优质汉语教育。",
+      "url": "https://xian.dehong.cn",
+      "ctas": [
+        {
+          "label": "访问网站",
+          "url": "https://xian.dehong.cn/zh/admissions"
+        }
+      ]
+    }
+  ]
+}
+  },
+  "listing": {
+    "title": "listing",
+    "items": [
+
+      {
+        "heading": "Int. High School Programmes",
+        "subHeading":"Specialist programmes for ages 14-18 offering IGCSE and A-Levels"
+      },
+    
+      {
+        "heading": "Sister Schools",
+        "subHeading": "Bilingual programmes combining Chinese curriculum with IB Diploma"
+      },
+      {
+        "name": "Dehong Shanghai International School",
+        "image_url": "https://www.dulwich.eimstaging.com/images/backgrounds/Dehong_Shanghai.jpeg",
+        "established": 2017,
+        "ages": "6 to 17",
+        "students": 800,
+        "location": "Shanghai, China",
+        "type": "Sister Schools",
+       
+        "content": "Largest student body in Beijing. Purpose-built theatre and Olympic-standard sports facilities.",
+        "url": "https://shanghai.dehong.cn",
+        "ctas": [
+          {
+            "label": "Visit Website",
+            "url": "https://shanghai.dehong.cn/admissions-application"
+          }
+        ]
+      },
+      {
+        "name": "Dehong Beijing International School",
+        "image_url": "https://www.dulwich.eimstaging.com/images/backgrounds/Dehong_Beijing.jpeg",
+        "established": 2019,
+        "ages": "3 to 16",
+        "students": "400+",
+      
+        "content": "Largest student body in Beijing. Purpose-built theatre and Olympic-standard sports facilities.",
+        "location": "Beijing, China",
+        "type": "Sister Schools",
+        "url": "https://beijing.dehong.cn",
+        "ctas": [
+          {
+            "label": "Visit Website",
+            "url": "https://beijing.dehong.cn/admissions/application"
+          }
+        ]
+      },
+      {
+        "name": "Dehong Xi'an School",
+        "image_url": "https://www.dulwich.eimstaging.com/images/backgrounds/Dehong_Xian.jpeg",
+        "established": 2019,
+        "ages": "6 to 12",
+        "students": 350,
+      
+        "content": "Largest student body in Beijing. Purpose-built theatre and Olympic-standard sports facilities.",
+        "location": "Xi'an, China",
+        "type": "Sister Schools",
+        "url": "https://xian.dehong.cn",
+        "ctas": [
+          {
+            "label": "Visit Website",
+            "url": "https://xian.dehong.cn/admissions"
+          }
+        ]
+      }
+    ]
+  }
+}

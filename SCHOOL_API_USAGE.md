@@ -330,7 +330,7 @@ function ArticlePage() {
 
 Add to your `.env` file:
 ```env
-REACT_APP_API_URL=https://cms.dulwich.org
+REACT_APP_API_URL=https://cms.dulwich.atalent.xyz
 ```
 
 Default value is already set in the service files.

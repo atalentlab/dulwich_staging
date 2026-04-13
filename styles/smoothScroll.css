@@ -1,0 +1,66 @@
+/* Lenis Smooth Scroll Styles */
+
+html.lenis {
+  height: auto;
+  overflow: auto;
+}
+
+html.lenis body {
+  height: auto;
+  overflow: visible;
+}
+
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+html.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+html.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+html.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Optimize for smooth scrolling performance */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure smooth transitions */
+body {
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar globally but keep functionality */
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Anchor offset for fixed header */
+[id] {
+  scroll-margin-top: 100px;
+}
+
+/* Prevent layout shift during scroll */
+.App {
+  min-height: 100vh;
+}

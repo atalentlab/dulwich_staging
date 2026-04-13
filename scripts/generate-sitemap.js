@@ -23,8 +23,8 @@
  * - SCHOOL=beijing DEPLOY_DOMAIN=https://beijing.dulwich-frontend.atalent.xyz npm run build  # Build Beijing with custom domain
  *
  * Sitemap APIs Used:
- * - Group: https://cms.dulwich.org/group/sitemap-{pages|news}.xml
- * - Schools: https://cms.dulwich.org/sitemap-{pages|news|people}.xml?subdomain={school}-cms
+ * - Group: https://cms.dulwich.atalent.xyz/group/sitemap-{pages|news}.xml
+ * - Schools: https://cms.dulwich.atalent.xyz/sitemap-{pages|news|people}.xml?subdomain={school}
  */
 
 const fs = require('fs');
@@ -32,7 +32,7 @@ const path = require('path');
 const https = require('https');
 const axios = require('axios');
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.atalent.xyz';
 
 // List of all school slugs
 const schools = [
@@ -95,7 +95,7 @@ const generateSchoolSitemap = async (schoolSlug, targetDomain) => {
   const allUrls = [];
 
   for (const type of sitemapTypes) {
-    const url = `${API_BASE_URL}/sitemap-${type}.xml?subdomain=${schoolSlug}-cms`;
+    const url = `${API_BASE_URL}/sitemap-${type}.xml?subdomain=${schoolSlug}`;
     const xmlContent = await fetchSitemapXML(url);
 
     if (xmlContent) {

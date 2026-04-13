@@ -1,0 +1,108 @@
+/* Years Anniversary Block Slider Styles */
+
+.anniversary-slider {
+  position: relative;
+  padding: 0 0 60px 0;
+}
+
+/* Custom Arrow Styles */
+.anniversary-arrow {
+  position: absolute;
+  bottom: -50px;
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  border: 1px solid #E0E0E0;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: none;
+}
+
+.anniversary-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.anniversary-arrow svg {
+  color: #666666;
+}
+
+.anniversary-arrow-prev {
+  right: 60px;
+}
+
+.anniversary-arrow-next {
+  right: 0;
+}
+
+/* Custom Dots Styles */
+.anniversary-dots {
+  bottom: -50px !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0 120px 0 0;
+}
+
+.anniversary-dots li {
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
+}
+
+.anniversary-dots li button {
+  width: 32px;
+  height: 4px;
+  padding: 0;
+  background-color: #D0D0D0;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 0;
+  line-height: 0;
+  transition: background-color 0.3s ease;
+}
+
+.anniversary-dots li button:before {
+  display: none;
+}
+
+.anniversary-dots li.slick-active button {
+  background-color: #D30013;
+}
+
+/* Remove default slick arrows (we use custom ones) */
+.anniversary-slider .slick-prev,
+.anniversary-slider .slick-next {
+  display: none !important;
+}
+
+/* Adjust slider track spacing */
+.anniversary-slider .slick-track {
+  display: flex;
+  gap: 0;
+}
+
+.anniversary-slider .slick-slide {
+  padding: 0;
+  height: auto;
+}
+
+.anniversary-slider .slick-slide > div {
+  height: 100%;
+}
+
+/* Mobile: no bottom padding needed (custom nav handles spacing) */
+@media (max-width: 767px) {
+  .anniversary-slider {
+    padding: 0;
+  }
+}

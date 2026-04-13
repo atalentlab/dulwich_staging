@@ -1,0 +1,157 @@
+{
+  "en": {
+    "ourSchools": "Find a School",
+    "pleaseSelect": "Please select",
+    "international": "International",
+    "columns": [
+      {
+        "id": "about",
+        "label": "About",
+        "links": [
+          { "title": "Our Origins",           "url": "/about-dulwich/our-origins" },
+          { "title": "Vision & Values",        "url": "/about-dulwich/vision-and-values" },
+          { "title": "School Locations",       "url": "/about-dulwich/school-locations" },
+          { "title": "Offerings",              "url": "/about-dulwich/offerings" },
+          { "title": "Live Worldwise",              "url": "/about-dulwich/live-worldwise" },
+          { "title": "Educational Leadership", "url": "/about-dulwich/educational-leadership" }
+        ]
+      },
+      {
+        "id": "live",
+        "label": "Live",
+        "links": [
+      
+          { "title": "Visual & Performing Arts",           "url": "/live/visual-performing-arts" },
+          { "title": "Sports",                             "url": "/live/sports" },
+          { "title": "STEM",               "url": "/live/stem-se21" },
+          { "title": "Mandarin",                           "url": "/live/mandarin" },
+          { "title": "Sustainability & Global Citizenship","url": "/live/sustainability-and-global-citizenship" },
+          { "title": "Ignite: Switzerland",                 "url": "/live/ignite-switzerland-programme" },
+          { "title": "Student Leadership",                 "url": "/live/student-leadership" },
+          { "title": "Wellbeing",                          "url": "/live/wellbeing" }
+        ]
+      },
+      {
+        "id": "world",
+        "label": "World",
+        "links": [
+          { "title": "Family of Schools",         "url": "/world/one-family-of-schools" },
+          { "title": "Global Parnerships",          "url": "/world/global-partnerships" },
+          { "title": "EIMx", "url": "/world/eimx-summer-camps" },
+          { "title": "Dulwich Life",              "url": "/dulwich-life" },
+          { "title": "Worldwide Alumni Network",  "url": "/world/worldwise-alumni-network" },
+          { "title": "Worldwise Events",            "url": "/world/worldwise-events" }
+        ]
+      },
+      {
+        "id": "wise",
+        "label": "Wise",
+        "links": [
+          { "title": "University & Careers Counselling","url": "/wise/university-and-careers-counselling" },
+          { "title": "University Matriculation",        "url": "/wise/university-matriculation" },
+          { "title": "Academic Excellence",             "url": "/wise/academic-results" }
+        ],
+        "externalLinks": {
+          "heading": "External Links",
+          "links": [
+        
+            { "title": "Education In Motion (EiM)", "url": "https://www.eimglobal.com/?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" }
+          ]
+        }
+      }
+    ],
+    "safeguarding": {
+      "title": "Safeguarding Matters:",
+      "text": "We are fully committed to safeguarding all of our students from any form of harm or abuse. Click",
+      "linkText": "here",
+      "linkUrl": "https://assets.dulwich.org/static/23-24-DCI-EN-Safeguarding-Policy_for-GroupSite_IA_20230705.pdf",
+      "suffix": "for more information."
+    },  
+    "Policy": {
+      "title": "Privacy Policy",
+      "linkUrl": "/privacy-policy"
+    },
+    "RecruitmentPolicy": {
+      "title": "Recruitment Privacy Policy",
+      "linkUrl": "/recruitment-privacy-policy"
+    }
+  },
+
+  "zh": {
+    "ourSchools": "寻找学校",
+    "international": "國際學校",
+    "pleaseSelect": "请选择",
+    "columns": [
+      {
+        "id": "about",
+        "label": "关于我们",
+        "links": [
+          { "title": "起源",         "url": "/zh/about-dulwich/our-origins" },
+          { "title": "愿景与价值观",        "url": "/zh/about-dulwich/vision-and-values" },
+          { "title": "查找学校",       "url": "/zh/about-dulwich/school-locations" },
+          { "title": "课程体系",              "url": "/zh/about-dulwich/offerings" },
+          { "title": "Live Worldwise",    "url": "/zh/about-dulwich/live-worldwise" },
+          { "title": "学术领导团队",          "url": "/zh/about-dulwich/educational-leadership" }
+        ]
+      },
+      {
+        "id": "live",
+        "label": "Live",
+        "links": [
+          { "title": "视觉与表演艺术",         "url": "/zh/live/visual-performing-arts" },
+          { "title": "运动",                "url": "/zh/live/sports" },
+          { "title": "STEM",       "url": "/zh/live/stem-se21" },
+          { "title": "中文课程",            "url": "/zh/live/mandarin" },
+          { "title": "可持续发展与全球公民意识",   "url": "/zh/live/sustainability-and-global-citizenship" },
+          { "title": "Ignite: Switzerland",             "url": "/zh/live/ignite-switzerland-programme" },
+          { "title": "学生领导力",            "url": "/zh/live/student-leadership" },
+          { "title": "身心健康",             "url": "/zh/live/wellbeing" }
+        ]
+      },
+      {
+        "id": "world",
+        "label": "World",
+        "links": [
+          { "title": "德威大家庭",          "url": "/zh/world/one-family-of-schools" },
+          { "title": "全球战略合作",        "url": "/zh/world/global-partnerships" },
+          { "title": "EIMx", "url": "/zh/world/eimx-summer-camps" },
+          { "title": "德威聚焦",            "url": "/zh/dulwich-life" },
+          { "title": "智胜全球校友会",             "url": "/zh/world/worldwise-alumni-network" },
+          { "title": "智胜全球活动",             "url": "/zh/world/worldwise-events" }
+        ]
+      },
+      {
+        "id": "wise",
+        "label": "Wise",
+        "links": [
+          { "title": "升学及就业指导" ,"url": "/zh/wise/university-and-careers-counselling" },
+          { "title": "大学升学成果",  "url": "/zh/wise/university-matriculation" },
+          { "title": "学术卓越",        "url": "/zh/wise/academic-results" }
+         
+          
+        ],
+        "externalLinks": {
+          "heading": "外部链接",
+          "links": [
+            { "title": "屹珈（EiM）国际教育集团", "url": "https://www.eimglobal.com/?utm_source=dulwich.org&utm_medium=footer-link&utm_campaign=eim-family-of-schools" }
+          ]
+        }
+      }
+    ],
+    "safeguarding": {
+      "title": "安全保障重要提示：",
+      "text": "我们全力保护所有学生免受任何形式的伤害或虐待。",
+      "linkText": "点击这里",
+      "linkUrl": "https://assets.dulwich.org/static/23-24-DCI-EN-Safeguarding-Policy_for-GroupSite_IA_20230705.pdf",
+      "suffix": "了解更多信息。"
+    },  
+    "Policy": {
+      "title": "隐私政策",
+      "linkUrl": "/zh/privacy-policy"
+    },
+    "RecruitmentPolicy": {
+      "title": "应聘者隐私政策",
+      "linkUrl": "/zh/recruitment-privacy-policy"
+    }
+  }
+}

@@ -1,0 +1,2559 @@
+{
+  "en": {
+    "topBar": {
+      "parentPortal": "Parent Portal",
+      "schoolCalendar": "School Calendar"
+    },
+    "siteMapLabel": "See Full Site Map",
+    "searchPlaceholder": "Search",
+    "searchResultsTitle": "Search Results",
+    "searchResultsClose": "Close",
+    "buttons": {
+      "enquire": "Enquire",
+      "applyNow": "Apply Now"
+    },
+    "mobile": {
+      "schools": "Schools",
+      "fullSiteMap": "Full Site Map",
+      "aiAssistant": "AI ASSISTANT"
+    },
+    "navItems": [
+      {
+        "id": "why-dulwich",
+        "label": "Why Dulwich",
+        "sections": [
+          {
+            "id": "highlighted",
+            "heading": "HIGHLIGHTED",
+            "style": "highlighted",
+            "links": [
+              {
+                "title": "Academic Results",
+                "url": "/why-dulwich/our-college/academic-results",
+                "image": "academic-results",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Academic Results",
+                "url": "/why-dulwich/our-school/academics-results",
+                "image": "academic-results",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "Academic Results",
+                "url": "/why-dulwich/our-school/academic-results",
+                "image": "academic-results",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "The Greenhouse: Innovation Hub",
+                "url": "/why-dulwich/our-college/the-greenhouse-innovation-hub",
+                "image": "the-greenhouse",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "University Matriculation",
+                "url": "/why-dulwich/our-college/university-matriculation",
+                "image": "university-matriculation",
+                "excludeSchools": [
+                  "singapore",
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "University Matriculation",
+                "url": "/why-dulwich/our-school/university-matriculation",
+                "image": "university-matriculation",
+                "schools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+               }
+            ]
+          },
+          {
+            "id": "our-college",
+            "heading": "OUR COLLEGE",
+            "links": [
+              {
+                "title": "From Head of College",
+                "url": "/why-dulwich/our-college/from-head-of-college",
+                "schools": [
+                  "beijing",
+                  "shanghai-pudong",
+                  "shanghai-puxi",
+                  "suzhou",
+                  "seoul"
+                ]
+              },
+              {
+                "title": "Welcome from the Head of College",
+                "url": "/why-dulwich/our-college/from-head-of-college",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "From Our Head",
+                "url": "/why-dulwich/our-school/from-our-head-of-school",
+                "schools": [
+                  "suzhou-high-school"
+                  
+                ]
+              },
+              {
+                "title": "From Our Director of School",
+                "url": "/why-dulwich/our-school/from-programme-direcotr",
+                "schools": [
+                 "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Vision & Values",
+                "url": "/why-dulwich/our-college/vision-and-values",
+                "excludeSchools": [
+                  "seoul",
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Vision & Values",
+                "url": "/why-dulwich/our-school/vision-and-values",
+                "schools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+               {
+                "title": "Guiding Statements",
+                "url": "/why-dulwich/our-college/guiding-statements",
+                "schools": [
+                  "seoul"
+                ]
+              },
+               {
+                "title": "Dulwich Difference",
+                "url": "/why-dulwich/our-school/dulwich-difference",
+                "schools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Dulwich Difference",
+                "url": "/why-dulwich/our-college/dulwich-difference",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+             
+              {
+                "title": "Campus Environment",
+                "url": "/why-dulwich/our-college/campus-environment",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "Facilities",
+                "url": "/why-dulwich/our-college/facilities",
+                "excludeSchools": [
+                  "bangkok",
+                  "singapore",
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Facilities",
+                "url": "/why-dulwich/our-school/facilities",
+                "schools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Campus & Facilities",
+                "url": "/why-dulwich/our-college/campus-and-facilities",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "University Matriculation",
+                "url": "/why-dulwich/our-college/university-matriculation",
+                "schools": [
+                  "singapore"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "family-of-schools",
+            "heading": "FAMILY OF SCHOOLS",
+            "links": [
+              {
+                "title": "Worldwise Events",
+                "url": "/why-dulwich/family-of-schools/worldwise-events"
+              },
+              {
+                "title": "Global Partnership",
+                "url": "/why-dulwich/family-of-schools/global-partnerships"
+              },
+              {
+                "title": "Educational Leadership",
+                "url": "/why-dulwich/family-of-schools/educational-leadership"
+              }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "academic-results",
+            "heading": "Academic Results",
+            "url": "/why-dulwich/our-college/academic-results",
+            "description": "Dulwich College Seoul continues to deliver exceptional academic outcomes, with outstanding IB and IGCSE results, and recognition as one of the Top IB international schools in Seoul.",
+            "buttonText": "Academic Results",
+            "image": "academic-results",
+            "schools": [
+              "seoul"
+            ]
+          },
+          {
+            "id": "academic-results",
+            "heading": "Academic Results",
+            "url": "/why-dulwich/our-college/academic-results",
+            "description": "Dulwich International Colleges continue to deliver exceptional outcomes, with our campuses recognised among the best IB schools in their country and region.",
+            "buttonText": "Academic Results",
+            "image": "academic-results",
+            "schools": [
+              "bangkok"
+            ]
+          },
+          {
+            "id": "academic-results",
+            "heading": "Academic Results",
+            "url": "/why-dulwich/our-college/academic-results",
+            "description": "Dulwich College Beijing continues to deliver exceptional academic outcomes, with outstanding IB, IGCSE and A Level results and recognition as one of the Top IB international schools in China.",
+            "buttonText": "Academic Results",
+            "image": "academic-results",
+            "schools": ["beijing"]
+          },
+           {
+            "id": "academic-results",
+            "heading": "Academic Results",
+            "url": "/why-dulwich/our-college/academic-results",
+            "description":"Dulwich Puxi continues to deliver exceptional academic outcomes, with outstanding IB, IGCSE and A Level results and recognition as one of the Top IB international schools in China.",
+            "buttonText": "Academic Results",
+            "image": "academic-results",
+            "schools": ["shanghai-puxi"]
+          },
+          {
+            "id": "academic-results",
+            "heading": "Academic Results",
+            "url": "/why-dulwich/our-college/academic-results",
+            "description":"Dulwich Pudong continues to deliver exceptional academic outcomes, with outstanding IB and IGCSE results and recognition as one of the Top IB international schools in China.",
+            "buttonText": "Academic Results",
+            "image": "academic-results",
+            "schools": ["shanghai-pudong"]
+          },
+          {
+            "id": "academic-results",
+            "heading": "Academic Results",
+            "url": "/why-dulwich/our-college/academic-results",
+            "description":"Dulwich College Suzhou continues to deliver exceptional academic outcomes, with outstanding IB, IGCSE and A Level results and recognition as one of the Top IB international schools in China.",
+            "buttonText": "Academic Results",
+            "image": "academic-results",
+            "schools": ["suzhou"]
+          },
+          {
+            "id": "academic-results",
+            "heading": "Academic Results",
+            "url": "/why-dulwich/our-school/academics-results",
+            "description":"Dulwich International High School Suzhou Programme continues to deliver exceptional academic outcomes, with outstanding IGCSE and A Level results.",
+            "buttonText": "Academic Results",
+            "image": "academic-results",
+            "schools": ["suzhou-high-school"]
+          },
+          {
+            "id": "academic-results",
+            "heading": "Academic Results",
+            "url": "/why-dulwich/our-school/academic-results",
+            "description":"Dulwich International High School Suzhou Programme continues to deliver exceptional academic outcomes, with outstanding A Level results.",
+            "buttonText": "Academic Results",
+            "image": "academic-results",
+            "schools": ["hengqin-high-school"]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "University Matriculation",
+            "url": "/why-dulwich/our-college/university-matriculation",
+            "description": "Each year, Dulwich graduates matriculate to leading universities worldwide, reflecting their academic excellence, global outlook, and diverse ambitions.",
+            "buttonText": "University Matriculation",
+            "image": "university-matriculation",
+            "schools": [
+              "bangkok"
+              
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "University Matriculation",
+            "url": "/why-dulwich/our-college/university-matriculation",
+            "description": "Each year, Dulwich Pudong graduates matriculate to leading universities worldwide, reflecting their academic excellence, global outlook, and diverse ambitions.",
+            "buttonText": "University Matriculation",
+            "image": "university-matriculation",
+            "schools": [
+              "shanghai-pudong"
+              
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "University Matriculation",
+            "url": "/why-dulwich/our-college/university-matriculation",
+            "description": "Each year, Dulwich Beijing graduates matriculate to leading universities worldwide, reflecting their academic excellence, global outlook, and diverse ambitions.",
+            "buttonText": "University Matriculation",
+            "image": "university-matriculation",
+            "schools": [
+              "beijing"
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "University Matriculation",
+            "url": "/why-dulwich/our-college/university-matriculation",
+            "description": "Each year, Dulwich Suzhou graduates matriculate to leading universities worldwide, reflecting their academic excellence, global outlook, and diverse ambitions.",
+            "buttonText": "University Matriculation",
+            "image": "university-matriculation",
+            "schools": [
+              "suzhou"
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "University Matriculation",
+            "url": "/why-dulwich/our-school/university-matriculation",
+            "description": "Each year, Dulwich High School Suzhou graduates matriculate to leading universities worldwide, reflecting their academic excellence, global outlook, and diverse ambitions.",
+            "buttonText": "University Matriculation",
+            "image": "university-matriculation",
+            "schools": [
+              "suzhou-high-school"
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "University Matriculation",
+            "url": "/why-dulwich/our-school/university-matriculation",
+            "description": "Each year, Dulwich Hengqin graduates matriculate to leading universities worldwide, reflecting their academic excellence, global outlook, and diverse ambitions.",
+            "buttonText": "University Matriculation",
+            "image": "university-matriculation",
+            "schools": [
+              "hengqin-high-school"
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "University Matriculation",
+            "url": "/why-dulwich/our-college/university-matriculation",
+            "description": "Each year, Dulwich Puxi graduates matriculate to leading universities worldwide, reflecting their academic excellence, global outlook, and diverse ambitions.",
+            "buttonText": "University Matriculation",
+            "image": "university-matriculation",
+            "schools": [
+              "shanghai-puxi"
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "University Matriculation",
+            "url": "/why-dulwich/our-college/university-matriculation",
+            "description": "Each year, Dulwich College Seoul graduates matriculate to leading universities worldwide, reflecting their academic excellence, global outlook, and diverse ambitions.",
+            "buttonText": "University Matriculation",
+            "image": "university-matriculation",
+            "schools": [
+              "seoul"
+            ]
+          },
+          {
+            "id": "academic-results",
+            "heading": "Academic Results",
+            "url": "/why-dulwich/our-college/academic-results",
+            "description": "Our students consistently achieve academic results that make Dulwich one of the leading international schools in the world.",
+            "buttonText": "Academic Results",
+            "image": "academic-results",
+            "excludeSchools": [
+              "singapore"
+            ]
+          },
+          {
+            "id": "academic-results",
+            "heading": "Academic Results",
+            "url": "/why-dulwich/our-college/academic-results",
+            "description": "Dulwich College (Singapore) continues to deliver exceptional academic outcomes, with outstanding IB, IGCSE and A Level results. Each year, Dulwich graduates matriculate to leading universities worldwide, reflecting their academic excellence, global outlook, and diverse ambitions.",
+            "buttonText": "Academic Results",
+            "image": "academic-results",
+            "schools": [
+              "singapore"
+            ]
+          },
+          {
+            "id": "the-greenhouse",
+            "heading": "The Greenhouse: Innovation Hub",
+            "url": "/why-dulwich/our-college/the-greenhouse-innovation-hub",
+            "description": "The Greenhouse, a net-zero energy building, is a learning lab in itself: showcasing engineering systems and sustainability features that challenge students to learn about their environment.",
+            "buttonText": "The Greenhouse",
+            "image": "the-greenhouse",
+            "schools": [
+              "singapore"
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "University Matriculation",
+            "url": "/why-dulwich/our-college/university-matriculation",
+            "description": "Our University Matriculation pathway supports students in securing placements at leading universities worldwide.",
+            "buttonText": "University Matriculation",
+            "image": "university-matriculation",
+            "excludeSchools": [
+              "singapore"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "learning",
+        "label": "Learning",
+        "sections": [
+          {
+            "id": "highlighted",
+            "heading": "HIGHLIGHTED",
+            "style": "highlighted",
+            "links": [
+              {
+                "title": "Wellbeing",
+                "url": "/learning/holistic-education/wellbeing",
+                "image": "wellbeing",
+                "schools": [
+                  "bangkok",
+                  "shanghai-puxi",
+                  "suzhou",
+                  "shanghai-pudong",
+                  "suzhou-high-school",
+                  "seoul"
+                ]
+              },
+              {
+                "title": "Student Leadership",
+                "url": "/learning/holistic-education/student-leadership",
+                "image": "student-leadership",
+                "schools": [
+                  "beijing",
+                  "suzhou-high-school",
+                  "seoul",
+                  "singapore",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "University and Careers Counselling",
+                "url": "/learning/core-curriculum/university-and-careers-counselling",
+                "image": "university-careers",
+                "schools": [
+                  "beijing"
+                ]
+              },
+              {
+                "title": "Sustainability & Global Citizenship",
+                "url": "/why-dulwich/our-school/sustainability-and-global-citizenship",
+                "image": "sustainability",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              
+              {
+                "title": "Sustainability & Global Citizenship",
+                "url": "/learning/holistic-education/sustainability-and-global-citizenship",
+                "image": "sustainability",
+                "excludeSchools": [
+                  "beijing",
+                  "suzhou-high-school",
+                  "seoul",
+                  "hengqin-high-school"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "core-curriculum",
+            "heading": "CORE CURRICULUM",
+            "links": [
+              {
+                "title": "DUCKS (ages 3 to 7)",
+                "url": "/learning/core-curriculum/ducks",
+                "schools": [
+                  "bangkok",
+                  "beijing",
+                  "seoul"
+                ]
+              },
+              {
+                "title": "DUCKS (ages 2 to 7)",
+                "url": "/learning/core-curriculum/ducks",
+                "schools": [
+                  "shanghai-puxi",
+                  "suzhou",
+                  "shanghai-pudong",
+                  "singapore"
+                ]
+              },
+              {
+                "title": "Junior School (ages 7 to 11)",
+                "url": "/learning/core-curriculum/junior-school",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Senior School (ages 11 to 18)",
+                "url": "/learning/core-curriculum/senior-school",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              
+              
+              {
+                "title": "IGCSE Programme",
+                "url": "/learning/core-curriculum/igcse-programme",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              
+              {
+                "title": "International Baccalaureate",
+                "url": "/learning/core-curriculum/international-baccalaureate",
+                "schools": [
+                  "shanghai-pudong",
+                  "seoul"
+                ]
+              },
+              {
+                "title": "International Baccalaureate",
+                "url": "/learning/core-curriculum/international-baccalaureate-diploma-programme",
+                "schools": [
+                  "beijing",
+                  "shanghai-puxi",
+                  "suzhou"
+                ]
+              },
+              
+             
+              {
+                "title": "Pre-A Level Programme",
+                "url": "/learning/core-curriculum/pre-alevel-programme",
+                "schools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "A-Level Programme",
+                "url": "/learning/core-curriculum/a-level-programme",
+                "schools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Boarding Programme",
+                "url": "/learning/core-curriculum/boarding-programme-25",
+                "schools": [
+                  "suzhou-high-school"
+                  
+                ]
+              },
+              {
+                "title": "Boarding Programme",
+                "url": "/learning/core-curriculum/boarding",
+                "schools": [
+                  "hengqin-high-school"
+                  
+                ]
+              },
+              {
+                "title": "Counselling & Matriculation",
+                "url": "/learning/core-curriculum/counselling",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "University and Careers Counselling",
+                "url": "/learning/core-curriculum/university-and-careers-counselling",
+                "schools": [
+                  
+                  "shanghai-puxi",
+                  "suzhou",
+                  "shanghai-pudong",
+                  "singapore"
+                  
+                ]
+              },
+              {
+                "title": "University and Careers Counselling",
+                "url": "/learning/holistic-education/university-and-careers-counselling",
+                "schools": [
+                  
+                 "hengqin-high-school"
+                  
+                ]
+              },
+              {
+                "title": "University & Careers Counselling",
+                "url": "/learning/core-curriculum/university-and-careers-counselling",
+                "schools": [
+                  "bangkok",
+                  "seoul"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "holistic-education",
+            "heading": "HOLISTIC EDUCATION",
+            "links": [
+              {
+                "title": "Co-curricular Activities",
+                "url": "/learning/holistic-education/co-curricular-activities",
+                "schools": [
+                  "bangkok",
+                  "beijing",
+                  "shanghai-puxi",
+                  "suzhou",
+                  "shanghai-pudong",
+                  "singapore",
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "Extra-curricular Activities",
+                "url": "/learning/holistic-education/extra-curricular-activities",
+                "schools": [
+                  "seoul"
+                ]
+              },
+              {
+                "title": "Enrichment Activities",
+                "url": "/learning/holistic-education/enrichment-activities",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "STEM",
+                "url": "/learning/holistic-education/stem-se21",
+                "excludeSchools": [
+                  "hengqin-high-school",
+                  "shanghai-pudong",
+                  "bangkok",
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "STEM",
+                "url": "/learning/holistic-education/steam-se21",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "STEM",
+                "url": "/learning/holistic-education/stem",
+                "schools": [
+                  "shanghai-pudong",
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "Sports",
+                "url": "/learning/holistic-education/sports"
+              },
+              {
+                "title": "Thai",
+                "url": "/learning/holistic-education/thai",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "Arts",
+                "url": "/learning/holistic-education/visual-performing-arts",
+                "schools": [
+                  "beijing"
+                ]
+              },
+             
+              {
+                "title": "Mandarin",
+                "url": "/learning/holistic-education/mandarin",
+                "schools": [
+                  "shanghai-puxi",
+                  "suzhou",
+                  "shanghai-pudong",
+                  "seoul"
+                ]
+              },
+              {
+                "title": "Student Leadership",
+                "url": "/learning/holistic-education/student-leadership",
+                "schools": [
+                  "shanghai-puxi",
+                  "suzhou",
+                  "shanghai-pudong"
+                ]
+              },
+              {
+                "title": "Humanities",
+                "url": "/learning/holistic-education/humanities",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "Camps & Weekend Courses",
+                "url": "/learning/holistic-education/camps-weekend-courses",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+             
+              {
+                "title": "English",
+                "url": "/learning/holistic-education/english",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Visual & Performing Arts",
+                "url": "/learning/holistic-education/visual-performing-arts",
+                "schools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school",
+                  "shanghai-pudong",
+                  "shanghai-puxi",
+                  "seoul",
+                  "suzhou"
+                ]
+              },
+              {
+                "title": "Visual & Performing Arts",
+                "url": "/learning/holistic-education/visual-and-performing-arts",
+                "schools": [
+                  "bangkok",
+                  "singapore"
+                ]
+              },
+              {
+                "title": "Learning Beyond the Classroom",
+                "url": "/learning/holistic-education/learning-beyond-the-classroom",
+                "schools": [
+                  "singapore"
+                ]
+              }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "wellbeing",
+            "heading": "Wellbeing",
+            "url": "/learning/holistic-education/wellbeing",
+            "description": "Students are our top priority. Their wellbeing, needs, and talents are at the heart of everything we do.",
+            "buttonText": "Wellbeing",
+            "image": "wellbeing",
+            "schools": [
+              "bangkok",
+              "seoul",
+              "shanghai-puxi",
+              "shanghai-pudong",
+              "suzhou",
+              "suzhou-high-school"
+            ]
+          },
+          {
+            "id": "wellbeing",
+            "heading": "Wellbeing",
+            "url": "/learning/holistic-education/wellbeing",
+            "description": "Our whole community supports student health, happiness, and social-emotional growth: the foundation for academic and life success.",
+            "buttonText": "Wellbeing",
+            "image": "wellbeing",
+            "schools": [
+              "shanghai-puxi",
+              "suzhou",
+              "shanghai-pudong",
+              "suzhou-high-school"
+
+            ]
+          },
+          {
+            "id": "student-leadership",
+            "heading": "Student Leadership",
+            "url": "/learning/holistic-education/student-leadership",
+            "description": "Dulwich students are empowered with the motivation, confidence, and skillset to lead with purpose.",
+            "buttonText": "Student Leadership",
+            "image": "student-leadership",
+            "schools": [
+              "suzhou-high-school"
+            ]
+          },
+          {
+            "id": "student-leadership",
+            "heading": "Student Leadership",
+            "url": "/learning/holistic-education/student-leadership",
+            "description": "Dulwich students are empowered with the motivation, confidence, and skillset to lead with purpose.",
+            "buttonText": "Student Leadership",
+            "image": "student-leadership",
+            "schools": [
+              "singapore",
+              "seoul",
+              "beijing",
+              "hengqin-high-school"
+            ]
+          },
+          {
+            "id": "university-careers",
+            "heading": "University and Careers Counselling",
+            "url": "/learning/core-curriculum/university-and-careers-counselling",
+            "description": "We begin our unique university and careers counselling programme in Year 7, and introduce students to age-appropriate university and careers topics until they graduate. Our students are well prepared to leave Dulwich as Worldwise graduates.",
+            "buttonText": "University and Careers Counselling",
+            "image": "university-careers",
+            "schools": [
+              "beijing"
+            ]
+          },
+         
+          {
+            "id": "sustainability",
+            "heading": "Sustainability & Global Citizenship",
+            "url": "/learning/holistic-education/sustainability-and-global-citizenship",
+            "description": "Sustainability and Global Citizenship are embedded across our whole school, from curriculum to extensive co-curricular activities, and lived every day both inside and beyond the classroom.",
+            "buttonText": "Sustainability & Global Citizenship",
+            "image": "sustainability",
+            "schools": [
+              "bangkok",
+              "singapore",
+              "shanghai-puxi",
+              "shanghai-pudong",
+              "suzhou"
+            ]
+          },
+          {
+            "id": "sustainability",
+            "heading": "Sustainability & Global Citizenship",
+            "url": "/learning/holistic-education/sustainability-and-global-citizenship",
+            "description": "At Dulwich College International, our holistic curriculum nurtures students to make a positive difference in the world.",
+            "buttonText": "Sustainability & Global Citizenship",
+            "image": "sustainability",
+            "excludeSchools": [
+              "beijing",
+              "suzhou-high-school",
+              "seoul",
+              "bangkok",
+              "singapore",
+              "hengqin-high-school"
+            ]
+          },
+          {
+            "id": "sustainability",
+            "heading": "Sustainability & Global Citizenship",
+            "url": "/why-dulwich/our-school/sustainability-and-global-citizenship",
+            "description": "At Dulwich College International, our holistic curriculum nurtures students to make a positive difference in the world.",
+            "buttonText": "Sustainability & Global Citizenship",
+            "image": "sustainability",
+            "schools": [
+              "hengqin-high-school"
+            ]
+          }
+          
+        ]
+      },
+      {
+        "id": "community",
+        "label": "Community",
+        "sections": [
+          {
+            "id": "highlighted",
+            "heading": "HIGHLIGHTED",
+            "style": "highlighted",
+            "links": [
+              {
+                "title": "Founding Families",
+                "url": "/community/our-members/founding-families",
+                "image": "founding-families",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "Meet Our Parents",
+                "url": "/community/our-members/meet-our-parents",
+                "image": "meet-our-parents",
+                "excludeSchools": [
+                  "bangkok",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Students Stories",
+                "url": "/community/our-members/student-stories",
+                "image": "student-stories"
+              },
+              {
+                "title": "Alumni Stories",
+                "url": "/community/our-members/alumni-stories",
+                "image": "alumni-stories",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "our-community",
+            "heading": "OUR members",
+            "links": [
+              {
+                "title": "Teachers & Staff",
+                "url": "/community/our-members/teachers-and-staff",
+                "excludeSchools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Heads of Department",
+                "url": "/community/our-members/heads-of-department",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Founding Families",
+                "url": "/community/our-members/founding-families",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "Friends of Dulwich",
+                "url": "/community/our-members/friends-of-dulwich",
+                "excludeSchools": [
+                  "bangkok",
+                  "singapore"
+                ]
+              },
+              {
+                "title": "Friends of Dulwich (FoD)",
+                "url": "/community/our-members/friends-of-dulwich",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "Alumni",
+                "url": "/community/our-members/worldwise-alumni-network",
+                "excludeSchools": [
+                  "bangkok",
+                  "seoul",
+                  "beijing",
+                  "shanghai-pudong",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Alumni",
+                "url": "/community/our-members/alumni",
+                "schools": [
+                  "seoul",
+                  "beijing",
+                  "shanghai-pudong",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Connections",
+                "url": "/community/our-members/connections",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "Safeguarding",
+                "url": "/community/our-members/safeguarding",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "Wellbeing",
+                "url": "/community/our-members/wellbeing",
+                "schools": [
+                  "singapore"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "life-at-dulwich",
+            "heading": "LIFE AT DULWICH",
+            "links": [
+              {
+                "title": "School Calendar",
+                "url": "/community/life-at-dulwich/school-calendar",
+                "excludeSchools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "School Calendar",
+                "url": "/community/life-at-dulwich/school-calendar",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "Dulwich Life",
+                "url": "/dulwich-life",
+                "excludeSchools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "Latest News",
+                "url": "/dulwich-life",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "Careers",
+                "url": "/community/life-at-dulwich/careers",
+                "excludeSchools": [
+                  "singapore",
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "Careers",
+                "url": "/community/life-at-dulwich/working-at-dulwich",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "Work at Dulwich",
+                "url": "/community/life-at-dulwich/careers",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "Wellbeing",
+                "url": "/community/life-at-dulwich/wellbeing",
+                "schools": [
+                  "beijing"
+                ]
+              }
+            ]
+          }
+        ],
+        "cards": [
+          
+          {
+            "id": "meet-our-parents",
+            "heading": "Meet Our Parents",
+            "url": "/community/our-members/meet-our-parents",
+            "description": "We invite you to hear our parents' stories and discover what learning, care, and belonging truly look like through the voices of those who know us best. ",
+            "buttonText": "Meet Our Parents",
+            "image": "meet-our-parents",
+            "schools": [
+              "bangkok",
+             "singapore",
+             "seoul",
+             "beijing",
+             "shanghai-puxi",
+             "shanghai-pudong",
+             "suzhou",
+             "suzhou-high-school"
+            ]
+          },
+          {
+            "id": "student-stories",
+            "heading": "Students Stories",
+            "url": "/community/our-members/student-stories",
+            "description": "Real stories from our students about their journeys, passions, and what makes Dulwich home.",
+            "buttonText": "Students Stories",
+            "image": "student-stories"
+          },
+          {
+            "id": "student-stories",
+            "heading": "Students Stories",
+            "url": "/community/our-members/student-stories",
+            "description": "Real stories from our students about their journeys, passions, and what makes Dulwich home.",
+            "buttonText": "Students Stories",
+            "image": "student-stories",
+            "schools": [
+              "bangkok",
+              "singapore",
+              "seoul",
+              "beijing"
+            ]
+          },
+          {
+            "id": "alumni-stories",
+            "heading": "Alumni Stories",
+            "url": "/community/our-members/alumni-stories",
+            "description": "Hear from Dulwich alumni about how their time at school shaped their futures.",
+            "buttonText": "Alumni Stories",
+            "image": "alumni-stories",
+            "schools": [
+              "hengqin-high-school"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "admissions",
+        "label": "Admissions",
+        "sections": [
+          {
+            "id": "highlighted",
+            "heading": "HIGHLIGHTED",
+            "style": "highlighted",
+            "links": [
+              {
+                "title": "How to Apply",
+                "url": "/admissions/apply/how-to-apply",
+                "image": "how-to-apply"
+              },
+              {
+                "title": "Visit Us",
+                "url": "/admissions/visit/visit-us",
+                "image": "visit-us"
+              }
+            ]
+          },
+          {
+            "id": "apply",
+            "heading": "APPLY",
+            "links": [
+              {
+                "title": "Eligibility",
+                "url": "/admissions/apply/eligibility",
+                "excludeSchools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "One to One Consultation",
+                "url": "https://dhsz.openapply.cn/roi?c_campaign=2369",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "Admissions Criteria",
+                "url": "/admissions/apply/admissions-criteria",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Entrance Assessment",
+                "url": "https://dhsz.openapply.cn/apply/forms/22963?c_campaign=2056",
+                "schools": [
+                  "suzhou-high-school"
+                  
+                ]
+              },
+              {
+                "title": "Entrance Examination",
+                "url": "/admissions/apply/entrance-exam",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Assessment Guide",
+                "url": " https://book.yunzhan365.com/bpiog/lrxy/mobile/index.html",
+                "schools": [
+                  "suzhou-high-school"
+                  
+                ]
+              },
+              {
+                "title": "Assessment Guide",
+                "url": "/admissions/assessment-guide",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Fees",
+                "url": "/admissions/apply/fees",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "FAQs",
+                "url": "/admissions/apply/frequently-asked-questions",
+                "excludeSchools": [
+                 "suzhou",
+                 "shanghai-puxi",
+                 "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "FAQs",
+                "url": "/admissions/apply/faqs",
+                "schools": [
+                  "suzhou",
+                  "shanghai-puxi"
+                ]
+              },
+              {
+                "title": "Useful Documents",
+                "url": "/admissions/apply/useful-documents",
+                "schools": [
+                  "seoul"
+                ]
+              },
+              {
+                "title": "Scholarships",
+                "url": "/admissions/apply/scholarships",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "Scholarship",
+                "url": "/admissions/apply/the-dulwich-difference-scholarship-programme",
+                "schools": [
+                  "bangkok"
+                ]
+              }
+              
+            ]
+          },
+          {
+            "id": "visit",
+            "heading": "VISIT",
+            "links": [
+              {
+                "title": "Book a Tour",
+                "url": "/admissions/visit/visit-us?anchor=book-a-tour",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                     "seoul"
+                ]
+              },
+              {
+                "title": "Open House",
+                "url": "/admissions/visit/visit-us?anchor=open-house",
+                "schools": [
+                  "beijing"
+                ]
+              },
+              {
+                "title": "Join Group Tour",
+                "url": "/admissions/visit/visit-us?anchor=group-tour",
+                "schools": [
+                  "seoul"
+                ]
+              },
+              {
+                "title": "Open Day",
+                "url": "/admissions/visit/visit-us?anchor=open-day",
+                "schools": [
+                  "bangkok",
+                  "shanghai-puxi",
+                  "suzhou",
+                  "suzhou-high-school",
+                  "hengqin-high-school",
+                  "shanghai-pudong",
+                  "singapore"
+                ]
+              },
+              {
+                "title": "Virtual Tour",
+                "url": "/admissions/visit/visit-us?anchor=virtual-tour"
+              },
+              {
+                "title": "Contact",
+                "url": "/admissions/visit/visit-us?anchor=contact"
+              }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "how-to-apply",
+            "heading": "How to Apply",
+            "url": "/admissions/apply/how-to-apply",
+            "description": "How to apply, what to do, which documents you will need to provide, and how to complete assessments and interviews.",
+            "buttonText": "How to Apply",
+            "image": "how-to-apply"
+          },
+          {
+            "id": "visit-us",
+            "heading": "Visit Us",
+            "url": "/admissions/visit/visit-us",
+            "description": "We love meeting new parents. You can make an individual request or join one of our admissions meetings and campus tours.",
+            "buttonText": "Visit Us",
+            "image": "visit-us"
+          }
+        ]
+      }
+    ]
+  },
+  "zh": {
+    "topBar": {
+      "parentPortal": "家长门户",
+      "schoolCalendar": "学校日历"
+    },
+    "siteMapLabel": "查看完整网站地图",
+    "searchPlaceholder": "搜索",
+    "searchResultsTitle": "搜索结果",
+    "searchResultsClose": "关闭",
+    "buttons": {
+      "enquire": "咨询",
+      "applyNow": "立即申请"
+    },
+    "mobile": {
+      "schools": "学校",
+      "fullSiteMap": "完整网站地图",
+      "aiAssistant": "AI 助手"
+    },
+    "navItems": [
+      {
+        "id": "why-dulwich",
+        "label": "德威优势",
+        "sections": [
+          {
+            "id": "highlighted",
+            "heading": "",
+            "style": "highlighted",
+            "links": [
+              {
+                "title": "学术成果",
+                "url": "/zh/why-dulwich/our-college/academic-results",
+                "image": "academic-results",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "学术成果",
+                "url": "/zh/why-dulwich/our-school/academics-results",
+                "image": "academic-results",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "学术成果",
+                "url": "/zh/why-dulwich/our-school/academic-results",
+                "image": "academic-results",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+
+              {
+                "title": "温室创新中心",
+                "url": "/zh/why-dulwich/our-college/the-greenhouse",
+                "image": "the-greenhouse",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "大学升学成果",
+                "url": "/zh/why-dulwich/our-college/university-matriculation",
+                "image": "university-matriculation",
+                "excludeSchools": [
+                  "singapore",
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "大学升学成果",
+                "url": "/zh/why-dulwich/our-school/university-matriculation",
+                "image": "university-matriculation",
+                "schools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              }
+
+            ]
+          },
+          {
+            "id": "our-college",
+            "heading": "关于我们",
+            "links": [
+              {
+                "title": "校长寄语",
+                "url": "/zh/why-dulwich/our-college/from-head-of-college",
+                "schools": [
+       
+                  "beijing",
+                  "shanghai-pudong",
+                  "shanghai-puxi",
+                  "suzhou",
+                  "seoul"
+                  
+                ]
+              },
+              {
+                "title": "院长致辞",
+                "url": "/zh/our-college/from-our-head-of-college",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "总监寄语",
+                "url": "/zh/why-dulwich/our-school/from-our-director-of-school",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "校长寄语",
+                "url": "/zh/why-dulwich/our-school/from-head-of-school",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              
+              {
+                "title": "愿景与价值观",
+                "url": "/zh/why-dulwich/our-college/vision-and-values",
+                "excludeSchools": [
+                  "shanghai-puxi",
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "愿景与价值观",
+                "url": "/zh/why-dulwich/our-school/vision-and-values",
+                "schools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "办学宗旨",
+                "url": "/zh/our-college/vision-and-values",
+                "schools": [
+                  "shanghai-puxi"
+                ]
+              },
+              {
+                "title": "德威特色",
+                "url": "/zh/why-dulwich/our-college/dulwich-difference",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "德威特色",
+                "url": "/zh/why-dulwich/our-school/dulwich-difference",
+                "schools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "校园环境",
+                "url": "/zh/our-college/campus-environment",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "校园设施",
+                "url": "/zh/why-dulwich/our-college/facilities",
+                "excludeSchools": [
+                  "bangkok",
+                  "singapore",
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "校园设施",
+                "url": "/zh/why-dulwich/our-school/facilities",
+                "schools": [
+                  "hengqin-high-school",
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "校园与设施",
+                "url": "/zh/our-college/campus-facilities",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "大学升学成果",
+                "url": "/zh/our-college/university-matriculation",
+                "schools": [
+                  "singapore"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "family-of-schools",
+            "heading": "一家多校",
+            "links": [
+              {
+                "title": "智胜全球活动",
+                "url": "/zh/why-dulwich/family-of-schools/worldwise-events"
+              },
+              {
+                "title": "全球战略合作",
+                "url": "/zh/why-dulwich/family-of-schools/global-partnerships"
+              },
+              {
+                "title": "学术领导团队",
+                "url": "/zh/why-dulwich/family-of-schools/educational-leadership"
+              }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "academic-results",
+            "heading": "学术成果",
+            "url": "/zh/why-dulwich/our-college/academic-results",
+            "description": "北京德威英国国际学校持续取得卓越的学术成果，在 IB 和 IGCSE 考试中表现优异，并被广泛认可为中国乃至亚洲顶尖 IB 国际学校之一。",
+            "buttonText": "学术成果",
+            "image": "academic-results",
+            "schools": [
+              "shanghai-pudong"
+            ]
+          },
+          {
+            "id": "academic-results",
+            "heading": "学术成果",
+            "url": "/zh/why-dulwich/our-college/academic-results",
+            "description": "苏州德威外籍人员子女学校持续取得卓越的学术成果，在IB和IGCSE考试中表现优异，并被广泛认可为中国乃至亚洲顶尖 IB 国际学校之一。",
+            "buttonText": "学术成果",
+            "image": "academic-results",
+            "schools": [
+              "suzhou"
+            ]
+          },
+          {
+            "id": "academic-results",
+            "heading": "学术成果",
+            "url": "/zh/why-dulwich/our-school/academics-results",
+            "description": "苏州德威国际课程高中项目持续取得卓越学术成果，在 IGCSE 和 A Level 考试中表现优异。",
+            "buttonText": "学术成果",
+            "image": "academic-results",
+            "schools": [
+              "suzhou-high-school"
+            ]
+          },
+          {
+            "id": "academic-results",
+            "heading": "学术成果",
+            "url": "/zh/why-dulwich/our-school/academic-results",
+            "description": "横琴德威国际课程高中项目持续取得卓越学术成果，在 A Level 考试中表现优异。",
+            "buttonText": "学术成果",
+            "image": "academic-results",
+            "schools": [
+              "hengqin-high-school"
+            ]
+          },
+          {
+            "id": "academic-results",
+            "heading": "学术成果",
+            "url": "/zh/why-dulwich/our-college/academic-results",
+            "description": "传承四百年学术卓越的传统，上海浦西德威持续取得卓越的学术成果，在 IB 和 IGCSE 考试中表现优异。",
+            "buttonText": "学术成果",
+            "image": "academic-results",
+            "schools": [
+              "shanghai-puxi"
+            ]
+          },
+          {
+            "id": "academic-results",
+            "heading": "学术成果",
+            "url": "/zh/why-dulwich/our-college/academic-results",
+            "description": "北京德威英国国际学校持续取得卓越的学术成果，在 IB 和 IGCSE 考试中表现优异，并被广泛认可为中国乃至亚洲顶尖 IB 国际学校之一。",
+            "buttonText": "学术成果",
+            "image": "academic-results",
+            "schools": [
+              "beijing"
+            ]
+          },
+          {
+            "id": "the-greenhouse",
+            "heading": "温室创新中心",
+            "url": "/zh/our-college/the-greenhouse",
+            "description": "在德威学院新加坡，我们的创新中心培养学生积极影响世界的能力。",
+            "buttonText": "温室创新中心",
+            "image": "the-greenhouse",
+            "schools": [
+              "singapore"
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "大学升学成果",
+            "url": "/zh/why-dulwich/our-college/university-matriculation",
+            "description": "每年，北京德威毕业生进入世界各地顶尖大学深造，展现出卓越的学术能力、国际视野与多元志向。",
+            "buttonText": "大学升学成果",
+            "image": "university-matriculation",
+            "schools": [
+              "beijing"
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "大学升学成果",
+            "url": "/zh/why-dulwich/our-college/university-matriculation",
+            "description": "每年，北京德威毕业生进入世界各地顶尖大学深造，展现出卓越的学术能力、国际视野与多元志向。",
+            "buttonText": "大学升学成果",
+            "image": "university-matriculation",
+            "schools": [
+              "shanghai-pudong",
+              "suzhou"
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "大学升学成果",
+            "url": "/zh/why-dulwich/our-school/university-matriculation",
+            "description": "每年，北京德威毕业生进入世界各地顶尖大学深造，展现出卓越的学术能力、国际视野与多元志向。",
+            "buttonText": "大学升学成果",
+            "image": "university-matriculation",
+            "schools": [
+              "suzhou-high-school",
+              "hengqin-high-school"
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "大学升学成果",
+            "url": "/zh/why-dulwich/our-college/university-matriculation",
+            "description": "每年，上海浦西德威毕业生进入世界各地顶尖大学深造，展现出卓越的学术能力、国际视野与多元志向。",
+            "buttonText": "大学升学成果",
+            "image": "university-matriculation",
+            "schools": [
+              "shanghai-puxi"
+            ]
+          },
+          {
+            "id": "university-matriculation",
+            "heading": "大学升学成果",
+            "url": "/zh/why-dulwich/our-college/university-matriculation",
+            "description": "我们的大学录取途径帮助学生进入全球领先大学。",
+            "buttonText": "大学升学成果",
+            "image": "university-matriculation",
+            "excludeSchools": [
+              "singapore",
+              "beijing"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "learning",
+        "label": "学习体验",
+        "sections": [
+          {
+            "id": "highlighted",
+            "heading": "精选",
+            "style": "highlighted",
+            "links": [
+              {
+                "title": "身心健康",
+                "url": "/zh/learning/holistic-education/wellbeing",
+                "image": "wellbeing",
+                "schools": [
+                  "bangkok",
+                  "shanghai-puxi",
+                  "suzhou",
+                  "shanghai-pudong",
+                  "suzhou-high-school",
+                  "seoul"
+                ]
+              },
+              {
+                "title": "学生领导力",
+                "url": "/zh/learning/holistic-education/student-leadership",
+                "image": "student-leadership",
+                "schools": [
+                  "beijing",
+                  "suzhou-high-school",
+                  "seoul",
+                  "singapore",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "升学和职业发展辅导",
+                "url": "/zh/learning/core-curriculum/university-and-careers-counselling",
+                "image": "university-careers",
+                "schools": [
+                  "beijing"
+                ]
+              },
+              {
+                "title": "可持续发展与全球公民意识",
+                "url": "/zh/why-dulwich/our-school/sustainability-and-global-citizenship",
+                "image": "sustainability",
+                "schools": [
+                 "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "可持续发展与全球公民意识",
+                "url": "/zh/why-dulwich/our-college/sustainability-and-global-citizenship",
+                "image": "sustainability",
+                "excludeSchools": [
+                  "beijing",
+                  "suzhou-high-school",
+                  "hengqin-high-school",
+                  "seoul",
+                  "suzhou",
+                  "shanghai-pudong",
+                  "shanghai-puxi"
+                ]
+              },
+              {
+                "title": "可持续发展与全球公民意识",
+                "url": "/zh/learning/holistic-education/sustainability-and-global-citizenship",
+                "image": "sustainability",
+                "schools": [
+                  "suzhou",
+                  "shanghai-pudong",
+                  "shanghai-puxi"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "core-curriculum",
+            "heading": "课程体系",
+            "links": [
+              {
+                "title": "学前部（3岁至7岁）",
+                "url": "/zh/learning/core-curriculum/ducks",
+                "schools": [
+                  "bangkok",
+                  "beijing",
+                  "seoul"
+                ]
+              },
+              {
+                "title": "幼儿园（2岁至7岁）",
+                "url": "/zh/learning/core-curriculum/ducks",
+                "schools": [
+                  "shanghai-puxi",
+                  "suzhou",
+                  "shanghai-pudong",
+                  "singapore"
+                ]
+              },
+              {
+                "title": "小学部（7岁至11岁）",
+                "url": "/zh/learning/core-curriculum/junior-school",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "中学部（11岁至18岁）",
+                "url": "/zh/learning/core-curriculum/senior-school",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "高中课程（17-18岁）",
+                "url": "/zh/holistic-education/sixth-form",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              
+              {
+                "title": "16岁后升学路径",
+                "url": "/zh/holistic-education/post-16-pathways",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "IB 课程",
+                "url": "/zh/learning/core-curriculum/international-baccalaureate",
+                "schools": [
+                  "shanghai-pudong",
+                  "seoul"
+                ]
+              },
+              {
+                "title": "IB 课程",
+                "url": "/zh/learning/core-curriculum/international-baccalaureate-diploma-programme",
+                "schools": [
+                  "beijing",
+                  "shanghai-puxi",
+                  "suzhou"
+                ]
+              },
+              
+             
+               {
+                "title": "IGCSE 课程",
+                "url": "/zh/learning/core-curriculum/igcse-programme",
+                "schools": [
+                  "suzhou-high-school"
+                  
+                ]
+              },
+              {
+                "title": "Pre-A Level 课程",
+                "url": "/zh/learning/core-curriculum/pre-alevel-programme",
+                "schools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+             
+              {
+                "title": "A-Level 课程",
+                "url": "/zh/learning/core-curriculum/a-level-programme",
+                "schools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "住宿项目",
+                "url": "/zh/learning/core-curriculum/boarding-programme-25",
+                "schools": [
+                  "suzhou-high-school"
+                  
+                ]
+              },
+              {
+                "title": "住宿项目",
+                "url": "/zh/learning/core-curriculum/boarding",
+                "schools": [
+                  "hengqin-high-school"
+                  
+                ]
+              },
+              {
+                "title": "大学升学指导与大学去向",
+                "url": "/zh/learning/core-curriculum/counselling",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              
+              {
+                "title": "升学及就业指导",
+                "url": "/zh/learning/core-curriculum/university-and-careers-counselling",
+                "schools": [
+                  "shanghai-puxi",
+                  "suzhou",
+                  "shanghai-pudong"
+                 
+                ]
+              },
+               {
+                "title": "升学及就业指导",
+                "url": "/zh/learning/holistic-education/university-and-careers-counselling",
+                "schools": [
+                  "hengqin-high-school"
+                 
+                ]
+              },
+              {
+                "title": "升学及就业指导",
+                "url": "/zh/holistic-education/university-careers-counselling",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "升学及就业指导",
+                "url": "/zh/holistic-education/university-careers-counselling",
+                "schools": [
+                  "singapore"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "holistic-education",
+            "heading": "全人教育",
+            "links": [
+              {
+                "title": "联课活动",
+                "url": "/zh/learning/holistic-education/co-curricular-activities",
+                "schools": [
+                  "bangkok",
+                  "beijing",
+                  "shanghai-puxi",
+                  "suzhou",
+                  "shanghai-pudong",
+                  "singapore",
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "核心素养活动",
+                "url": "/zh/learning/holistic-education/enrichment-activities",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "联课活动",
+                "url": "/zh/holistic-education/co-curricular",
+                "schools": [
+                  "seoul"
+                ]
+              },
+              {
+                "title": "STEM",
+                "url": "/zh/learning/holistic-education/stem-se21",
+                "excludeSchools": [
+                  "hengqin-high-school",
+                  "shanghai-pudong",
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "STEM",
+                "url": "/zh/learning/holistic-education/steam-se21",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "STEM",
+                "url": "/zh/learning/holistic-education/stem",
+                "schools": [
+                  "shanghai-pudong"
+                ]
+              },
+              {
+                "title": "运动",
+                "url": "/zh/learning/holistic-education/sports"
+              },
+              {
+                "title": "泰语",
+                "url": "/zh/holistic-education/thai",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "视觉与表演艺术",
+                "url": "/zh/learning/holistic-education/visual-performing-arts",
+                "schools": [
+                  "beijing",
+                  "suzhou-high-school",
+                  "hengqin-high-school",
+                  "shanghai-pudong",
+                  "shanghai-puxi",
+                  "singapore",
+                  "seoul",
+                  "suzhou"
+                ]
+              },
+              
+              {
+                "title": "中文课程",
+                "url": "/zh/learning/holistic-education/mandarin",
+                "schools": [
+                  "shanghai-puxi",
+                  "suzhou",
+                  "shanghai-pudong",
+                  "seoul"
+                ]
+              },
+              {
+                "title": "学生领导力",
+                "url": "/zh/learning/holistic-education/student-leadership",
+                "schools": [
+                  "shanghai-puxi",
+                  "suzhou",
+                  "shanghai-pudong"
+                ]
+              },
+              {
+                "title": "Humanities",
+                "url": "/zh/holistic-education/humanities",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "Camps & Weekend Courses",
+                "url": "/zh/learning/holistic-education/camps-weekend-courses",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              
+              {
+                "title": "英语语言",
+                "url": "/zh/learning/holistic-education/english",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "课外学习",
+                "url": "/zh/holistic-education/learning-beyond-the-classroom",
+                "schools": [
+                  "singapore"
+                ]
+              }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "wellbeing",
+            "heading": "身心健康",
+            "url": "/zh/learning/holistic-education/wellbeing",
+            "description": "学生始终是我们的首要关注，他们的身心健康、成长需求与个人天赋是我们一切工作的核心。",
+            "buttonText": "身心健康",
+            "image": "wellbeing",
+            "schools": [
+              "bangkok",
+              "shanghai-puxi",
+              "suzhou",
+              "shanghai-pudong",
+              "suzhou-high-school",
+              "seoul"
+            ]
+          },
+          {
+            "id": "student-leadership",
+            "heading": "学生领导力",
+            "url": "/zh/learning/holistic-education/student-leadership",
+            "description": "德威学生被赋能以动力、自信与能力，以目标与责任感引领未来。",
+            "buttonText": "学生领导力",
+            "image": "student-leadership",
+            "schools": [
+              "beijing",
+              "suzhou-high-school",
+              "hengqin-high-school",
+              "seoul",
+              "singapore"
+            ]
+          },
+          {
+            "id": "university-careers",
+            "heading": "升学和职业发展辅导",
+            "url": "/zh/learning/core-curriculum/university-and-careers-counselling",
+            "description": "德威从七年级开始开展独具特色的大学与职业规划项目，通过循序渐进、符合年龄特点的指导，一直陪伴学生直到毕业，帮助他们成长为真正的心怀世界的毕业生。",
+            "buttonText": "升学和职业发展辅导",
+            "image": "university-careers",
+            "schools": [
+              "beijing"
+            ]
+          },
+          
+          {
+            "id": "sustainability",
+            "heading": "可持续发展与全球公民意识",
+            "url": "/zh/learning/holistic-education/sustainability-and-global-citizenship",
+            "description": "可持续发展与全球公民意识贯穿整个校园，从课程到丰富的课外活动，并在课堂内外的日常学习与生活中得到实践。",
+            "buttonText": "可持续发展与全球公民意识",
+            "image": "sustainability",
+            "excludeSchools": [
+              "beijing",
+              "suzhou-high-school",
+              "hengqin-high-school",
+              "seoul"
+            ]
+          },
+          {
+            "id": "sustainability",
+            "heading": "可持续发展与全球公民意识",
+            "url": "/zh/why-dulwich/our-school/sustainability-and-global-citizenship",
+            "description": "可持续发展与全球公民意识贯穿整个校园，从课程到丰富的课外活动，并在课堂内外的日常学习与生活中得到实践。",
+            "buttonText": "可持续发展与全球公民意识",
+            "image": "sustainability",
+            "schools": [
+              "hengqin-high-school"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "community",
+        "label": "活力社区",
+        "sections": [
+          {
+            "id": "highlighted",
+            "heading": "精选",
+            "style": "highlighted",
+            "links": [
+              {
+                "title": "创始家庭",
+                "url": "/zh/community/our-members/founding-families",
+                "image": "founding-families",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "家长分享",
+                "url": "/zh/community/our-members/meet-our-parents",
+                "image": "meet-our-parents",
+                "excludeSchools": [
+                  "bangkok",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "学生故事",
+                "url": "/zh/community/our-members/student-stories",
+                "image": "student-stories",
+                "excludeSchools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "学生故事",
+                "url": "/zh/community/our-members/student-stories",
+                "image": "student-stories",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "毕业生故事",
+                "url": "/zh/community/our-members/alumni-stories",
+                "image": "alumni-stories",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "our-community",
+            "heading": "社区成员",
+            "links": [
+              {
+                "title": "教师团队",
+                "url": "/zh/community/our-members/teachers-and-staff",
+                "excludeSchools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "学术领导团队",
+                "url": "/zh/community/our-members/heads-of-department",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "创始家庭",
+                "url": "/zh/community/founding-families",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "德威之友",
+                "url": "/zh/community/our-members/friends-of-dulwich",
+                "excludeSchools": [
+                  "bangkok",
+                  "singapore"
+                ]
+              },
+              {
+                "title": "德威之友（FoD）",
+                "url": "/zh/community/friends-of-dulwich",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "校友",
+                "url": "/zh/community/our-members/alumni",
+                "excludeSchools": [
+                  "bangkok",
+                  "suzhou",
+                  "suzhou-high-school",
+                  "shanghai-puxi"
+                ]
+              },
+              {
+                "title": "校友",
+                "url": "/zh/community/our-members/worldwise-alumni-network",
+                "schools": [
+                 
+                  "suzhou",
+                  "suzhou-high-school",
+                  "shanghai-puxi"
+                ]
+              },
+              {
+                "title": "联络",
+                "url": "/zh/community/our-members/connections",
+                "schools": [
+                  "bangkok"
+                ]
+              },
+              {
+                "title": "安全保障",
+                "url": "/zh/community/our-members/safeguarding",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "身心健康",
+                "url": "/zh/community/our-members/wellbeing",
+                "schools": [
+                  "singapore"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "life-at-dulwich",
+            "heading": "校园生活",
+            "links": [
+              {
+                "title": "学校日历",
+                "url": "/zh/community/life-at-dulwich/school-calendar",
+                "excludeSchools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "学院日历",
+                "url": "/zh/our-college/school-calendar",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "德威聚焦",
+                "url": "/zh/dulwich-life",
+                "excludeSchools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "最新消息",
+                "url": "/zh/latest-news",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "职业发展",
+                "url": "/zh/community/life-at-dulwich/careers",
+                "excludeSchools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "在德威工作",
+                "url": "/zh/working-at-dulwich",
+                "schools": [
+                  "singapore"
+                ]
+              },
+              {
+                "title": "身心健康",
+                "url": "/zh/community/life-at-dulwich/wellbeing",
+                "schools": [
+                  "beijing"
+                ]
+              }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "founding-families",
+            "heading": "创始家庭",
+            "url": "/zh/community/founding-families",
+            "description": "了解创始家庭及其对学校的愿景。",
+            "buttonText": "创始家庭",
+            "image": "founding-families",
+            "schools": [
+              "bangkok"
+            ]
+          },
+          {
+            "id": "meet-our-parents",
+            "heading": "家长分享",
+            "url": "/zh/community/our-members/meet-our-parents",
+            "description": "我们邀请您聆听家长的真实故事，通过最了解我们的家庭视角，了解学习、关怀与归属感在这里真正的模样。",
+            "buttonText": "家长分享",
+            "image": "meet-our-parents",
+            "excludeSchools": [
+              "bangkok",
+              "hengqin-high-school"
+            ]
+          },
+          {
+            "id": "student-stories",
+            "heading": "学生故事",
+            "url": "/zh/community/our-members/student-stories",
+            "description": "来自学生的真实分享，讲述他们的成长旅程与热爱。",
+            "buttonText": "学生故事",
+            "image": "student-stories"
+          },
+          {
+            "id": "student-stories-hengqin",
+            "heading": "学生故事",
+            "url": "/zh/community/student-stories",
+            "description": "来自我们学生关于他们旅程、热情以及是什么让德威成为家的真实故事。",
+            "buttonText": "学生故事",
+            "image": "student-stories",
+            "schools": [
+              "hengqin-high-school"
+            ]
+          },
+          {
+            "id": "alumni-stories",
+            "heading": "毕业生故事",
+            "url": "/zh/community/our-members/alumni-stories",
+            "description": "听听德威毕业生讲述他们的在校经历如何塑造了他们的未来。",
+            "buttonText": "毕业生故事",
+            "image": "alumni-stories",
+            "schools": [
+              "hengqin-high-school"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "admissions",
+        "label": "招生入学",
+        "sections": [
+          {
+            "id": "highlighted",
+            "heading": "精选",
+            "style": "highlighted",
+            "links": [
+              {
+                "title": "如何申请",
+                "url": "/zh/admissions/apply/how-to-apply",
+                "image": "how-to-apply"
+              },
+              {
+                "title": "校园参观",
+                "url": "/zh/admissions/visit/visit-us",
+                "image": "visit-us"
+              }
+            ]
+          },
+          {
+            "id": "apply",
+            "heading": "入学申请",
+            "links": [
+              {
+                "title": "申请资格",
+                "url": "/zh/admissions/apply/eligibility",
+                "excludeSchools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "One to One Consultation",
+                "url": "https://dhsz.openapply.cn/roi?c_campaign=2369",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "录取标准",
+                "url": "/zh/admissions/apply/admissions-criteria",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Entrance Assessment",
+                "url": "https://dhsz.openapply.cn/apply/forms/22963?c_campaign=2056",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "入学考试",
+                "url": "/zh/admissions/apply/entrance-exam",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "Assessment Guide",
+                "url": " https://book.yunzhan365.com/bpiog/lrxy/mobile/index.html",
+                "schools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "评估指南",
+                "url": "/zh/admissions/assessment-guide",
+                "schools": [
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "费用明细",
+                "url": "/zh/admissions/apply/fees",
+                "excludeSchools": [
+                  "suzhou-high-school",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "常见问题",
+                "url": "/zh/admissions/apply/frequently-asked-questions",
+                "excludeSchools":[
+                  "suzhou",
+                  "shanghai-puxi",
+                  "hengqin-high-school"
+                ]
+              },
+              {
+                "title": "常见问题",
+                "url": "/zh/admissions/apply/faqs",
+                "schools":[
+                  "suzhou",
+                  "shanghai-puxi"
+                ]
+              },
+              {
+                "title": "奖学金",
+                "url": "/zh/admissions/scholarships",
+                "schools": [
+                  "singapore"
+                ]
+              }
+              
+            ]
+          },
+          {
+            "id": "visit",
+            "heading": "预约访校",
+            "links": [
+              {
+                "title": "预约探校",
+                "url": "/zh/admissions/visit/visit-us?anchor=book-a-tour",
+                "excludeSchools": [
+                  "suzhou-high-school"
+                ]
+              },
+              {
+                "title": "校园开放日",
+                "url": "/zh/admissions/visit/visit-us?anchor=open-day",
+                "excludeSchools": [
+                  "beijing",
+                  "seoul"
+                ]
+              },
+              {
+                "title": "校园开放日",
+                "url": "/zh/admissions/visit/visit-us?anchor=open-house",
+                "schools": [
+                  "beijing",
+                  "seoul"
+                ]
+              },
+              {
+                "title": "校园导览",
+                "url": "/zh/admissions/visit/visit-us?anchor=virtual-tour",
+                "excludeSchools": [
+                  "shanghai-pudong"
+                ]
+              },
+              {
+                "title": "虚拟导览",
+                "url": "/zh/admissions/visit/visit-us?anchor=virtual-tour",
+                "schools": [
+                  "shanghai-pudong"
+                ]
+              },
+              {
+                "title": "联系我们",
+                "url": "/zh/admissions/visit/visit-us?anchor=contact"
+              }
+            ]
+          }
+        ],
+        "cards": [
+          {
+            "id": "how-to-apply",
+            "heading": "如何申请",
+            "url": "/zh/admissions/apply/how-to-apply",
+            "description": "了解申请流程、所需材料，以及如何完成评估与面试。",
+            "buttonText": "如何申请",
+            "image": "how-to-apply"
+          },
+          {
+            "id": "visit-us",
+            "heading": "校园参观",
+            "url": "/zh/admissions/visit/visit-us",
+            "description": "我们非常期待与新家长见面。您可以预约一对一咨询，或参加我们的招生说明会和校园参观活动。",
+            "buttonText": "校园参观",
+            "image": "visit-us"
+          }
+        ]
+      }
+    ]
+  }
+}

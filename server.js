@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.EXPRESS_PORT || process.env.PORT || 4000;
 
 // API base URL - use production CMS
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.atalent.xyz';
 
 // Serve static files from the React app (but not HTML, robots.txt, or sitemap.xml files)
 app.use((req, res, next) => {
@@ -62,7 +62,7 @@ const extractUrlsFromSitemap = (xmlContent, targetDomain) => {
     let urlBlock = match[1];
 
     // Replace any localhost or CMS domain URLs with the target domain
-    // This handles localhost:4000, cms.dulwich.org, or any other CMS domain
+ 
     urlBlock = urlBlock.replace(
       /(https?:\/\/)[^\/]+/g,
       targetDomain
@@ -80,7 +80,7 @@ const getSchoolSitemapUrls = async (schoolSlug, targetDomain) => {
   const allUrls = [];
 
   for (const type of sitemapTypes) {
-    const url = `${API_BASE_URL}/sitemap-${type}.xml?subdomain=${schoolSlug}-cms`;
+    const url = `${API_BASE_URL}/sitemap-${type}.xml?subdomain=${schoolSlug}`;
     console.log(`📡 Fetching sitemap-${type}.xml for ${schoolSlug}`);
 
     const xmlContent = await fetchSitemapXML(url);
@@ -189,7 +189,6 @@ const injectMetaTags = (html, pageData) => {
 const fetchPageData = async (slug, locale = 'en', school = null) => {
   try {
     let url;
-    const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
 
     // Check if this is a school-specific request
     if (school) {
@@ -197,19 +196,19 @@ const fetchPageData = async (slug, locale = 'en', school = null) => {
       const isHomepage = !normalizedSlug || normalizedSlug === 'home';
 
       if (isHomepage) {
-        // School homepage: /api/school/home?locale=en&slug=singapore-cms
+        // School homepage: /api/school/home?locale=en&slug=singapore
         url = `${API_BASE_URL}/api/school/home?`;
         if (locale) {
           url += `locale=${locale}&`;
         }
-        url += `slug=${school}${cmsSuffix}`;
+        url += `slug=${school}`;
       } else {
-        // School page: /api/school/page?locale=en&slug=about&school=singapore-cms
+        // School page: /api/school/page?locale=en&slug=about&school=singapore
         url = `${API_BASE_URL}/api/school/page?`;
         if (locale) {
           url += `locale=${locale}&`;
         }
-        url += `slug=${normalizedSlug}&school=${school}${cmsSuffix}`;
+        url += `slug=${normalizedSlug}&school=${school}`;
       }
     } else {
       // General page (no school)

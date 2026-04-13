@@ -1,0 +1,485 @@
+{
+  "en": {
+    "topBar": {
+      "admissions": { "label": "Admissions", "url": "/admissions" },
+      "careers": { "label": "Careers", "url": "/working-at-dulwich" }
+    },
+    "siteMapLabel": "See Full Site Map",
+    "scList": "Schools",
+    "desktopNav": [
+      {
+        "id": "about",
+        "label": "About",
+        "links": [
+          { "title": "Our Origins", "url": "/about-dulwich/our-origins" },
+          { "title": "Vision & Values", "url": "/about-dulwich/vision-and-values" },
+          { "title": "School Locations", "url": "/about-dulwich/school-locations" },
+          { "title": "Offerings", "url": "/about-dulwich/offerings" }
+         
+        ],
+        "cards": [
+          {
+            "heading": "LIVE WORLDWISE",
+            "url": "/about-dulwich/live-worldwise",
+            "imageKey": "live",
+            "imageAlt": "Visit Us",
+            "description": "We nurture students to Live Worldwise and develop the skills and character to make a positive difference in the world.",
+            "buttonText": "Live Worldwise"
+          },
+          {
+            "heading": "EDUCATIONAL LEADERSHIP",
+            "url": "/about-dulwich/educational-leadership",
+            "imageKey": "el",
+            "imageAlt": "Educational Leadership",
+            "description": "The Dulwich Educational Leadership team bring deep expertise and proven excellence to teaching and learning across our network.",
+            "buttonText": "Educational Leadership"
+          }
+          
+        ]
+      },
+      {
+        "id": "live",
+        "label": "Live",
+        "links": [
+          { "title": "Visual & Performing Arts", "url": "/live/visual-performing-arts" },
+          { "title": "Sports", "url": "/live/sports" },
+          { "title": "STEM", "url": "/live/stem-se21" },
+          { "title": "Mandarin", "url": "/live/mandarin" },
+          { "title": "Sustainability & Global Citizenship", "url": "/live/sustainability-and-global-citizenship" },
+          { "title": "Ignite: Switzerland", "url": "/live/ignite-switzerland-programme" }
+          
+        ],
+        "cards": [
+          {
+            "heading": "STUDENT LEADERSHIP",
+            "url": "/live/student-leadership",
+            "imageKey": "sle",
+            "imageAlt": "Student Leadership",
+            "description": "Dulwich students are empowered with the motivation, confidence, and skillset to lead with purpose.",
+            "buttonText": "Student Leadership"
+          },
+          {
+            "heading": "WELLBEING",
+            "url": "/live/wellbeing",
+            "imageKey": "well",
+            "imageAlt": "Wellbeing",
+            "description": "Students are our top priority. Their wellbeing, needs, and talents are at the heart of everything we do.",
+            "buttonText": "Wellbeing"
+          }
+        ]
+      },
+      {
+        "id": "world",
+        "label": "World",
+        "links": [
+          { "title": "Family of Schools", "url": "/world/one-family-of-schools" },
+          { "title": "Global Partnership", "url": "/world/global-partnerships" },
+          { "title": "EIMx", "url": "/world/eimx-summer-camps" },
+          { "title": "Dulwich Life", "url": "/dulwich-life" }
+          
+        ],
+        "cards": [
+          {
+            "heading": "WORLDWISE ALUMNI NETWORK",
+            "url": "/world/worldwise-alumni-network",
+            "imageKey": "wan",
+            "imageAlt": "Worldwise Alumni Network",
+            "description": "Our 8,000-strong Worldwise Alumni Network connects graduates around the world, fostering lifelong relationships, professional growth, and a shared commitment to positive impact.",
+            "buttonText": "Worldwise Alumni Network"
+          },
+          {
+            "heading": "Worldwise Events",
+            "url": "/world/worldwise-events",
+            "imageKey": "we",
+            "imageAlt": "Worldwise Events",
+            "description": "Worldwise Events bring our global community together through collaborative learning with leading practitioners and educators, connecting theory with real-world impact.",
+            "buttonText": " Worldwise Events"
+          }
+        ]
+      },
+      {
+        "id": "wise",
+        "label": "Wise",
+                "links": [
+         
+        ],
+        "cards": [
+          {
+            "heading": "ACADEMIC EXCELLENCE",
+            "url": "/wise/academic-results",
+            "imageKey": "excel",
+            "imageAlt": "Academic Excellence",
+            "description": "Dulwich Colleges and high schools continue to deliver exceptional outcomes, with our campuses recognised among the best IB schools in their country and region.",
+            "buttonText": "Academic Excellence"
+          },
+
+          {
+            "heading": "University Matriculation",
+            "url": "/wise/university-matriculation",
+            "imageKey": "matric",
+            "imageAlt": "University Matriculation",
+            "description": "Each year, Dulwich graduates matriculate to leading universities worldwide, reflecting their academic excellence, global outlook, and diverse ambitions.",
+            "buttonText": "University Matriculation"
+          },
+          {
+            "heading": "University & Careers Counselling",
+            "url": "/wise/university-and-careers-counselling",
+            "imageKey": "uni",
+            "imageAlt": "uni",
+            "description": "We begin our unique university and careers counselling programme in Year 7, and introduce students to age-appropriate university and careers topics until they graduate. Our students are well prepared to leave Dulwich as Worldwise graduates.",
+            "buttonText": "University & Careers Counselling"
+          }
+        ]
+      }
+    ],
+    "mobileNav": [
+      {
+        "id": "about",
+        "label": "About",
+        "type": "sectioned",
+        "borderFull": false,
+        "sections": [
+          {
+            "heading": "HIGHLIGHTED",
+            "style": "highlighted",
+            "links": [
+              { "title": "Educational Leadership", "url": "/about-dulwich/educational-leadership", "image": "el" },
+              { "title": "Live Worldwise", "url": "/about-dulwich/live-worldwise", "image": "live" }
+            ]
+          },
+          {
+            "heading": "ABOUT",
+            "style": "normal",
+        "links": [
+          { "title": "Our Origins", "url": "/about-dulwich/our-origins" },
+          { "title": "Vision & Values", "url": "/about-dulwich/vision-and-values" },
+          { "title": "School Locations", "url": "/about-dulwich/school-locations" },
+          { "title": "Offerings", "url": "/about-dulwich/offerings" }
+        ]
+          }
+        ]
+      },
+      {
+        "id": "live",
+        "label": "Live",
+        "type": "sectioned",
+        "borderFull": false,
+        "sections": [
+          {
+            "heading": "HIGHLIGHTED",
+            "style": "highlighted",
+            "links": [
+              { "title": "Student Leadership", "url": "/live/student-leadership", "image": "sle" },
+              { "title": "Wellbeing", "url": "/live/wellbeing", "image": "well" }
+            ]
+          },
+          {
+            "heading": "LIVE",
+            "style": "normal",
+        "links": [
+          { "title": "Visual & Performing Arts", "url": "/live/visual-performing-arts" },
+          { "title": "Sports", "url": "/live/sports" },
+          { "title": "STEM", "url": "/live/stem-se21" },
+          { "title": "Mandarin", "url": "/live/mandarin" },
+          { "title": "Sustainability & Global Citizenship", "url": "/live/sustainability-and-global-citizenship" },
+          { "title": "Ignite: Switzerland", "url": "/live/ignite-switzerland-programme" }
+        ]
+          }
+        ]
+      },
+      {
+        "id": "world",
+        "label": "World",
+        "type": "sectioned",
+        "borderFull": false,
+        "sections": [
+          {
+            "heading": "HIGHLIGHTED",
+            "style": "highlighted",
+            "links": [
+              { "title": "Worldwise Alumni Network", "url": "/world/worldwise-alumni-network", "image": "wan" },
+              { "title": "Worldwise Events", "url": "/world/worldwise-events", "image": "we" }
+            ]
+          },
+          {
+            "heading": "WORLD",
+            "style": "normal",
+            "links": [
+              { "title": "Family of Schools", "url": "/world/one-family-of-schools" },
+              { "title": "Global Partnership", "url": "/world/global-partnerships" },
+               { "title": "EIMx", "url": "/world/eimx-summer-camps" },
+              { "title": "Dulwich Life", "url": "/dulwich-life" }
+             
+
+            ]
+          }
+        ]
+      },
+      {
+        "id": "wise",
+        "label": "Wise",
+        "type": "sectioned",
+        "borderFull": true,
+        "sections": [
+          {
+            "heading": "HIGHLIGHTED",
+            "style": "highlighted",
+            "links": [
+              { "title": "Academic Excellence", "url": "/wise/academic-results", "image": "excel" },
+              { "title": "University Matriculation", "url": "/wise/university-matriculation", "image": "matric" },
+              { "title": "University & Careers Counselling", "url": "/wise/university-and-careers-counselling", "image": "uni" }
+            ]
+          }
+                   
+        ]
+      }
+    ],
+    "mobileExtraLinks": [
+      { "label": "Full Site Map", "href": "/sitemap" },
+      { "label": "Admissions", "href": "/admissions" },
+      { "label": "Careers", "href": "/working-at-dulwich"}
+    ]
+  },
+
+  "zh": {
+    "topBar": {
+      "admissions": { "label": "招生", "url": "/zh/admissions" },
+      "careers": { "label": "职业机会", "url": "/zh/working-at-dulwich" }
+    },
+    "siteMapLabel": "查看完整网站地图",
+    "scList": "学校",
+  "desktopNav": [
+      {
+        "id": "about",
+        "label": "关于我们",
+        "links":[
+          { "title": "起源", "url": "/zh/about-dulwich/our-origins" },
+          { "title": "愿景与价值观", "url": "/zh/about-dulwich/vision-and-values" },
+          { "title": "查找学校", "url": "/zh/about-dulwich/school-locations" },
+          { "title": "课程体系", "url": "/zh/about-dulwich/offerings" }
+         
+        ],
+        "cards":[
+          {
+            "heading":"Live Worldwise",
+            "url": "/zh/about-dulwich/live-worldwise",
+            "imageKey": "live",
+            "imageAlt": "访问我们",
+            "description": "德威培养学生心怀世界、睿引未来，发展学生的能力与品格，为世界创造积极影响。",
+            "buttonText": "Live Worldwise"
+          },
+          {
+            "heading": "学术领导团队",
+            "url": "/zh/about-dulwich/educational-leadership",
+            "imageKey": "el",
+            "imageAlt": "Educational Leadership",
+            "description": "德威学术领导团队以深厚的专业经验与卓越实践，引领整个学校大家庭的教学与学习发展。",
+            "buttonText": "学术领导团队"
+          }
+          
+        ]
+      },
+      {
+        "id": "live",
+        "label": "Live",
+        "links":[
+          { "title": "视觉与表演艺术", "url": "/zh/live/visual-performing-arts" },
+          { "title": "运动", "url": "/zh/live/sports" },
+          { "title": "STEM", "url": "/zh/live/stem-se21" },
+          { "title": "中文课程", "url": "/zh/live/mandarin" },
+          { "title": "可持续发展与全球公民意识", "url": "/zh/live/sustainability-and-global-citizenship" },
+          { "title": "Ignite: Switzerland", "url": "/zh/live/ignite-switzerland-programme" }
+          
+        ],
+        "cards":[
+          {
+            "heading": "学生领导力",
+            "url": "/zh/live/student-leadership",
+            "imageKey": "sle",
+            "imageAlt": "Student Leadership",
+            "description": "德威学生被赋能以动力、自信与能力，以目标与责任感引领未来。",
+            "buttonText": "学生领导力"
+          },
+          {
+            "heading":"身心健康",
+            "url": "/zh/live/wellbeing",
+            "imageKey": "well",
+            "imageAlt": "健康",
+            "description":"学生始终是我们的首要关注，他们的身心健康、成长需求与个人天赋是我们一切工作的核心。",
+            "buttonText": "身心健康"
+          }
+        ]
+      },
+      {
+        "id": "World",
+        "label":"World",
+        "links":[
+          { "title": "德威大家庭", "url": "/zh/world/one-family-of-schools" },
+          { "title": "全球战略合作", "url": "/zh/world/global-partnerships" },
+          { "title": "EIMx", "url": "/zh/world/eimx-summer-camps" },
+          { "title": "德威聚焦", "url": "/zh/dulwich-life" }
+          
+        ],
+        "cards":[
+          {
+            "heading":"智胜全球校友会",
+            "url": "/zh/world/worldwise-alumni-network",
+            "imageKey": "wan",
+            "imageAlt": "Worldwise 校友网络",
+            "description":"超过 8,000 余名成员组成的校友网络连接全球毕业生，促进长久联系与职业发展，共创积极影响。",
+            "buttonText": "智胜全球校友会"
+          },
+          {
+            "heading":"智胜全球活动",
+            "url": "/zh/world/worldwise-events",
+            "imageKey": "we",
+            "imageAlt": "国际经验",
+            "description":"智胜全球活动通过与世界领先实践者与教育者的协作教学，将德威全球社区连接在一起，让知识与现实世界产生真正的联系。",
+            "buttonText": "智胜全球活动"
+          }
+        ]
+      },
+      {
+        "id": "wise",
+        "label": "Wise",
+                "links":[
+         
+        ],
+        "cards":[
+          {
+            "heading":"学术卓越",
+            "url": "/zh/wise/academic-results",
+            "imageKey": "excel",
+            "imageAlt": "学术卓越",
+            "description": "学术卓越是德威四百年的传统，各所德威国际学校被广泛认可为全国甚至亚洲顶尖的 IB 学校，德威四年蝉联中国国际学校IB排行榜第一名。",
+            "buttonText": "学术卓越"
+          },
+ 
+          {
+            "heading":"大学升学成果",
+            "url": "/zh/wise/university-matriculation",
+            "imageKey": "matric",
+            "imageAlt": "大学入学资格",
+            "description": "每年，德威毕业生进入世界各地顶尖大学深造，展现出卓越的学术能力、国际视野与多元志向。",
+            "buttonText": "大学升学成果"
+          },
+          {
+            "heading": "升学及就业指导",
+            "url": "/zh/wise/university-and-careers-counselling",
+            "imageKey": "uni",
+            "imageAlt": "uni",
+            "description": "我们从七年级开始开展独特的大学与职业规划辅导项目，并在学生毕业之前持续向他们介绍符合其年龄阶段的大学和职业相关内容。我们的学生在离开德威时，已经成长为具有全球视野的毕业生。",
+            "buttonText": "升学及就业指导"
+          }
+        ]
+      }
+    ],
+    "mobileNav":[
+      {
+        "id": "about",
+        "label": "关于我们",
+        "type": "sectioned",
+        "borderFull": "false",
+       "sections":[
+          {
+            "heading": "高亮显示",
+            "style": "highlighted",
+            "links":[
+              { "title": "学术领导团队", "url": "/zh/about-dulwich/educational-leadership", "image": "el" },
+              { "title": "Live Worldwise", "url": "/zh/about-dulwich/live-worldwise", "image": "live" }
+            ]
+          },
+          {
+            "heading": "关于我们",
+            "style": "normal",
+        "links":[
+          { "title": "起源", "url": "/zh/about-dulwich/our-origins" },
+          { "title": "愿景与价值观", "url": "/zh/about-dulwich/vision-and-values" },
+          { "title": "查找学校", "url": "/zh/about-dulwich/school-locations" },
+          { "title": "课程介绍", "url": "/zh/about-dulwich/offerings" }
+        ]
+          }
+        ]
+      },
+      {
+        "id": "live",
+        "label": "Live",
+        "type": "sectioned",
+        "borderFull": "false",
+       "sections":[
+          {
+            "heading": "高亮显示",
+            "style": "highlighted",
+            "links":[
+              { "title": "学生领导力", "url": "/zh/live/student-leadership", "image": "sle" },
+              { "title": "健康", "url": "/zh/live/wellbeing", "image": "well" }
+            ]
+          },
+          {
+            "heading": "直播",
+            "style": "normal",
+        "links":[
+          { "title": "视觉与表演艺术", "url": "/zh/live/visual-performing-arts" },
+          { "title": "运动", "url": "/zh/live/sports" },
+          { "title": "STEM", "url": "/zh/live/stem-se21" },
+          { "title": "中文课程", "url": "/zh/live/mandarin" },
+          { "title": "可持续发展与全球公民意识", "url": "/zh/live/sustainability-and-global-citizenship" },
+          { "title": "Ignite: Switzerland", "url": "/zh/live/ignite-switzerland-programme" }
+        ]
+          }
+        ]
+      },
+      {
+        "id": "World",
+        "label": "World",
+        "type": "sectioned",
+        "borderFull": false,
+       "sections":[
+          {
+            "heading": "高亮显示",
+            "style": "highlighted",
+            "links":[
+              { "title": "智胜全球校友会", "url": "/zh/world/worldwise-alumni-network", "image": "wan" },
+              { "title": "智胜全球活动", "url": "/zh/world/worldwise-events", "image": "we" }
+            ]
+          },
+          {
+            "heading":"World",
+            "style": "normal",
+            "links":[
+              { "title": "德威大家庭", "url": "/zh/world/one-family-of-schools" },
+              { "title": "全球战略合作", "url": "/zh/world/global-partnerships" },
+              { "title": "EIMx", "url": "/zh/world/eimx-summer-camps" },
+              { "title": "德威聚焦", "url": "/zh/dulwich-life" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "wise",
+        "label": "Wise",
+        "type": "sectioned",
+        "borderFull": true,
+       "sections":[
+          {
+            "heading":"高亮显示",
+            "style": "highlighted",
+            "links":[
+              { "title": "升学及就业指导", "url": "/zh/wise/academic-results", "image": "excel" },
+              { "title": "大学升学成果", "url": "/zh/wise/university-matriculation", "image": "matric" },
+              { "title": "大学及职业咨询", "url": "/zh/wise/university-and-careers-counselling", "image": "uni"}
+            ]
+          }
+                   
+        ]
+      }
+    ],
+ 
+    "mobileExtraLinks": [
+      { "label": "完整网站地图", "href": "/sitemap" },
+       { "label": "招生", "href": "/zh/admissions" },
+       { "label": "职业机会", "href": "/zh/working-at-dulwich" }
+ 
+    ]
+  }
+}

@@ -1,0 +1,347 @@
+{
+  "menu": {
+    "header": "Dulwich College Singapore Menu",
+    "subHeaders": [
+      {
+        "title": "why Dulwich",
+        "pages": [
+          {
+            "title": "Vision & Values",
+            "url": "/about-dulwich/vision-and-values"
+          },
+          {
+            "title": "Group Origins",
+            "url": "/about-dulwich/our-origins",
+            "subPages": [
+              {
+                "title": "400 Years of Heritage",
+                "url": "/about-dulwich/our-origins/400-years-of-heritage"
+              },
+              {
+                "title": "Education in Motion (EiM)",
+                "url": "/about-dulwich/our-origins/education-in-motion"
+              }
+            
+            ]
+          },    {
+            "title": "Wellbeing",
+            "url": "/how-we-teach-and-learn/wellbeing"
+          },
+          {
+            "title": "Compassionate Systems Education",
+            "url": "/how-we-teach-and-learn/compassionate-systems"
+          },
+          {
+            "title": "Education Innovation",
+            "url": "/how-we-teach-and-learn/learning-principles-and-innovation"
+          },
+          {
+            "title": "High Potential Learners",
+            "url": "/how-we-teach-and-learn/high-potential-learners"
+          },
+          {
+            "title": "University Counselling",
+            "url": "/how-we-teach-and-learn/dcsg-university-counselling"
+          }
+          ,
+          {
+            "title": "Group Education Team",
+            "url": "/about-dulwich/education-team"
+          },
+          {
+            "title": "The Network Effect",
+            "url": "/about-dulwich/the-network-effect"
+        
+          },
+          {
+            "title": "One Family of Schools",
+            "url": "/about-dulwich/the-network-effect/one-family-of-schools"
+          },
+          {
+            "title": "Holiday Camps",
+            "url": "/holistic-curriculum/holiday-camps"
+          },
+          {
+            "title": "Worldwise Events",
+            "url": "/holistic-curriculum/worldwise-events"
+          }
+        ]
+      },
+      {
+        "title": "Learning",
+        "pages": [
+          {
+            "title": "DUCKS (Ages 2 to 7)",
+            "url": "/holistic-curriculum/ducks-ages-2-to-7",
+            "subPages": [
+              {
+                "title": "Forest School",
+                "url": "/holistic-curriculum/ducks-ages-2-to-7/forest-school"
+              }
+            ]
+          },
+          {
+            "title": "Junior School (Ages 7 to 11)",
+            "url": "/holistic-curriculum/junior-school-ages-7-to-11"
+          },
+          {
+            "title": "Senior School (Ages 11 to 18)",
+            "url": "/holistic-curriculum/senior-school-ages-11-to-18",
+            "subPages": [
+              {
+                "title": "The Inside Story",
+                "url": "/holistic-curriculum/senior-school-ages-11-to-18/the-inside-story"
+              },
+              {
+                "title": "IBCP",
+                "url": "/holistic-curriculum/senior-school-ages-11-to-18/ibcp"
+              },
+              {
+                "title": "IBDP",
+                "url": "/holistic-curriculum/senior-school-ages-11-to-18/ibdp"
+              }
+            ]
+          },
+          {
+            "title": "Mandarin",
+            "url": "/holistic-curriculum/mandarin"
+          },
+          {
+            "title": "STEAM / SE21",
+            "url": "/holistic-curriculum/stem-se21"
+          },
+          {
+            "title": "Visual & Performing Arts",
+            "url": "/holistic-curriculum/visual-and-performing-arts",
+            "subPages": [
+              {
+                "title": "Music",
+                "url": "/holistic-curriculum/visual-and-performing-arts/music"
+              },
+              {
+                "title": "Drama",
+                "url": "/holistic-curriculum/visual-and-performing-arts/drama"
+              },
+              {
+                "title": "Art",
+                "url": "/holistic-curriculum/visual-and-performing-arts/visual-art"
+              },
+              {
+                "title": "Dance",
+                "url": "/holistic-curriculum/visual-and-performing-arts/dance"
+              }
+            ]
+          },
+          {
+            "title": "Ignite: Performance Development",
+            "url": "/holistic-curriculum/dcsg-ignite"
+          },
+          {
+            "title": "Co-Curricular Activities",
+            "url": "/holistic-curriculum/co-curricular-activities"
+          },
+          {
+            "title": "Libraries",
+            "url": "/holistic-curriculum/libraries"
+          },
+          {
+            "title": "Sports",
+            "url": "/holistic-curriculum/sports"
+          },
+          {
+            "title": "Learning Beyond the Classroom",
+            "url": "/holistic-curriculum/learning-beyond-the-classroom",
+            "subPages": [
+              {
+                "title": "Outdoor Education",
+                "url": "/holistic-curriculum/learning-beyond-the-classroom/outdoor-education"
+              },
+              {
+                "title": "International Awards",
+                "url": "/holistic-curriculum/learning-beyond-the-classroom/international-award"
+              },
+              {
+                "title": "Educational Visits",
+                "url": "/holistic-curriculum/learning-beyond-the-classroom/educational-visits"
+              }
+            ]
+          },
+          {
+            "title": "Student Leadership Programme",
+            "url": "/holistic-curriculum/student-leadership"
+          },
+        
+          {
+            "title": "Ignite: Switzerland",
+            "url": "/holistic-curriculum/ignite-switzerland-programme",
+            "subPages": [
+              {
+                "title": "Ignite: Switzerland Boarding",
+                "url": "/holistic-curriculum/ignite-switzerland-programme/ignite-switzerland-boarding"
+              },
+              {
+                "title": "Ignite: Switzerland Electives",
+                "url": "/holistic-curriculum/ignite-switzerland-programme/ignite-switzerland-electives"
+              },
+              {
+                "title": "Ignite: Switzerland FAQs",
+                "url": "/holistic-curriculum/ignite-switzerland-programme/ignite-switzerland-faqs"
+              },
+              {
+                "title": "Ignite: Switzerland Handbook",
+                "url": "/holistic-curriculum/ignite-switzerland-programme/ignite-switzerland-handbook"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Community",
+        "pages": [
+          {
+            "title": "Teachers",
+            "url": "/community/teachers"
+          },
+          {
+            "title": "Friends of Dulwich",
+            "url": "/community/friends-of-dulwich"
+          },
+          {
+            "title": "Alumni",
+            "url": "/community/worldwise-alumni-network"
+          },
+          {
+            "title": "Collaborations",
+            "url": "/community/collaborations"
+          },
+          {
+            "title": "From our Head of College",
+            "url": "/our-college/from-our-head-of-college"
+          },
+          {
+            "title": "School Heritage",
+            "url": "/our-college/school-heritage"
+          },
+          {
+            "title": "Vision & Values",
+            "url": "/our-college/guiding-statements"
+          },
+          {
+            "title": "Sustainability & Global Citizenship",
+            "url": "/our-college/sustainability-and-global-citizenship"
+          },
+          {
+            "title": "Diversity, Equity & Inclusion",
+            "url": "/our-college/dei"
+          },
+          {
+            "title": "Academic Results",
+            "url": "/our-college/academic-results"
+          },
+          {
+            "title": "Facilities",
+            "url": "/our-college/campus-environment"
+          },
+          {
+            "title": "The Greenhouse",
+            "url": "/our-college/the-greenhouse"
+          },
+          {
+            "title": "Boarding",
+            "url": "/our-college/boarding"
+          },
+          {
+            "title": "Safeguarding",
+            "url": "/our-college/safeguarding"
+          },
+          {
+            "title": "Affiliations & Accreditations",
+            "url": "/our-college/affiliations-accreditations"
+          },
+          {
+            "title": "Governance",
+            "url": "/our-college/governance"
+          },
+          {
+            "title": "School Calendar",
+            "url": "/our-college/academic-year-calendar"
+          },
+          {
+            "title": "Events",
+            "url": "/our-college/dcsg-events",
+            "subPages": [
+              {
+                "title": "Dulwich Olympiad 2024",
+                "url": "/our-college/dcsg-events/dulwich-olympiad-2024"
+              }
+            ]
+          },
+          {
+            "title": "Worldwise Partnership Programme",
+            "url": "/our-college/worldwise-partnership-programme"
+          }
+        ]
+      }
+    ,
+      {
+        "title": "Admissions",
+        "pages": [
+          {
+            "title": "Overview",
+            "url": "/admissions/admissions-overview"
+          },
+          {
+            "title": "How to Apply",
+            "url": "/admissions/how-to-apply"
+          },
+          {
+            "title": "Enquire",
+            "url": "/admissions/enquire"
+          },
+          {
+            "title": "Visit Us",
+            "url": "/admissions/visit-us"
+          },
+          {
+            "title": "Apply Now",
+            "url": "/admissions/apply-now"
+          },
+          {
+            "title": "Book a Tour*",
+            "url": "/admissions/visit-us"
+          },
+          {
+            "title": "Virtual Tour*",
+            "url": "https://virtualtour.dulwich.org/singapore?utm_source=website&utm_medium=mainmenu&utm_campaign=virtualtour"
+          },
+          {
+            "title": "Open Day*",
+            "url": "/admissions/visit-us"
+          },
+          {
+            "title": "Contact*",
+            "url": "/contact"
+          },
+          {
+            "title": "Virtual Tour",
+            "url": "https://virtualtour.dulwich.org/singapore?utm_source=website&utm_medium=mainmenu&utm_campaign=virtualtour"
+          },
+          {
+            "title": "Scholarships",
+            "url": "/admissions/scholarships",
+            "subPages": [
+              {
+                "title": "Alleynian Scholarship",
+                "url": "/admissions/scholarships/alleynian-scholarship"
+              },
+              {
+                "title": "Music Scholarship",
+                "url": "/admissions/scholarships/music-scholarships"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
