@@ -51,8 +51,8 @@ export const fetchSchoolPageBySlug = async (slug, school, locale) => {
       // Homepage - use /api/school/home with slug={schoolName}
       const params = new URLSearchParams();
       if (locale) params.append('locale', locale);
-      // For this specific endpoint, 'slug' param holds the school name
-      params.append('slug', detectedSchool);
+      // For this specific endpoint, 'slug' param holds the school name with -cms suffix
+      params.append('slug', `${detectedSchool}-cms`);
       url = `${API_BASE_URL}/api/school/home?${params.toString()}`;
     } else {
       // Other pages - use /api/school/page
@@ -293,8 +293,8 @@ export const fetchSchoolInfo = async (school, locale) => {
       url += `locale=${locale}&`;
     }
 
-    // Add school parameter
-    url += `school=${detectedSchool}`;
+    // Add school parameter with -cms suffix for school_info API
+    url += `school=${detectedSchool}-cms`;
 
     console.log('🔍 Fetching school info from:', url);
 
@@ -363,7 +363,8 @@ export const fetchMainMenu = async (school, locale) => {
     if (locale) {
       params.append('locale', locale);
     }
-    params.append('school', detectedSchool);
+    // Add -cms suffix for mainmenu API
+    params.append('school', `${detectedSchool}-cms`);
 
     const url = `${API_BASE_URL}/api/mainmenu?${params.toString()}`;
 

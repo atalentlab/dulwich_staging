@@ -41,7 +41,8 @@ const MainCampusMapBlock = ({ content }) => {
       try {
         setLoading(true);
         const baseUrl = process.env.REACT_APP_API_URL;
-        const apiUrl = `${baseUrl}/api/school_info?locale=${locale}&school=${schoolSlug}`;
+        // Add -cms suffix for school_info API
+        const apiUrl = `${baseUrl}/api/school_info?locale=${locale}&school=${schoolSlug}-cms`;
 
         console.log('🗺️ MainCampusMapBlock - Fetching school info:', apiUrl);
 
