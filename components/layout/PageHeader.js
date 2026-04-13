@@ -645,86 +645,106 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                     delayDuration={100}
                   >
                     <NavigationMenu.List className="flex items-left gap-1">
-                      {nav.desktopNav.map((navItem) => (
-                        <NavigationMenu.Item key={navItem.id}>
-                          <NavigationMenu.Trigger className="group px-5 py-1 text-[16px] font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative">
-                            {navItem.label}
-                            <span className={`absolute ${scrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] scale-x-0 group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-all duration-200 origin-left`}></span>
-                          </NavigationMenu.Trigger>
-                          <NavigationMenu.Content
-                            className={`fixed left-0 right-0 ${scrolled ? 'top-[72px]' : 'top-[140px]'} w-full transition-all duration-200 ease-out z-[60]`}
-                            style={{ transformOrigin: 'top', animation: 'none' }}
-                          >
-                            <div className="w-full bg-white">
-                              <div className="w-[1120px] mx-auto px-4 py-8">
-                                <div className="grid grid-cols-3 gap-8 mb-8">
-                                  {/* Links column - only rendered when links exist */}
-                                  {navItem.links.length > 0 && (
-                                    <div className="text-left">
-                                      <ul className="space-y-4">
-                                        {navItem.links.map((link, i) => (
-                                          <li key={i}>
-                                            <a href={link.url} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
-                                              {link.title}
+                      {nav.desktopNav.map((navItem) => {
+                        const subsections = navItem.subsectionLinks || [];
+                        const cards = navItem.cards || [];
+                        // Extract pathname for correct routing
+                        const getPath = (url) => {
+                          if (url - X GET "https://pru-my.atalent.xyz/cpd-malaysia-v1/cpd-result/" - H "user_id: 113561" - H "api-token: 0986b9fd54f1f7b1dd2628d72a75c147432f237709a31d86b18459dc467faebc" || url === '#') return null;
+                      try { return new URL(url).pathname; } catch { return url; }
+                        };
+                        // Grid: col-span-2 for subsections (2-col inside) + up to 2 card cols
+                        const hasSubsections = subsections.length > 0;
+                      const totalCols = hasSubsections ? Math.min(4, 2 + cards.length) : Math.min(4, cards.length);
+                      const gridCols = ['', 'grid-cols-1', 'grid-cols-2', 'grid-cols-3', 'grid-cols-4'][totalCols] || 'grid-cols-3';
+                      return (
+                      <NavigationMenu.Item key={navItem.id}>
+                        <NavigationMenu.Trigger className="group px-5 py-1 text-[16px] font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative">
+                          {navItem.label}
+                          <span className={`absolute ${scrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] scale-x-0 group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-all duration-200 origin-left`}></span>
+                        </NavigationMenu.Trigger>
+                        <NavigationMenu.Content
+                          className={`fixed left-0 right-0 ${scrolled ? 'top-[72px]' : 'top-[140px]'} w-full transition-all duration-200 ease-out z-[60]`}
+                          style={{ transformOrigin: 'top', animation: 'none' }}
+                        >
+                          <div className="w-full bg-white">
+                            <div className="w-[1120px] mx-auto px-4 py-8">
+                              <div className={`grid ${gridCols} gap-8 mb-8`}>
+
+                                {/* LEFT: subsection titles in 2-column internal grid */}
+                                {hasSubsections && (
+                                  <div className="col-span-2 grid grid-cols-2 gap-6 text-left">
+                                    {subsections.map((sub, i) => {
+                                      const path = getPath(sub.url);
+                                      return (
+                                        <div key={sub.id || i}>
+                                          {path ? (
+                                            <a href={path} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                              {sub.title}
                                             </a>
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  )}
-
-                                  {/* Feature cards */}
-                                  {navItem.cards.map((card, i) => (
-                                    <a key={i} href={card.url}>
-                                      <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-6 uppercase tracking-widest">
-                                        {card.heading}
-                                      </h3>
-                                      <div className="text-left overflow-hidden">
-                                        <img
-                                          src={card.imageUrl || imageMap[card.imageKey]}
-                                          alt={card.imageAlt}
-                                          className="w-full h-40 object-cover rounded-lg overflow-hidden"
-                                        />
-                                        <div className="mt-5">
-                                          <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">
-                                            {card.description}
-                                          </p>
-                                          <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-[#9E1422] hover:text-white transition-all duration-200">
-                                            {card.heading}
-                                          </button>
+                                          ) : (
+                                            <span className="text-base text-[#3C3C3B]">{sub.title}</span>
+                                          )}
                                         </div>
-                                      </div>
-                                    </a>
-                                  ))}
-                                </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
 
-                                {/* Bottom Section */}
-                                <div className="pt-6 border-t col-span-2 border-[#EAE8E4] flex items-center justify-between">
-                                  <a href={isChineseVersion ? '/zh/sitemap' : '/sitemap'} className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
-                                    {nav.siteMapLabel}
-                                  </a>
-                                  <form onSubmit={handleSearch} className="relative w-[50%]">
-                                    <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                                      <Icon icon="Icon-Search" size={16} color="#9CA3AF" />
+                                {/* RIGHT: highlight cards */}
+                                {cards.map((card, i) => (
+                                  <a key={i} href={getPath(card.url) || card.url}>
+                                    <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-6 uppercase tracking-widest">
+                                      {card.heading}
+                                    </h3>
+                                    <div className="text-left overflow-hidden">
+                                      <img
+                                        src={card.imageUrl || imageMap[card.imageKey]}
+                                        alt={card.imageAlt}
+                                        className="w-full h-40 object-cover rounded-lg overflow-hidden"
+                                      />
+                                      <div className="mt-5">
+                                        <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">
+                                          {card.description}
+                                        </p>
+                                        <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-[#9E1422] hover:text-white transition-all duration-200">
+                                          {card.heading}
+                                        </button>
+                                      </div>
                                     </div>
-                                    <input
-                                      type="text"
-                                      placeholder={isChineseVersion ? '搜索' : 'Search'}
-                                      value={searchQuery}
-                                      onChange={(e) => setSearchQuery(e.target.value)}
-                                      autoComplete="off"
-                                      autoCorrect="off"
-                                      autoCapitalize="off"
-                                      spellCheck="false"
-                                      className="w-full pl-10 pr-4 py-2 border border-[#EAE8E4] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent"
-                                    />
-                                  </form>
-                                </div>
+                                  </a>
+                                ))}
+
+                              </div>
+
+                              {/* Bottom Section */}
+                              <div className="pt-6 border-t col-span-2 border-[#EAE8E4] flex items-center justify-between">
+                                <a href={isChineseVersion ? '/zh/sitemap' : '/sitemap'} className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                  {nav.siteMapLabel}
+                                </a>
+                                <form onSubmit={handleSearch} className="relative w-[50%]">
+                                  <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                                    <Icon icon="Icon-Search" size={16} color="#9CA3AF" />
+                                  </div>
+                                  <input
+                                    type="text"
+                                    placeholder={isChineseVersion ? '搜索' : 'Search'}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    autoComplete="off"
+                                    autoCorrect="off"
+                                    autoCapitalize="off"
+                                    spellCheck="false"
+                                    className="w-full pl-10 pr-4 py-2 border border-[#EAE8E4] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent"
+                                  />
+                                </form>
                               </div>
                             </div>
-                          </NavigationMenu.Content>
-                        </NavigationMenu.Item>
-                      ))}
+                          </div>
+                        </NavigationMenu.Content>
+                      </NavigationMenu.Item>
+                      );
+                      })}
 
                       {/* Schools Dropdown */}
                       {/* {availableSchools && availableSchools.length > 0 && (
@@ -795,7 +815,7 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                     )}
                   </div>
 
-{/* <a href={isChineseVersion ? "/zh/admissions/enquire" : "/admissions/enquire"}>
+                  {/* <a href={isChineseVersion ? "/zh/admissions/enquire" : "/admissions/enquire"}>
                   <button
                     className="group flex items-center gap-2 px-4 py-3 text-sm border rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
                     style={{ color: '#D30013', borderColor: '#D30013' }}
@@ -807,17 +827,17 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                   </button>
                   </a> */}
 
-<a href={isChineseVersion ? "/zh/find-a-school" : "/find-a-school"}>
-  <button
-    className="group flex items-center gap-2 px-5 py-3.5 text-sm text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg active:scale-95"
-    style={{ backgroundColor: '#D30013' }}
-    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#B8000F'; }}
-    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#D30013'; }}
-  >
-    {isChineseVersion ? '查找学校' : 'Find a School'}
-    <Icon icon="Find-a-School_White" size={18} color="white" className="pb-[2px]"/>
-  </button>
-</a>
+                  <a href={isChineseVersion ? "/zh/find-a-school" : "/find-a-school"}>
+                    <button
+                      className="group flex items-center gap-2 px-5 py-3.5 text-sm text-white rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg active:scale-95"
+                      style={{ backgroundColor: '#D30013' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#B8000F'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#D30013'; }}
+                    >
+                      {isChineseVersion ? '查找学校' : 'Find a School'}
+                      <Icon icon="Find-a-School_White" size={18} color="white" className="pb-[2px]" />
+                    </button>
+                  </a>
                 </div>
               </div>
             </div>
@@ -846,21 +866,21 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
       <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
         <div className="px-4 py-2.5 border-b border-gray-200">
           <div className="flex items-center justify-between">
-      <div className='flex items-center'>
+            <div className='flex items-center'>
               {/* Logo */}
               <img
-              src="/images/crest-logo.svg"
-              alt="Dulwich College"
-              className="h-10 w-auto cursor-pointer pr-4"
-              onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
-            />
-               <img
-              src={logo}
-              alt="Dulwich College"
-              className="w-[220px] cursor-pointer"
-              onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
-            />
-      </div>
+                src="/images/crest-logo.svg"
+                alt="Dulwich College"
+                className="h-10 w-auto cursor-pointer pr-4"
+                onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
+              />
+              <img
+                src={logo}
+                alt="Dulwich College"
+                className="w-[220px] cursor-pointer"
+                onClick={() => window.location.href = isChineseVersion ? '/zh/' : '/'}
+              />
+            </div>
 
             {/* Menu Button */}
             <button
@@ -878,13 +898,13 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
         <div className="grid grid-cols-3 h-16">
           {/* ai ask replaced */}
-          <a href={isChineseVersion ? "/zh/admissions" : "/admissions"} 
+          <a href={isChineseVersion ? "/zh/admissions" : "/admissions"}
             // onClick={() => setChatOpen && setChatOpen(true)}
             className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors"
           >
             {/* <Icon icon="Icon-AI" size={20} color="#D30013" /> */}
-            
-             <Icon icon="Admissions" size={20} color="#D30013" />
+
+            <Icon icon="Admissions" size={20} color="#D30013" />
             <span className="text-[10px] text-[#3C3C3B]"> {isChineseVersion ? '招生' : 'Admissions'}</span>
           </a>
 
@@ -896,7 +916,7 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
 
           {/* APPLY */}
           <a href={isChineseVersion ? "/zh/find-a-school" : "/find-a-school"} className="flex flex-col items-center justify-center gap-1 hover:bg-gray-50 transition-colors">
-          <Icon icon="Find-a-School_Red" size={18} color="red" className="transition-transform duration-300 group-hover:translate-x-1" />
+            <Icon icon="Find-a-School_Red" size={18} color="red" className="transition-transform duration-300 group-hover:translate-x-1" />
             <span className="text-[10px] text-[#3C3C3B]"> {isChineseVersion ? '查找学校' : 'Find a School'}</span>
           </a>
 
@@ -933,7 +953,7 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                 <span className="text-[12px] font-bold">HOME</span>
               </a>
               <button onClick={() => setMobileMenuOpen(false)} className="p-1 hover:bg-gray-100 rounded-full transition-colors">
-              <Icon icon="Close-Button" size={38} color="#D30013"/>
+                <Icon icon="Close-Button" size={38} color="#D30013" />
               </button>
             </div>
 
@@ -960,9 +980,8 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                       </button>
                       {/* Red underline when expanded */}
                       <div
-                        className={`section-underline absolute left-0 right-0 bottom-0 h-[4px] bg-[#9E1422] ${
-                          openMobileSection === section.id ? 'scale-x-100' : 'scale-x-0'
-                        }`}
+                        className={`section-underline absolute left-0 right-0 bottom-0 h-[4px] bg-[#9E1422] ${openMobileSection === section.id ? 'scale-x-100' : 'scale-x-0'
+                          }`}
                       />
                     </div>
 
@@ -1103,11 +1122,10 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                               }
                               setMobileMenuOpen(false);
                             }}
-                            className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 ${
-                              selectedSchool === `${school.title}`
+                            className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 ${selectedSchool === `${school.title}`
                                 ? 'bg-white font-semibold text-[#D30013] scale-[1.02]'
                                 : 'hover:bg-white hover:scale-[1.02] text-[#4B5563]'
-                            }`}
+                              }`}
                           >
                             <div className="flex items-center justify-between">
                               <span> {school.title}</span>
@@ -1125,9 +1143,8 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                 {/* Search and Language Tabs */}
                 <div
                   ref={mobileSearchRef}
-                  className={`bg-[#fff] mt-4 pt-4 border-t border-[#F2EDE9] px-4 py-4 -mx-4 transition-all duration-300 ${
-                    isSearchFocused ? 'bg-[#FAF7F5] shadow-lg' : 'bg-[#FAF7F5]'
-                  }`}
+                  className={`bg-[#fff] mt-4 pt-4 border-t border-[#F2EDE9] px-4 py-4 -mx-4 transition-all duration-300 ${isSearchFocused ? 'bg-[#FAF7F5] shadow-lg' : 'bg-[#FAF7F5]'
+                    }`}
                 >
                   <div className="flex items-center gap-3 ">
                     {/* Search */}
@@ -1154,11 +1171,10 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                         autoCapitalize="off"
                         spellCheck="false"
                         inputMode="search"
-                        className={`w-full pl-10 pr-4 py-2.5 bg-[#FAF7F5] border bottom-[#F2EDE9] rounded-lg text-sm transition-all duration-300 ${
-                          isSearchFocused
+                        className={`w-full pl-10 pr-4 py-2.5 bg-[#FAF7F5] border bottom-[#F2EDE9] rounded-lg text-sm transition-all duration-300 ${isSearchFocused
                             ? 'border-[#D30013] ring-2 ring-[#D30013] ring-opacity-50 shadow-lg'
                             : 'border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent'
-                        }`}
+                          }`}
                       />
                     </form>
 

@@ -62,7 +62,7 @@ const extractUrlsFromSitemap = (xmlContent, targetDomain) => {
     let urlBlock = match[1];
 
     // Replace any localhost or CMS domain URLs with the target domain
- 
+
     urlBlock = urlBlock.replace(
       /(https?:\/\/)[^\/]+/g,
       targetDomain
@@ -208,7 +208,7 @@ const fetchPageData = async (slug, locale = 'en', school = null) => {
         if (locale) {
           url += `locale=${locale}&`;
         }
-        url += `slug=${normalizedSlug}&school=${school}`;
+        url += `slug=${normalizedSlug}&school=${school}-cms`;
       }
     } else {
       // General page (no school)

@@ -14,11 +14,16 @@ const fetchDynamicMenu = async (locale = 'en', school = null) => {
     // Add -cms suffix for dynamic_menu API
     params.append('school', `${school}-cms`);
   }
-  const response = await fetch(`${API_BASE_URL}/api/dynamic_menu?${params.toString()}`);
+  const url = `${API_BASE_URL}/api/dynamic_menu?${params.toString()}`;
+  console.log('[useDynamicMenu] Fetching:', url);
+
+  const response = await fetch(url);
   if (!response.ok) {
-    throw new Error('Failed to fetch dynamic menu');
+    console.error('[useDynamicMenu] Fetch failed:', response.status, response.statusText);
+    throw new Error(`Failed to fetch dynamic menu: ${response.status}`);
   }
   const data = await response.json();
+  console.log('[useDynamicMenu] Received data:', data);
   return data;
 };
 
@@ -31,8 +36,8 @@ export const useDynamicMenu = (locale = 'en', school = null) => {
   return useQuery({
     queryKey: ['dynamicMenu', locale, school],
     queryFn: () => fetchDynamicMenu(locale, school),
-    staleTime: 1000 * 60 * 30, // Cache for 30 minutes
-    cacheTime: 1000 * 60 * 60, // Keep in cache for 1 hour
+    staleTime: 0, // Always fetch fresh data
+    cacheTime: 1000 * 60 * 5, // Keep in memory for 5 minutes
     refetchOnWindowFocus: false,
     retry: 2,
   });

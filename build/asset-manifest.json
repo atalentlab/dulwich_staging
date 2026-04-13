@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.1c0c8778.css",
-    "main.js": "/static/js/main.8e19c701.js",
+    "main.css": "/static/css/main.9bd52dce.css",
+    "main.js": "/static/js/main.13b6dc46.js",
     "static/js/919.128a2a0c.chunk.js": "/static/js/919.128a2a0c.chunk.js",
     "static/media/EiMAdshootforThailandatDCSG-Sun-138.jpg": "/static/media/EiMAdshootforThailandatDCSG-Sun-138.4274e6cda593da2aac16.jpg",
     "static/media/DCSG__DUCKS_Geography.jpg": "/static/media/DCSG__DUCKS_Geography.ca9a616385984989c9d9.jpg",
@@ -9,14 +9,11 @@
     "static/media/JS.jpg": "/static/media/JS.b35d7efd7fa0f56a2202.jpg",
     "static/media/DCSZ_Chevron_KV_3840x2160_20260123.png": "/static/media/DCSZ_Chevron_KV_3840x2160_20260123.fe485489d41cb415ce7f.png",
     "static/media/DCSZ_Holistic_Curriculum.JPG": "/static/media/DCSZ_Holistic_Curriculum.a697898859083d1a3fbc.JPG",
-    "static/media/Communitymparents.JPG": "/static/media/Communitymparents.c9be74750f1d801c33d3.JPG",
     "static/media/AO0T3146.jpg": "/static/media/AO0T3146.56271716ca3b3dd83363.jpg",
     "static/media/Curriculum.png": "/static/media/Curriculum.ea6e20860a94c7f0feed.png",
-    "static/media/Learningwel.png": "/static/media/Learningwel.140abe859d4d53f27c79.png",
     "static/media/DCSZ_HomepageKV.png": "/static/media/DCSZ_HomepageKV.cb9678e69f187ba4d260.png",
     "static/media/DCSG_DUCKS_2 Girls.jpg": "/static/media/DCSG_DUCKS_2 Girls.4aa01ead8db12294422d.jpg",
     "static/media/240605DCSGFoundingFamilies(Full)-65.jpg": "/static/media/240605DCSGFoundingFamilies(Full)-65.906d80272c616d695b7b.jpg",
-    "static/media/sustory.jpg": "/static/media/sustory.4b23c5bc0879bbcfe0af.jpg",
     "static/media/Leadership1.jpg": "/static/media/Leadership1.3b2d1481b1740aa1f893.jpg",
     "static/media/sle.png": "/static/media/sle.d8510501d3434b90c485.png",
     "static/media/excel.png": "/static/media/excel.a236f59e7d29a858507f.png",
@@ -42,17 +39,12 @@
     "static/media/seoul.svg": "/static/media/seoul.cce69743b3b0e95edb2d19bd4bd6db02.svg",
     "static/media/beijing.svg": "/static/media/beijing.a4d091b154ae39ea4ba07325da3771f1.svg",
     "static/media/article-logo.svg": "/static/media/article-logo.bb1cb2a866005a9ba99201c9eae818c6.svg",
-    "static/media/visitus.jpg": "/static/media/visitus.1d51456face2bf7c522b.jpg",
-    "static/media/LearningStudentleadership.jpg": "/static/media/LearningStudentleadership.93651d3728c6ce1dcefd.jpg",
-    "static/media/acre.jpg": "/static/media/acre.7301103ca84098c323ee.jpg",
     "static/media/Wechat_QRcode.webp": "/static/media/Wechat_QRcode.49292665b7a73aec99c6.webp",
-    "static/media/WhyUniversityMatriculation.jpeg": "/static/media/WhyUniversityMatriculation.14b481e4bfdf1fcde6b7.jpeg",
     "static/media/icomoon.svg?7b4acw": "/static/media/icomoon.197bf9bc113f70ea725e.svg",
     "static/media/sticky-beijing-mobile.svg": "/static/media/sticky-beijing-mobile.c39b17eb85fd6ea94c7a03ffd7176a04.svg",
     "static/media/University Matriculation.jpeg": "/static/media/University Matriculation.122b93562d3e5eea1a9c.jpeg",
     "static/media/suzhou.jpeg": "/static/media/suzhou.062c56e1432dd0a0bea5.jpeg",
     "static/media/puxi.jpg": "/static/media/puxi.3c30cbfe20eb20e2ec4b.jpg",
-    "static/media/um.jpg": "/static/media/um.60f997d5c1d25ce76700.jpg",
     "static/media/hs-suzhou.jpeg": "/static/media/hs-suzhou.ee92553c4ee5e1a5b14b.jpeg",
     "static/media/seoul.jpeg": "/static/media/seoul.06ef7d3f78066a750493.jpeg",
     "static/media/sticky-shanghai-pudong-default.svg": "/static/media/sticky-shanghai-pudong-default.f9319669e38d49d6574311f0499a7ffe.svg",
@@ -81,12 +73,12 @@
     "static/media/ico-star.svg": "/static/media/ico-star.e757cadbbbcce6ffe7f97efd83c86d3f.svg",
     "static/media/ico-star2.svg": "/static/media/ico-star2.fcd8cb15ce58b9e9ebeb676ca3ffc6ca.svg",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
-    "main.1c0c8778.css.map": "/static/css/main.1c0c8778.css.map",
-    "main.8e19c701.js.map": "/static/js/main.8e19c701.js.map",
+    "main.9bd52dce.css.map": "/static/css/main.9bd52dce.css.map",
+    "main.13b6dc46.js.map": "/static/js/main.13b6dc46.js.map",
     "919.128a2a0c.chunk.js.map": "/static/js/919.128a2a0c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1c0c8778.css",
-    "static/js/main.8e19c701.js"
+    "static/css/main.9bd52dce.css",
+    "static/js/main.13b6dc46.js"
   ]
 }

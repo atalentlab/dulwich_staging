@@ -54,7 +54,27 @@ const getImageKeyFromMenuItem = (item) => {
 };
 
 /**
- * Transforms API menu data to PageHeader desktop navigation format
+ * Recursively collect all highlighted items from nested menu structure
+ */
+const collectAllHighlights = (itemList) => {
+  const results = [];
+  if (!Array.isArray(itemList)) return results;
+  itemList.forEach(item => {
+    if (item.highlight_menu) {
+      results.push(item);
+    }
+    if (item.items && item.items.length > 0) {
+      results.push(...collectAllHighlights(item.items));
+    }
+  });
+  return results;
+};
+
+/**
+ * Transforms API menu data to PageHeader desktop navigation format.
+ * - subsectionLinks: 2nd-level items (title + url) shown as left column list
+ * - cards: highlight items from ANY nesting level, sorted by weight
+ * - links: direct non-highlighted children (fallback / flat menus)
  */
 export const transformToDesktopNav = (apiData) => {
   if (!apiData?.success || !Array.isArray(apiData?.data)) {
@@ -64,29 +84,35 @@ export const transformToDesktopNav = (apiData) => {
   return apiData.data.map((menuItem) => {
     const items = menuItem.items || [];
 
-    // Separate highlighted items (cards) from regular links
-    const highlightedItems = items.filter(item => item.highlight_menu);
-    const regularItems = items.filter(item => !item.highlight_menu);
+    // 2nd-level items that are NOT themselves highlighted → subsection titles
+    const subsectionLinks = items
+      .filter(item => !item.highlight_menu)
+      .map(item => ({
+        id: item.id,
+        title: item.title,
+        url: item.url && item.url !== '#' ? item.url : null,
+      }));
 
-    // Sort highlighted items by weight
-    const sortedHighlightedItems = highlightedItems.sort((a, b) => {
-      const weightA = a.highlight_menu?.weight || 0;
-      const weightB = b.highlight_menu?.weight || 0;
-      return weightA - weightB;
-    });
+    // Collect ALL highlighted items recursively (level 2, 3, ...)
+    const allHighlights = collectAllHighlights(items);
+
+    // Sort by weight
+    allHighlights.sort((a, b) => (a.highlight_menu?.weight || 0) - (b.highlight_menu?.weight || 0));
+
+    // Flat links: only used when there are NO subsections (simple menus)
+    const directHighlights = items.filter(item => item.highlight_menu);
+    const directRegular = items.filter(item => !item.highlight_menu);
 
     return {
       id: menuItem.id,
       label: menuItem.title,
-      links: regularItems.map(item => ({
-        title: item.title,
-        url: item.url
-      })),
-      cards: sortedHighlightedItems.map(item => ({
+      subsectionLinks,
+      links: directRegular.map(item => ({ title: item.title, url: item.url })),
+      cards: allHighlights.map(item => ({
         heading: item.title,
         url: item.url,
         imageKey: getImageKeyFromMenuItem(item),
-        imageUrl: item.highlight_menu?.image, // Add actual image URL from API
+        imageUrl: item.highlight_menu?.image,
         imageAlt: item.title,
         description: item.highlight_menu?.description || '',
         buttonText: 'Learn More'
