@@ -1120,7 +1120,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                                   href={link.url}
                                                   className="inline-block px-6 py-2.5 text-sm text-[#D30013] border border-[#D30013] rounded hover:bg-[#D30013] hover:text-white transition-all duration-200 text-center"
                                                 >
-                                                  {link.title}
+                                                  {link.buttonText || link.title}
                                                 </a>
                                               </div>
                                             ))}

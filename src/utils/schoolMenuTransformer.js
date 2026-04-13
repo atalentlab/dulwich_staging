@@ -111,6 +111,7 @@ const processSubsection = (subsection) => {
         image: child.highlight_menu?.image,
         imageUrl: child.highlight_menu?.image,
         description: child.highlight_menu?.description,
+        buttonText: child.highlight_menu?.button_text || child.highlight_menu?.title || child.title,
         isHighlighted: true
       }))
     });
