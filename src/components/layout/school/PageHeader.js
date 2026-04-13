@@ -1066,12 +1066,11 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                           <NavigationMenu.Content className={`nav-content fixed left-0 right-0 ${isScrolled ? 'top-[72px]' : 'top-[138px]'} w-full z-[60]`}>
                             <div className="w-full bg-white">
                               <div className="w-[1120px] mx-auto px-4 py-8">
-                                <div className="grid gap-8 mb-8" style={{
-                                  gridTemplateColumns: `repeat(${Math.min(
-                                    1 + (navItem.cards || []).filter(c => showCard(c)).length,
-                                    4
-                                  )}, 1fr)`
-                                }}>
+                                <div className="grid grid-cols-4 gap-8 mb-8" style={{
+                                      display: 'grid',
+                                      gridTemplateColumns: ' 1fr 1fr 1fr 1fr',
+                                      gap: '24px'
+                                    }}>
 
                                   {/* Left column: ALL sections stacked vertically (headings + links) */}
                                   {(navItem.sections || []).filter(sec => sec.style !== 'highlighted').length > 0 && (

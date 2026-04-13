@@ -29,7 +29,9 @@ export const fetchTeacherList = async ({
 
     const params = new URLSearchParams();
 
-    if (school) params.append('school', school);
+    // Add -cms suffix to school parameter
+    const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+    if (school) params.append('school', `${school}${cmsSuffix}`);
     if (locale && locale !== 'en') params.append('locale', locale);
     params.append('page_no', page_no.toString());
     params.append('limit', limit.toString());
