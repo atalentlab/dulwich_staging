@@ -4,15 +4,6 @@ import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { ChevronDown, Menu as MenuIcon, X } from 'lucide-react';
 import Icon from '../Icon';
 import SearchModal from '../SearchModal';
-import elImage from '../../assets/images/el.png';
-import liveImage from '../../assets/images/live.png';
-import matric from '../../assets/images/DCI/University Matriculation.jpeg';
-import sleImage from '../../assets/images/sle.png';
-import wellImage from '../../assets/images/DCI/wellbeing.jpg';
-import wanImage from '../../assets/images/wan.png';
-import weImage from '../../assets/images/we.png';
-import excelImage from '../../assets/images/excel.png';
-import uniImage from '../../assets/images/uni.png';
 import curriculumImage from '../../assets/images/Curriculum.png';
 import logo from '../../assets/images/dci-group-logo.svg';
 import sitemapIcon from '../../assets/images/sitemap.png';
@@ -23,20 +14,6 @@ import { transformMenuData } from '../../utils/menuTransformer';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.atalent.xyz';
 
-const imageMap = {
-  el: elImage,
-  live: liveImage,
-  matric: matric,
-  sle: sleImage,
-  well: wellImage,
-  wellbeing: wellImage,
-  wan: wanImage,
-  we: weImage,
-  excel: excelImage,
-  uni: uniImage,
-  curriculum: curriculumImage,
-  'co-curricular': curriculumImage,
-};
 
 function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, setChatOpen, chatOpen, pageLayoutType }) {
   // ── All Hooks MUST be called unconditionally at the top ───────────────────
@@ -681,7 +658,7 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                                       </h3>
                                       <div className="text-left overflow-hidden">
                                         <img
-                                          src={card.imageUrl || imageMap[card.imageKey]}
+                                          src={card.imageUrl}
                                           alt={card.imageAlt}
                                           className="w-full h-40 object-cover rounded-lg overflow-hidden"
                                         />
@@ -1003,7 +980,7 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                                           {(link.imageUrl || link.image) && (
                                             <div className="aspect-[4/3] overflow-hidden relative">
                                               <img
-                                                src={link.imageUrl || imageMap[link.image] || link.image}
+                                                src={link.imageUrl || link.image}
                                                 alt={link.title}
                                                 className="w-full h-full min-w-[168px] object-cover group-hover:scale-105 transition-transform duration-300"
                                               />

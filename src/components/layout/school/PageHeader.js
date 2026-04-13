@@ -471,10 +471,9 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
         searchParams.append('school', `${currentSchoolSlug}${cmsSuffix}`);
       }
 
-      // Add locale parameter for Chinese version
-      if (isChineseVersion) {
-        searchParams.append('locale', 'zh');
-      }
+      // Always add locale parameter (zh for Chinese, en for English)
+      const locale = isChineseVersion ? 'zh' : 'en';
+      searchParams.append('locale', locale);
 
       const response = await fetch(`${API_BASE_URL}/api/search?${searchParams.toString()}`);
       const data = await response.json();
@@ -1103,7 +1102,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                         {highlightedLinks.length > 0 && (
                                           <div className={`grid grid-cols-2 gap-6 ${regularLinks.length > 0 ? 'mt-6' : ''}`}>
                                             {highlightedLinks.map((link, i) => (
-                                              <div key={i} className="flex flex-col">
+                                              <div key={i} className="flex flex-col h-full">
                                                 {/* Card title as heading */}
                                                 <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-4 tracking-widest uppercase h-8 flex items-start">
                                                   {link.title}
@@ -1117,17 +1116,19 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                                     />
                                                   </div>
                                                 )}
-                                                {link.description && (
-                                                  <p className="text-sm text-[#3C3C3B] mb-4 leading-relaxed">
-                                                    {link.description}
-                                                  </p>
-                                                )}
-                                                <a
-                                                  href={link.url}
-                                                  className="block w-full px-6 py-2.5 text-sm text-[#D30013] border border-[#D30013] rounded hover:bg-[#D30013] hover:text-white transition-all duration-200 text-center"
-                                                >
-                                                  {link.buttonText || link.title}
-                                                </a>
+                                                <div className="flex-1 flex flex-col">
+                                                  {link.description && (
+                                                    <p className="text-sm text-[#3C3C3B] mb-4 leading-relaxed flex-1">
+                                                      {link.description}
+                                                    </p>
+                                                  )}
+                                                  <a
+                                                    href={link.url}
+                                                    className="block w-full px-6 py-2.5 text-sm text-[#D30013] border border-[#D30013] rounded hover:bg-[#D30013] hover:text-white transition-all duration-200 text-center mt-auto"
+                                                  >
+                                                    {link.buttonText || link.title}
+                                                  </a>
+                                                </div>
                                               </div>
                                             ))}
                                           </div>
