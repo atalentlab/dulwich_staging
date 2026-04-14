@@ -2,7 +2,7 @@ import React from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 /**
  * DownloadSelectBlock Component
@@ -99,12 +99,15 @@ const DownloadSelectBlock = ({ content }) => {
               {ctaTitle}
             </h2>
           )}
-          <button
-            onClick={handleDownloadAll}
-            className="px-6 py-3 bg-white border-2 border-[#D30013] text-[#D30013] font-semibold rounded-lg hover:bg-[#D30013] hover:text-white transition-all duration-300"
-          >
-            Download All
-          </button>
+          {/* Only show Download All button if there's more than one file */}
+          {fileArray.length > 1 && (
+            <button
+              onClick={handleDownloadAll}
+              className="px-6 py-3 bg-white border-2 border-[#D30013] text-[#D30013] font-semibold rounded-lg hover:bg-[#D30013] hover:text-white transition-all duration-300"
+            >
+              Download All
+            </button>
+          )}
         </div>
 
         {/* File Grid */}

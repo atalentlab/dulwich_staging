@@ -1059,7 +1059,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                       {/* Dynamic nav items - works for all schools regardless of menu order */}
                       {(nav.navItems || []).map((navItem) => (
                         <NavigationMenu.Item key={navItem.id}>
-                          <NavigationMenu.Trigger className={`group px-3 py-1 text-[16px] font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative`}>
+                          <NavigationMenu.Trigger className={`group px-3 py-1 text-[14px] leading font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative`}>
                             {navItem.label}
                             <span className={`absolute ${isScrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] ${isMenuItemActive(navItem) ? 'scale-x-100' : 'scale-x-0'} group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-transform duration-200 origin-left`}></span>
                           </NavigationMenu.Trigger>
@@ -1124,7 +1124,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                                   )}
                                                   <a
                                                     href={link.url}
-                                                    className="block w-full px-6 py-2.5 text-sm text-[#D30013] border border-[#D30013] rounded hover:bg-[#D30013] hover:text-white transition-all duration-200 text-center mt-auto"
+                                                    className="px-4 w-fit py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white"
                                                   >
                                                     {link.buttonText || link.title}
                                                   </a>
