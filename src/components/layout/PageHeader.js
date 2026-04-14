@@ -652,26 +652,30 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
 
                                   {/* Feature cards */}
                                   {navItem.cards.map((card, i) => (
-                                    <a key={i} href={card.url}>
-                                      <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-6 uppercase tracking-widest">
+                                    <div key={i} className="flex flex-col h-full">
+                                      {/* Card title as heading */}
+                                      <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-4 tracking-widest uppercase h-8 flex items-start">
                                         {card.heading}
                                       </h3>
-                                      <div className="text-left overflow-hidden">
+                                      <div className="w-full h-40 overflow-hidden relative rounded-lg mb-4">
                                         <img
                                           src={card.imageUrl}
                                           alt={card.imageAlt}
-                                          className="w-full h-40 object-cover rounded-lg overflow-hidden"
+                                          className="w-full h-full object-cover"
                                         />
-                                        <div className="mt-5">
-                                          <p className="text-xs min-h-[48px] text-[#3C3C3B] mb-4 leading line-clamp-3">
-                                            {card.description}
-                                          </p>
-                                          <button className="px-4 py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-[#9E1422] hover:text-white transition-all duration-200">
-                                            {card.heading}
-                                          </button>
-                                        </div>
                                       </div>
-                                    </a>
+                                      <div className="flex-1 flex flex-col">
+                                        <p className="text-sm text-left text-[#3C3C3B] mb-4 leading-relaxed flex-1">
+                                          {card.description}
+                                        </p>
+                                        <a
+                                          href={card.url}
+                                          className="block w-full px-6 py-2.5 text-sm text-[#D30013] border border-[#D30013] rounded hover:bg-[#D30013] hover:text-white transition-all duration-200 text-center mt-auto"
+                                        >
+                                          {card.heading}
+                                        </a>
+                                      </div>
+                                    </div>
                                   ))}
                                 </div>
 
@@ -927,17 +931,17 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
               >
                 {nav.mobileNav.map((section) => (
                   <React.Fragment key={section.id}>
-                    <div className="relative">
+                    <div className="relative border-b border-gray-100">
                       <button
                         onClick={() => setOpenMobileSection(openMobileSection === section.id ? null : section.id)}
-                        className={`w-full flex items-center justify-between py-4 ${section.borderFull ? '' : ''}`}
+                        className="w-full flex items-center justify-between py-4"
                       >
                         <span className="text-[20px] text-[#3C3C3B] font-normal">{section.label}</span>
                         <ChevronDown className={`chevron-rotate w-7 h-6 text-[#D30013] translate-x-1 ${openMobileSection === section.id ? 'rotate-180' : 'rotate-0'}`} />
                       </button>
                       {/* Red underline when expanded */}
                       <div
-                        className={`section-underline absolute left-0 right-0 bottom-0 h-[4px] bg-[#9E1422] ${
+                        className={`section-underline absolute left-0 right-0 bottom-0 h-[4px] bg-[#9E1422] transition-transform duration-300 ${
                           openMobileSection === section.id ? 'scale-x-100' : 'scale-x-0'
                         }`}
                       />

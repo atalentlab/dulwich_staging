@@ -49,6 +49,7 @@ const getImageKeyFromMenuItem = (item) => {
   if (title.includes('university') || title.includes('higher education')) return 'uni';
   if (title.includes('curriculum') || title.includes('academic')) return 'curriculum';
   if (title.includes('co-curricular') || title.includes('cocurricular')) return 'co-curricular';
+  if (title.includes('ignite')) return 'curriculum'; // Ignite Switzerland uses curriculum fallback
 
   return 'curriculum'; // default fallback
 };
@@ -64,9 +65,12 @@ export const transformToDesktopNav = (apiData) => {
   return apiData.data.map((menuItem) => {
     const items = menuItem.items || [];
 
-    // Separate highlighted items (cards) from regular links
-    const highlightedItems = items.filter(item => item.highlight_menu);
-    const regularItems = items.filter(item => !item.highlight_menu);
+    // Collect ALL items including nested children
+    const allItems = collectAllItems(items);
+
+    // Separate highlighted items (cards) from regular links (from all levels)
+    const highlightedItems = allItems.filter(item => item.highlight_menu);
+    const regularItems = items.filter(item => !item.highlight_menu); // Only top-level regular items
 
     // Sort highlighted items by weight
     const sortedHighlightedItems = highlightedItems.sort((a, b) => {
@@ -96,6 +100,29 @@ export const transformToDesktopNav = (apiData) => {
 };
 
 /**
+ * Recursively collect all items including nested children
+ */
+const collectAllItems = (items) => {
+  const allItems = [];
+
+  const traverse = (itemList) => {
+    if (!Array.isArray(itemList)) return;
+
+    itemList.forEach(item => {
+      allItems.push(item);
+
+      // Recursively collect nested items
+      if (item.items && item.items.length > 0) {
+        traverse(item.items);
+      }
+    });
+  };
+
+  traverse(items);
+  return allItems;
+};
+
+/**
  * Transforms API menu data to PageHeader mobile navigation format
  */
 export const transformToMobileNav = (apiData) => {
@@ -106,9 +133,12 @@ export const transformToMobileNav = (apiData) => {
   return apiData.data.map((menuItem) => {
     const items = menuItem.items || [];
 
-    // Separate highlighted items from regular links
-    const highlightedItems = items.filter(item => item.highlight_menu);
-    const regularItems = items.filter(item => !item.highlight_menu);
+    // Collect ALL items including nested children
+    const allItems = collectAllItems(items);
+
+    // Separate highlighted items from regular links (from all levels)
+    const highlightedItems = allItems.filter(item => item.highlight_menu);
+    const regularItems = items.filter(item => !item.highlight_menu); // Only top-level regular items
 
     // Sort highlighted items by weight
     const sortedHighlightedItems = highlightedItems.sort((a, b) => {

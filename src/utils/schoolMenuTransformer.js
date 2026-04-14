@@ -208,12 +208,13 @@ export const transformToSchoolNav = (apiData) => {
     // Sort cards by weight
     allCards.sort((a, b) => a.weight - b.weight);
 
-    // Build subsectionLinks: flatten all 3rd-level non-highlighted child items
+    // Build subsectionLinks: flatten all 3rd-level child items
     // from every 2nd-level subsection so the left column shows real navigable links
+    // Include both highlighted and non-highlighted items
     const subsectionLinks = [];
     items.forEach(subsection => {
       console.log('[transformer] subsection:', subsection.title, 'items:', subsection.items?.length, subsection.items?.map(c => ({title: c.title, highlight_menu: !!c.highlight_menu})));
-      const childItems = (subsection.items || []).filter(child => !child.highlight_menu);
+      const childItems = subsection.items || [];
       if (childItems.length > 0) {
         // Use the child items (3rd level) as the actual links
         childItems.forEach(child => {
