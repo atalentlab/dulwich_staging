@@ -55,6 +55,7 @@ import StoriesSection from './StoriesSection';
 
 import OpendayCarouselBlock from './OpendayCarouselBlock';
 import MainCampusMapBlock from './MainCampusMapBlock';
+import ContactFormBlock from './ContactFormBlock';
 
 /**
  * Registry mapping block types to components
@@ -68,6 +69,7 @@ export const BLOCK_COMPONENTS = {
   single_image: SingleImageBlock,
   video_upload: VideoUploadBlock,
   video: VideoBlock,
+  contact_form: ContactFormBlock,
 
   // Layout blocks
   triptych: TriptychBlock,
