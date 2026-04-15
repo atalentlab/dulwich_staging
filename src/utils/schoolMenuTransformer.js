@@ -72,6 +72,21 @@ const getStableSubsectionId = (subsection) => {
 };
 
 /**
+ * Helper to clean and normalize URLs from API
+ */
+const normalizeUrl = (url) => {
+  if (!url || url === '#') return null;
+  
+  // Clean up escaped forward slashes
+  let cleanUrl = url.replace(/\\\//g, '/');
+  
+  // If it's an absolute URL pointing to a dulwich-frontend domain, 
+  // we might want to keep it as is or make it relative depending on use case.
+  // For now, just ensuring it's a clean string.
+  return cleanUrl;
+};
+
+/**
  * Process a subsection (2nd level menu item) into sections format
  */
 const processSubsection = (subsection) => {
@@ -92,10 +107,11 @@ const processSubsection = (subsection) => {
       id: getStableSubsectionId(subsection),
       heading: subsection.title,
       style: 'regular',
+      url: normalizeUrl(subsection.url),
       links: regularItems.map(child => ({
         title: child.title,
         header_menu_title: child.header_menu_title,
-        url: child.url
+        url: normalizeUrl(child.url)
       }))
     });
   }
@@ -106,10 +122,11 @@ const processSubsection = (subsection) => {
       id: 'highlighted',
       heading: 'HIGHLIGHTED',
       style: 'highlighted',
+      url: normalizeUrl(subsection.url),
       links: highlightedItems.map(child => ({
         title: child.title,
         header_menu_title: child.header_menu_title,
-        url: child.url,
+        url: normalizeUrl(child.url),
         image: child.highlight_menu?.image,
         imageUrl: child.highlight_menu?.image,
         description: child.highlight_menu?.description,
@@ -242,12 +259,13 @@ export const transformToSchoolNav = (apiData) => {
     return {
       id: getStableMenuId(menuItem, index),
       label: menuItem.title,
+      url: normalizeUrl(menuItem.url),
       sections,
       subsectionLinks,
       cards: allCards,
       links: items.map(item => ({
         title: item.title,
-        url: item.url
+        url: normalizeUrl(item.url)
       }))
     };
   });

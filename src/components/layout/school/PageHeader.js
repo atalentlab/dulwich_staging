@@ -1092,124 +1092,143 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                   >
                     <NavigationMenu.List className="flex items-left gap-1">
                       {/* Dynamic nav items - works for all schools regardless of menu order */}
-                      {(nav.navItems || []).map((navItem) => (
-                        <NavigationMenu.Item key={navItem.id}>
-                          <NavigationMenu.Trigger className={`group px-3 py-1 text-[16px] leading font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative`}>
-                            {navItem.label}
-                            <span className={`absolute ${isScrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] ${isMenuItemActive(navItem) ? 'scale-x-100' : 'scale-x-0'} group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-transform duration-200 origin-left`}></span>
-                          </NavigationMenu.Trigger>
-                          <NavigationMenu.Content className={`nav-content fixed left-0 right-0 ${isScrolled ? 'top-[72px]' : 'top-[138px]'} w-full z-[60]`}>
-                            <div className="w-full bg-white">
-                              <div className="w-[1120px] mx-auto px-4 py-8">
-                                {/* 4-column grid - regular sections + highlighted section spanning 2 columns */}
-                                <div className="grid grid-cols-4 gap-8 mb-8">
-                                  {(navItem.sections || []).map((sec, si) => {
-                                    const filteredLinks = filterLinks(sec.links || []);
-                                    const regularLinks = filteredLinks.filter(link => !link.isHighlighted);
-                                    const highlightedLinks = filteredLinks.filter(link => link.isHighlighted);
-
-                                    // Check if this is a highlighted section
-                                    const isHighlightedSection = sec.style === 'highlighted' || highlightedLinks.length > 0;
-
-                                    return (
-                                      <div key={si} className={`text-left ${isHighlightedSection ? 'col-span-2' : ''}`}>
-                                        {/* Show heading only for non-highlighted sections */}
-                                        {sec.heading && !isHighlightedSection && (
-                                          <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-4 tracking-widest uppercase">
-                                            {sec.heading}
-                                          </h3>
-                                        )}
-
-                                        {/* Regular links */}
-                                        {regularLinks.length > 0 && (
-                                          <ul className="space-y-3" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                                            {regularLinks.map((link, i) => {
-                                              const linkIsActive = isLinkActive(link.url);
-                                              return (
-                                                <li key={i}>
-                                                  <a
-                                                    href={link.url || '#'}
-                                                    className={`text-base transition-colors ${
-                                                      linkIsActive
-                                                        ? 'text-[#D30013] font-semibold'
-                                                        : 'text-[#3C3C3B] hover:text-[#D30013]'
-                                                    }`}
-                                                  >
-                                                    {link.header_menu_title || link.title}
-                                                  </a>
-                                                </li>
-                                              );
-                                            })}
-                                          </ul>
-                                        )}
-
-                                        {/* Highlighted items as cards in 2-column grid */}
-                                        {highlightedLinks.length > 0 && (
-                                          <div className={`grid grid-cols-2 gap-6 ${regularLinks.length > 0 ? 'mt-6' : ''}`}>
-                                            {highlightedLinks.map((link, i) => (
-                                              <div key={i} className="flex flex-col h-full">
-                                                {/* Card title as heading */}
-                                                <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-4 tracking-widest uppercase h-8 flex items-start">
-                                                  {link.title}
-                                                </h3>
-                                                {link.imageUrl && (
-                                                  <div className="w-full h-40 overflow-hidden relative rounded-lg mb-4">
-                                                    <img
-                                                      src={link.imageUrl}
-                                                      alt={link.title}
-                                                      className="w-full h-full object-cover"
-                                                    />
-                                                  </div>
-                                                )}
-                                                <div className="flex-1 flex flex-col">
-                                                  {link.description && (
-                                                    <p className="text-sm text-[#3C3C3B] mb-4 leading-relaxed flex-1">
-                                                      {link.description}
-                                                    </p>
-                                                  )}
-                                                  <a
-                                                    href={link.url}
-                                                    className="px-4 w-fit py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white"
-                                                  >
-                                                    {link.buttonText || link.title}
-                                                  </a>
-                                                </div>
-                                              </div>
-                                            ))}
-                                          </div>
-                                        )}
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-
-                                {/* Bottom Section */}
-                                <div className="pt-6 border-t border-[#EAE8E4] flex items-center justify-between">
-                                  <a href={isChineseVersion ? "/zh/sitemap" : "/sitemap"} className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
-                                    {nav.siteMapLabel}
+                      {(nav.navItems || []).map((navItem) => {
+                        const hasSections = (navItem.sections || []).some(sec => filterLinks(sec.links).length > 0);
+                        return (
+                          <NavigationMenu.Item key={navItem.id}>
+                            {hasSections ? (
+                              <>
+                                <NavigationMenu.Trigger asChild className={`group px-3 py-1 text-[16px] leading font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative cursor-pointer`}>
+                                  <a href={navItem.url || '#'}>
+                                    {navItem.label}
+                                    <span className={`absolute ${isScrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] ${isMenuItemActive(navItem) ? 'scale-x-100' : 'scale-x-0'} group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-transform duration-200 origin-left`}></span>
                                   </a>
-                                  <form onSubmit={handleSearch} className="relative w-[50%]">
-                                    <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                                      <Icon icon="Icon-Search" size={16} color="#9CA3AF" />
+                                </NavigationMenu.Trigger>
+                                <NavigationMenu.Content className={`nav-content fixed left-0 right-0 ${isScrolled ? 'top-[72px]' : 'top-[138px]'} w-full z-[60]`}>
+                                  <div className="w-full bg-white">
+                                    <div className="w-[1120px] mx-auto px-4 py-8">
+                                      {/* 4-column grid - regular sections + highlighted section spanning 2 columns */}
+                                      <div className="grid grid-cols-4 gap-8 mb-8">
+                                        {(navItem.sections || []).map((sec, si) => {
+                                          const filteredLinks = filterLinks(sec.links || []);
+                                          const regularLinks = filteredLinks.filter(link => !link.isHighlighted);
+                                          const highlightedLinks = filteredLinks.filter(link => link.isHighlighted);
+
+                                          // Check if this is a highlighted section
+                                          const isHighlightedSection = sec.style === 'highlighted' || highlightedLinks.length > 0;
+
+                                          return (
+                                            <div key={si} className={`text-left ${isHighlightedSection ? 'col-span-2' : ''}`}>
+                                              {/* Show heading only for non-highlighted sections */}
+                                              {sec.heading && !isHighlightedSection && (
+                                                <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-4 tracking-widest uppercase">
+                                                  <a href={sec.url} className="hover:text-[#D30013] transition-colors">
+                                                    {sec.heading}
+                                                  </a>
+                                                </h3>
+                                              )}
+
+                                              {/* Regular links */}
+                                              {regularLinks.length > 0 && (
+                                                <ul className="space-y-3" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                                  {regularLinks.map((link, i) => {
+                                                    const linkIsActive = isLinkActive(link.url);
+                                                    return (
+                                                      <li key={i}>
+                                                        <a
+                                                          href={link.url}
+                                                          className={`text-base transition-colors ${linkIsActive
+                                                            ? 'text-[#D30013] font-semibold'
+                                                            : 'text-[#3C3C3B] hover:text-[#D30013]'
+                                                            }`}
+                                                        >
+                                                          {link.header_menu_title || link.title}
+                                                        </a>
+                                                      </li>
+                                                    );
+                                                  })}
+                                                </ul>
+                                              )}
+
+                                              {/* Highlighted items as cards in 2-column grid */}
+                                              {highlightedLinks.length > 0 && (
+                                                <div className={`grid grid-cols-2 gap-6 ${regularLinks.length > 0 ? 'mt-6' : ''}`}>
+                                                  {highlightedLinks.map((link, i) => (
+                                                    <div key={i} className="flex flex-col h-full">
+                                                      {/* Card title as heading */}
+                                                      <h3 className="text-[12px] text-left font-bold text-[#3C3C3B] mb-4 tracking-widest uppercase h-8 flex items-start">
+                                                        <a href={link.url || '#'} className="hover:text-[#D30013] transition-colors">
+                                                          {link.title}
+                                                        </a>
+                                                      </h3>
+                                                      {link.imageUrl && (
+                                                        <div className="w-full h-40 overflow-hidden relative rounded-lg mb-4">
+                                                          <img
+                                                            src={link.imageUrl}
+                                                            alt={link.title}
+                                                            className="w-full h-full object-cover"
+                                                          />
+                                                        </div>
+                                                      )}
+                                                      <div className="flex-1 flex flex-col">
+                                                        {link.description && (
+                                                          <p className="text-sm text-[#3C3C3B] mb-4 leading-relaxed flex-1">
+                                                            {link.description}
+                                                          </p>
+                                                        )}
+                                                        <a
+                                                          href={link.url}
+                                                          className="px-4 w-fit py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white"
+                                                        >
+                                                          {link.buttonText || link.title}
+                                                        </a>
+                                                      </div>
+                                                    </div>
+                                                  ))}
+                                                </div>
+                                              )}
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+
+                                      {/* Bottom Section */}
+                                      <div className="pt-6 border-t border-[#EAE8E4] flex items-center justify-between">
+                                        <a href={isChineseVersion ? "/zh/sitemap" : "/sitemap"} className="text-sm text-[#3C3C3B] hover:text-[#D30013] transition-colors">
+                                          {nav.siteMapLabel}
+                                        </a>
+                                        <form onSubmit={handleSearch} className="relative w-[50%]">
+                                          <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                                            <Icon icon="Icon-Search" size={16} color="#9CA3AF" />
+                                          </div>
+                                          <input
+                                            type="text"
+                                            placeholder={nav.searchPlaceholder}
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            autoComplete="off"
+                                            autoCorrect="off"
+                                            autoCapitalize="off"
+                                            spellCheck="false"
+                                            className="w-full pl-10 pr-4 py-2 border border-[#EAE8E4] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent"
+                                          />
+                                        </form>
+                                      </div>
                                     </div>
-                                    <input
-                                      type="text"
-                                      placeholder={nav.searchPlaceholder}
-                                      value={searchQuery}
-                                      onChange={(e) => setSearchQuery(e.target.value)}
-                                      autoComplete="off"
-                                      autoCorrect="off"
-                                      autoCapitalize="off"
-                                      spellCheck="false"
-                                      className="w-full pl-10 pr-4 py-2 border border-[#EAE8E4] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#D30013] focus:border-transparent"
-                                    />
-                                  </form>
-                                </div>
-                              </div>
-                            </div>
-                          </NavigationMenu.Content>
-                        </NavigationMenu.Item>
-                      ))}
+                                  </div>
+                                </NavigationMenu.Content>
+                              </>
+                            ) : (
+                              <NavigationMenu.Link asChild className={`group px-3 py-1 text-[16px] leading font-base text-[#3C3C3B] hover:text-[#D30013] outline-none transition-all duration-200 relative cursor-pointer`}>
+                                <a href={navItem.url || '#'}>
+                                  {navItem.label}
+                                  <span className={`absolute ${isScrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] ${isMenuItemActive(navItem) ? 'scale-x-100' : 'scale-x-0'} group-hover:scale-x-100 transition-transform duration-200 origin-left`}></span>
+                                </a>
+                              </NavigationMenu.Link>
+                            )}
+                          </NavigationMenu.Item>
+                        );
+                      })}
                     </NavigationMenu.List>
                   </NavigationMenu.Root>
                 </div>
@@ -1574,6 +1593,18 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                             }}
                           >
                             <div className="space-y-6">
+                              {/* Main Section Link - appears first when dropdown opens */}
+                              {navItem.url && navItem.url !== '#' && (
+                                <div className="pb-4 border-b border-gray-100">
+                                  <a
+                                    href={navItem.url}
+                                    className="link-item flex items-center justify-between text-base font-semibold text-[#D30013] hover:text-[#B8000F] hover:pl-2 py-2 transition-all"
+                                  >
+                                    {navItem.label}
+                                    <Icon icon="Icon-Chevron-Large" size={15} color="#D30013" className="flex-shrink-0" />
+                                  </a>
+                                </div>
+                              )}
                               {/* HIGHLIGHTED SECTION - Show at the top if there are highlighted items */}
                               {allHighlightedLinks.length > 0 && (
                                 <div>
@@ -1615,7 +1646,11 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
 
                                 return (
                                   <div key={i}>
-                                    <h3 className="text-[12px] font-bold text-[#3C3C3B] mb-4 tracking-[1.1px] uppercase">{sec.heading}</h3>
+                                    <h3 className="text-[12px] font-bold text-[#3C3C3B] mb-4 tracking-[1.1px] uppercase">
+                                      <a href={sec.url || '#'} className="hover:text-[#D30013] transition-colors">
+                                        {sec.heading}
+                                      </a>
+                                    </h3>
 
                                     {/* Regular link list */}
                                     <div className="space-y-0">
@@ -1625,11 +1660,10 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                           <a
                                             key={j}
                                             href={link.url}
-                                            className={`link-item block text-base hover:pl-2 py-3.5 border-b border-gray-100 last:border-b-0 ${
-                                              linkIsActive
-                                                ? 'text-[#D30013] font-semibold bg-[#FEF2F2] pl-2'
-                                                : 'text-[#3C3C3B] hover:text-[#D30013]'
-                                            }`}
+                                            className={`link-item block text-base hover:pl-2 py-3.5 border-b border-gray-100 last:border-b-0 ${linkIsActive
+                                              ? 'text-[#D30013] font-semibold bg-[#FEF2F2] pl-2'
+                                              : 'text-[#3C3C3B] hover:text-[#D30013]'
+                                              }`}
                                           >
                                             {link.header_menu_title || link.title}
                                           </a>
