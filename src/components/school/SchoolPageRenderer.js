@@ -172,27 +172,37 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
     return <Loading />;
   }
 
-  // Check for redirect from API response
-  if (data?.redirects?.redirect === true && data?.redirects?.target) {
+  // Check for redirect from API response FIRST (before error handling)
+  // This is important because redirects might come with error status codes like 301
+  // Handle multiple possible redirect data structures:
+  // Format 1: { redirects: { redirect: true, target: "...", status: "301" } }
+  // Format 2: { redirect: true, target: "...", status: "301" }
+  const hasRedirect = data?.redirects?.redirect === true || data?.redirect === true;
+  const redirectTarget = data?.redirects?.target || data?.target;
+  const redirectStatus = data?.redirects?.status || data?.status;
+
+  console.log('🔍 Redirect Check:', { hasRedirect, redirectTarget, redirectStatus, data });
+
+  if (hasRedirect && redirectTarget) {
     console.log('🔄 Redirect detected:', {
       from: location.pathname,
-      to: data.redirects.target,
-      status: data.redirects.status
+      to: redirectTarget,
+      status: redirectStatus
     });
 
     // Build redirect URL with locale preservation
-    let redirectTarget = data.redirects.target;
+    let finalRedirectTarget = redirectTarget;
 
     // If current page has locale prefix (/zh), preserve it in redirect
-    if (locale && locale !== 'en' && !redirectTarget.startsWith(`/${locale}`)) {
-      if (!redirectTarget.startsWith('/')) {
-        redirectTarget = '/' + redirectTarget;
+    if (locale && locale !== 'en' && !finalRedirectTarget.startsWith(`/${locale}`)) {
+      if (!finalRedirectTarget.startsWith('/')) {
+        finalRedirectTarget = '/' + finalRedirectTarget;
       }
-      redirectTarget = `/${locale}${redirectTarget}`;
-      console.log('🌐 Locale preserved in redirect:', redirectTarget);
+      finalRedirectTarget = `/${locale}${finalRedirectTarget}`;
+      console.log('🌐 Locale preserved in redirect:', finalRedirectTarget);
     }
 
-    console.log('➡️ Redirecting to:', redirectTarget);
+    console.log('➡️ Redirecting to:', finalRedirectTarget);
 
     // Render OG tags BEFORE redirect so WhatsApp can scrape them
     // Use banner data from API if available
@@ -203,7 +213,7 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
     const redirectSeoTitle = data?.meta?.meta_title || data?.banner?.meta_title || data?.banner?.title || `Dulwich College ${schoolName}`;
     const redirectSeoDescription = data?.meta?.meta_description || data?.banner?.meta_description || data?.banner?.description || '';
     const redirectSeoImage = getOgImage();
-    const redirectSeoUrl = `${window.location.origin}${redirectTarget}`;
+    const redirectSeoUrl = `${window.location.origin}${finalRedirectTarget}`;
 
     return (
       <>
@@ -219,7 +229,7 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
         />
 
         {/* Client-side redirect */}
-        <Navigate to={redirectTarget} replace />
+        <Navigate to={finalRedirectTarget} replace />
       </>
     );
   }
@@ -305,7 +315,7 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
   // ── Layout type 5: full-viewport section-by-section scrolling ─────────────
   if (pageLayoutType === 5 || pageLayoutType === "5") {
     return (
-      <>
+      <div className="page-content-loaded">
         {/* Dynamic SEO Meta Tags */}
         <DynamicSEO
           title={seoTitle}
@@ -341,14 +351,14 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
             School: {school} | Slug: {pageSlug} | Layout: 5 | Sections: {(data.blocks?.length || 0) + 2}
           </div>
         )}
-      </>
+      </div>
     );
   }
 
   // ── Layout type 3: ScrollSpy with sticky sidebar navigation ───────────────
   if (pageLayoutType === 3 || pageLayoutType === "3") {
     return (
-      <>
+      <div className="page-content-loaded">
         {/* Dynamic SEO Meta Tags */}
         <DynamicSEO
           title={seoTitle}
@@ -384,13 +394,13 @@ const SchoolPageRenderer = ({ school: propSchool, slug: propSlug, locale: propLo
             School: {school} | Slug: {pageSlug} | Layout: 3 (ScrollSpy) | Blocks: {data.blocks?.length || 0}
           </div>
         )}
-      </>
+      </div>
     );
   }
 
   // ── Default layout ─────────────────────────────────────────────────────────
   return (
-    <div className="school-page-wrapper">
+    <div className="school-page-wrapper page-content-loaded">
       {/* Dynamic SEO Meta Tags */}
       <DynamicSEO
         title={seoTitle}

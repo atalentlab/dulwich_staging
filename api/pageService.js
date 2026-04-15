@@ -12,7 +12,7 @@ const STATIC_HEADER = {
   logo: 'Dulwich College International',
   navigation: [],
   banner: {},
-}; REACT_APP_SCHOOL_CMS_SUFFIX = -cms
+};
 
 /**
  * Static footer configuration - used across all pages
@@ -100,7 +100,7 @@ export const fetchPageBySlug = async (slug, locale) => {
 
       return {
         banner: banner || {},
-        meta: meta || null,
+        meta:   meta   || null,
         blocks: blocks || [],
         redirects: redirectsData,
         // Static header and footer for all pages
