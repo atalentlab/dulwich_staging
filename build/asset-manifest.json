@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.9bd52dce.css",
-    "main.js": "/static/js/main.13b6dc46.js",
+    "main.css": "/static/css/main.08d0522e.css",
+    "main.js": "/static/js/main.79f906ae.js",
     "static/js/919.128a2a0c.chunk.js": "/static/js/919.128a2a0c.chunk.js",
     "static/media/EiMAdshootforThailandatDCSG-Sun-138.jpg": "/static/media/EiMAdshootforThailandatDCSG-Sun-138.4274e6cda593da2aac16.jpg",
     "static/media/DCSG__DUCKS_Geography.jpg": "/static/media/DCSG__DUCKS_Geography.ca9a616385984989c9d9.jpg",
@@ -15,15 +15,8 @@
     "static/media/DCSG_DUCKS_2 Girls.jpg": "/static/media/DCSG_DUCKS_2 Girls.4aa01ead8db12294422d.jpg",
     "static/media/240605DCSGFoundingFamilies(Full)-65.jpg": "/static/media/240605DCSGFoundingFamilies(Full)-65.906d80272c616d695b7b.jpg",
     "static/media/Leadership1.jpg": "/static/media/Leadership1.3b2d1481b1740aa1f893.jpg",
-    "static/media/sle.png": "/static/media/sle.d8510501d3434b90c485.png",
-    "static/media/excel.png": "/static/media/excel.a236f59e7d29a858507f.png",
-    "static/media/we.png": "/static/media/we.63f8731abdd32d6c19c6.png",
     "static/media/DUCKS boy.jpg": "/static/media/DUCKS boy.39b47c7a29bb07109bab.jpg",
-    "static/media/live.png": "/static/media/live.e43a79f7cc00e5862080.png",
-    "static/media/wan.png": "/static/media/wan.01509ae9c47d9122bbec.png",
     "static/media/suzhou-high-school.svg": "/static/media/suzhou-high-school.e719f46facaeaa6d9fbf39d25f02ffc4.svg",
-    "static/media/el.png": "/static/media/el.28ab0eb96cbf22a750e0.png",
-    "static/media/uni.png": "/static/media/uni.9348b739c85b74e30d35.png",
     "static/media/hengqin-high-school.svg": "/static/media/hengqin-high-school.7c2fa7cdc98a267bf9b122585b2c70d2.svg",
     "static/media/map-static.png": "/static/media/map-static.d95d2534afd29c359b7f.png",
     "static/media/singapore.png": "/static/media/singapore.0ab5483ee97b00180e2d.png",
@@ -42,7 +35,6 @@
     "static/media/Wechat_QRcode.webp": "/static/media/Wechat_QRcode.49292665b7a73aec99c6.webp",
     "static/media/icomoon.svg?7b4acw": "/static/media/icomoon.197bf9bc113f70ea725e.svg",
     "static/media/sticky-beijing-mobile.svg": "/static/media/sticky-beijing-mobile.c39b17eb85fd6ea94c7a03ffd7176a04.svg",
-    "static/media/University Matriculation.jpeg": "/static/media/University Matriculation.122b93562d3e5eea1a9c.jpeg",
     "static/media/suzhou.jpeg": "/static/media/suzhou.062c56e1432dd0a0bea5.jpeg",
     "static/media/puxi.jpg": "/static/media/puxi.3c30cbfe20eb20e2ec4b.jpg",
     "static/media/hs-suzhou.jpeg": "/static/media/hs-suzhou.ee92553c4ee5e1a5b14b.jpeg",
@@ -57,7 +49,6 @@
     "static/media/ss-beijing.jpeg": "/static/media/ss-beijing.b4dc138d5e03c40687e8.jpeg",
     "static/media/bangkok.jpeg": "/static/media/bangkok.88a72b7a3a5bc39dc4c4.jpeg",
     "static/media/rednote.webp": "/static/media/rednote.5ab3efa6c44f09a28823.webp",
-    "static/media/wellbeing.jpg": "/static/media/wellbeing.bf71ad417b0d47fc6e63.jpg",
     "static/media/loading_spinner.gif": "/static/media/loading_spinner.809834dd12314af7bf1a.gif",
     "static/media/ss-xian.webp": "/static/media/ss-xian.0a493c72185045bcdbb8.webp",
     "static/media/icomoon.eot?7b4acw": "/static/media/icomoon.afcdb43825596a085cb8.eot",
@@ -73,12 +64,12 @@
     "static/media/ico-star.svg": "/static/media/ico-star.e757cadbbbcce6ffe7f97efd83c86d3f.svg",
     "static/media/ico-star2.svg": "/static/media/ico-star2.fcd8cb15ce58b9e9ebeb676ca3ffc6ca.svg",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
-    "main.9bd52dce.css.map": "/static/css/main.9bd52dce.css.map",
-    "main.13b6dc46.js.map": "/static/js/main.13b6dc46.js.map",
+    "main.08d0522e.css.map": "/static/css/main.08d0522e.css.map",
+    "main.79f906ae.js.map": "/static/js/main.79f906ae.js.map",
     "919.128a2a0c.chunk.js.map": "/static/js/919.128a2a0c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.9bd52dce.css",
-    "static/js/main.13b6dc46.js"
+    "static/css/main.08d0522e.css",
+    "static/js/main.79f906ae.js"
   ]
 }

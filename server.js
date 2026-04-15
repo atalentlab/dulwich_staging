@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.EXPRESS_PORT || process.env.PORT || 4000;
 
 // API base URL - use production CMS
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 // Serve static files from the React app (but not HTML, robots.txt, or sitemap.xml files)
 app.use((req, res, next) => {
