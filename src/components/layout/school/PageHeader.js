@@ -1091,7 +1091,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                             {regularLinks.map((link, i) => (
                                               <li key={i}>
                                                 <a href={link.url || '#'} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
-                                                  {link.title}
+                                                  {link.header_menu_title || link.title}
                                                 </a>
                                               </li>
                                             ))}
@@ -1524,7 +1524,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                     <div className="space-y-0">
                                       {regularLinks.map((link, j) => (
                                         <a key={j} href={link.url} className="link-item block text-base text-[#3C3C3B] hover:text-[#D30013] hover:pl-2 py-3.5 border-b border-gray-100 last:border-b-0">
-                                          {link.title}
+                                          {link.header_menu_title || link.title}
                                         </a>
                                       ))}
                                     </div>

@@ -94,6 +94,7 @@ const processSubsection = (subsection) => {
       style: 'regular',
       links: regularItems.map(child => ({
         title: child.title,
+        header_menu_title: child.header_menu_title,
         url: child.url
       }))
     });
@@ -107,6 +108,7 @@ const processSubsection = (subsection) => {
       style: 'highlighted',
       links: highlightedItems.map(child => ({
         title: child.title,
+        header_menu_title: child.header_menu_title,
         url: child.url,
         image: child.highlight_menu?.image,
         imageUrl: child.highlight_menu?.image,
@@ -221,6 +223,7 @@ export const transformToSchoolNav = (apiData) => {
           subsectionLinks.push({
             id: child.id || createSlug(child.title),
             title: child.title,
+            header_menu_title: child.header_menu_title,
             url: child.url && child.url !== '#' ? child.url : null,
           });
         });

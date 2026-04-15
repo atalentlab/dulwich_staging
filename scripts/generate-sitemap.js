@@ -32,7 +32,7 @@ const path = require('path');
 const https = require('https');
 const axios = require('axios');
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.atalent.xyz';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.org';
 
 // List of all school slugs
 const schools = [

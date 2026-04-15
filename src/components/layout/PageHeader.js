@@ -39,12 +39,13 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
   const currentLocale = isChineseVersion ? 'zh' : 'en';
   const { data: dynamicMenuData, isLoading: isMenuLoading, error: menuError } = useDynamicMenu(currentLocale);
 
-  // Transform API data to navigation structure, fallback to static JSON if API fails
+  // Transform API data to navigation structure, fallback to static JSON while loading or if API fails
   const nav = React.useMemo(() => {
+    // Use API data if available and successful
     if (dynamicMenuData?.success) {
       return transformMenuData(dynamicMenuData);
     }
-    // Fallback to static JSON
+    // Fallback to static JSON while loading or on error
     return isChineseVersion ? rawNavigationData.zh : rawNavigationData.en;
   }, [dynamicMenuData, isChineseVersion]);
 

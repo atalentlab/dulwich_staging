@@ -36,9 +36,11 @@ export const useDynamicMenu = (locale = 'en', school = null) => {
   return useQuery({
     queryKey: ['dynamicMenu', locale, school],
     queryFn: () => fetchDynamicMenu(locale, school),
-    staleTime: 0, // Always fetch fresh data
-    cacheTime: 1000 * 60 * 5, // Keep in memory for 5 minutes
+    staleTime: 1000 * 60 * 10, // Data stays fresh for 10 minutes
+    cacheTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
     refetchOnWindowFocus: false,
+    refetchOnMount: false, // Don't refetch on component mount if data exists
     retry: 2,
+    placeholderData: (previousData) => previousData, // Use previous data while loading
   });
 };
