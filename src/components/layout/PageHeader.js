@@ -316,6 +316,127 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
     handleSearch(null, pageNumber);
   };
 
+  // Helper function to recursively collect all URLs from nested menu structure
+  const collectAllUrls = (navItem) => {
+    const urls = [];
+
+    // Add URLs from direct links
+    if (navItem.links && Array.isArray(navItem.links)) {
+      navItem.links.forEach(link => {
+        if (link.url) urls.push(link.url);
+      });
+    }
+
+    // Add URLs from cards
+    if (navItem.cards && Array.isArray(navItem.cards)) {
+      navItem.cards.forEach(card => {
+        if (card.url) urls.push(card.url);
+      });
+    }
+
+    // Add URLs from sections (for mobile/complex structures)
+    if (navItem.sections && Array.isArray(navItem.sections)) {
+      navItem.sections.forEach(section => {
+        if (section.links && Array.isArray(section.links)) {
+          section.links.forEach(link => {
+            if (link.url) urls.push(link.url);
+          });
+        }
+      });
+    }
+
+    return urls;
+  };
+
+  // Helper function to check if a menu item is active based on current route
+  const isMenuItemActive = (navItem) => {
+    if (!navItem) return false;
+
+    const currentPath = location.pathname;
+
+    // Collect all URLs from the menu item
+    const allUrls = collectAllUrls(navItem);
+
+    // Check if any URL matches the current path
+    const isActive = allUrls.some(url => {
+      if (!url || url === '#') return false;
+
+      try {
+        // Extract pathname from the URL (handle both relative and absolute URLs)
+        let linkPath;
+
+        // If URL starts with http:// or https://, it's absolute
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+          const linkUrl = new URL(url);
+          linkPath = linkUrl.pathname;
+        } else {
+          // Relative URL - use as-is
+          linkPath = url.startsWith('/') ? url : '/' + url;
+        }
+
+        // Remove trailing slashes for comparison
+        const normalizedCurrentPath = currentPath.replace(/\/$/, '').toLowerCase();
+        const normalizedLinkPath = linkPath.replace(/\/$/, '').toLowerCase();
+
+        // Remove locale prefix for comparison (e.g., /zh/)
+        const currentPathWithoutLocale = normalizedCurrentPath.replace(/^\/zh\//, '/');
+        const linkPathWithoutLocale = normalizedLinkPath.replace(/^\/zh\//, '/');
+
+        // Check if current path matches exactly
+        if (currentPathWithoutLocale === linkPathWithoutLocale) {
+          return true;
+        }
+
+        // Check if current path starts with the link path (for nested routes)
+        if (currentPathWithoutLocale.startsWith(linkPathWithoutLocale + '/')) {
+          return true;
+        }
+
+        return false;
+      } catch (e) {
+        console.error('Error matching URL:', url, e);
+        return false;
+      }
+    });
+
+    return isActive;
+  };
+
+  // Helper function to check if a specific link is active
+  const isLinkActive = (linkUrl) => {
+    if (!linkUrl || linkUrl === '#') return false;
+
+    const currentPath = location.pathname;
+
+    try {
+      // Extract pathname from the URL (handle both relative and absolute URLs)
+      let linkPath;
+
+      // If URL starts with http:// or https://, it's absolute
+      if (linkUrl.startsWith('http://') || linkUrl.startsWith('https://')) {
+        const url = new URL(linkUrl);
+        linkPath = url.pathname;
+      } else {
+        // Relative URL - use as-is
+        linkPath = linkUrl.startsWith('/') ? linkUrl : '/' + linkUrl;
+      }
+
+      // Remove trailing slashes for comparison
+      const normalizedCurrentPath = currentPath.replace(/\/$/, '').toLowerCase();
+      const normalizedLinkPath = linkPath.replace(/\/$/, '').toLowerCase();
+
+      // Remove locale prefix for comparison (e.g., /zh/)
+      const currentPathWithoutLocale = normalizedCurrentPath.replace(/^\/zh\//, '/');
+      const linkPathWithoutLocale = normalizedLinkPath.replace(/^\/zh\//, '/');
+
+      // Check if current path matches exactly
+      return currentPathWithoutLocale === linkPathWithoutLocale;
+    } catch (e) {
+      console.error('Error matching link URL:', linkUrl, e);
+      return false;
+    }
+  };
+
   return (
     <>
       {/* Custom CSS for smooth dropdown animations */}
@@ -623,12 +744,15 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                     delayDuration={100}
                   >
                     <NavigationMenu.List className="flex items-left gap-1">
-                      {nav.desktopNav.map((navItem) => (
-                        <NavigationMenu.Item key={navItem.id}>
-                          <NavigationMenu.Trigger className="group px-5 py-1 text-[16px] font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative">
-                            {navItem.label}
-                            <span className={`absolute ${scrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] scale-x-0 group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-all duration-200 origin-left`}></span>
-                          </NavigationMenu.Trigger>
+                      {nav.desktopNav.map((navItem) => {
+                        const isActive = isMenuItemActive(navItem);
+
+                        return (
+                          <NavigationMenu.Item key={navItem.id}>
+                            <NavigationMenu.Trigger className="group px-5 py-1 text-[16px] font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative">
+                              {navItem.label}
+                              <span className={`absolute ${scrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] ${isActive ? 'scale-x-100' : 'scale-x-0'} group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-all duration-200 origin-left`}></span>
+                            </NavigationMenu.Trigger>
                           <NavigationMenu.Content
                             className={`fixed left-0 right-0 ${scrolled ? 'top-[72px]' : 'top-[140px]'} w-full transition-all duration-200 ease-out z-[60]`}
                             style={{ transformOrigin: 'top', animation: 'none' }}
@@ -640,13 +764,23 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                                   {navItem.links.length > 0 && (
                                     <div className="text-left">
                                       <ul className="space-y-4">
-                                        {navItem.links.map((link, i) => (
-                                          <li key={i}>
-                                            <a href={link.url} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
-                                              {link.title}
-                                            </a>
-                                          </li>
-                                        ))}
+                                        {navItem.links.map((link, i) => {
+                                          const linkIsActive = isLinkActive(link.url);
+                                          return (
+                                            <li key={i}>
+                                              <a
+                                                href={link.url}
+                                                className={`text-base transition-colors ${
+                                                  linkIsActive
+                                                    ? 'text-[#D30013] font-semibold'
+                                                    : 'text-[#3C3C3B] hover:text-[#D30013]'
+                                                }`}
+                                              >
+                                                {link.title}
+                                              </a>
+                                            </li>
+                                          );
+                                        })}
                                       </ul>
                                     </div>
                                   )}
@@ -706,7 +840,8 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                             </div>
                           </NavigationMenu.Content>
                         </NavigationMenu.Item>
-                      ))}
+                        );
+                      })}
 
                       {/* Schools Dropdown */}
                       {/* {availableSchools && availableSchools.length > 0 && (
@@ -957,11 +1092,22 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                       >
                         {section.type === 'simple' ? (
                           <div className="space-y-3">
-                            {section.links.map((link, i) => (
-                              <a key={i} href={link.url} className="link-item block text-[16px] text-[#3C3C3B] hover:text-[#D30013] hover:pl-2 py-2">
-                                {link.title}
-                              </a>
-                            ))}
+                            {section.links.map((link, i) => {
+                              const linkIsActive = isLinkActive(link.url);
+                              return (
+                                <a
+                                  key={i}
+                                  href={link.url}
+                                  className={`link-item block text-[16px] hover:pl-2 py-2 ${
+                                    linkIsActive
+                                      ? 'text-[#D30013] font-semibold bg-[#FEF2F2] pl-2'
+                                      : 'text-[#3C3C3B] hover:text-[#D30013]'
+                                  }`}
+                                >
+                                  {link.title}
+                                </a>
+                              );
+                            })}
                           </div>
                         ) : (
                           <div className="space-y-6 text-left">
@@ -1002,11 +1148,22 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                                 ) : (
                                   /* Regular link list */
                                   <div className="space-y-0">
-                                    {sec.links.map((link, j) => (
-                                      <a key={j} href={link.url} className="link-item block text-base text-[#3C3C3B] hover:text-[#D30013] hover:pl-2 py-3.5 border-b border-gray-100 last:border-b-0">
-                                        {link.title}
-                                      </a>
-                                    ))}
+                                    {sec.links.map((link, j) => {
+                                      const linkIsActive = isLinkActive(link.url);
+                                      return (
+                                        <a
+                                          key={j}
+                                          href={link.url}
+                                          className={`link-item block text-base hover:pl-2 py-3.5 border-b border-gray-100 last:border-b-0 ${
+                                            linkIsActive
+                                              ? 'text-[#D30013] font-semibold bg-[#FEF2F2] pl-2'
+                                              : 'text-[#3C3C3B] hover:text-[#D30013]'
+                                          }`}
+                                        >
+                                          {link.title}
+                                        </a>
+                                      );
+                                    })}
                                   </div>
                                 )}
                               </div>

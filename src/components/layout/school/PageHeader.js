@@ -382,6 +382,41 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
     return urls;
   };
 
+  // Helper function to check if a specific link is active
+  const isLinkActive = (linkUrl) => {
+    if (!linkUrl || linkUrl === '#') return false;
+
+    const currentPath = location.pathname;
+
+    try {
+      // Extract pathname from the URL (handle both relative and absolute URLs)
+      let linkPath;
+
+      // If URL starts with http:// or https://, it's absolute
+      if (linkUrl.startsWith('http://') || linkUrl.startsWith('https://')) {
+        const url = new URL(linkUrl);
+        linkPath = url.pathname;
+      } else {
+        // Relative URL - use as-is
+        linkPath = linkUrl.startsWith('/') ? linkUrl : '/' + linkUrl;
+      }
+
+      // Remove trailing slashes for comparison
+      const normalizedCurrentPath = currentPath.replace(/\/$/, '').toLowerCase();
+      const normalizedLinkPath = linkPath.replace(/\/$/, '').toLowerCase();
+
+      // Remove locale prefix for comparison (e.g., /zh/)
+      const currentPathWithoutLocale = normalizedCurrentPath.replace(/^\/zh\//, '/');
+      const linkPathWithoutLocale = normalizedLinkPath.replace(/^\/zh\//, '/');
+
+      // Check if current path matches exactly
+      return currentPathWithoutLocale === linkPathWithoutLocale;
+    } catch (e) {
+      console.error('Error matching link URL:', linkUrl, e);
+      return false;
+    }
+  };
+
   // Helper function to check if a menu item is active based on current route
   const isMenuItemActive = (navItem) => {
     if (!navItem || !navItem.sections) return false;
@@ -1088,13 +1123,23 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                         {/* Regular links */}
                                         {regularLinks.length > 0 && (
                                           <ul className="space-y-3" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                                            {regularLinks.map((link, i) => (
-                                              <li key={i}>
-                                                <a href={link.url || '#'} className="text-base text-[#3C3C3B] hover:text-[#D30013] transition-colors">
-                                                  {link.header_menu_title || link.title}
-                                                </a>
-                                              </li>
-                                            ))}
+                                            {regularLinks.map((link, i) => {
+                                              const linkIsActive = isLinkActive(link.url);
+                                              return (
+                                                <li key={i}>
+                                                  <a
+                                                    href={link.url || '#'}
+                                                    className={`text-base transition-colors ${
+                                                      linkIsActive
+                                                        ? 'text-[#D30013] font-semibold'
+                                                        : 'text-[#3C3C3B] hover:text-[#D30013]'
+                                                    }`}
+                                                  >
+                                                    {link.header_menu_title || link.title}
+                                                  </a>
+                                                </li>
+                                              );
+                                            })}
                                           </ul>
                                         )}
 
@@ -1483,85 +1528,123 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                     transition: 'padding-bottom 0.4s ease-out'
                   }}
                 >
-                  {nav.navItems.map((navItem) => (
-                    <React.Fragment key={navItem.id}>
-                      <div className="relative">
-                        <button
-                          onClick={() => setOpenMobileSection(openMobileSection === navItem.id ? null : navItem.id)}
-                          className="w-full flex items-center justify-between py-4"
-                        >
-                          <span className="text-[20px] text-[#3C3C3B] font-normal">{navItem.label}</span>
-                          <ChevronDown className={`chevron-rotate w-7 h-6 text-[#D30013] ${openMobileSection === navItem.id ? 'rotate-180' : 'rotate-0'}`} />
-                        </button>
-                        {/* Red underline when expanded */}
-                        <div
-                          className={`section-underline absolute left-0 right-0 bottom-0 h-[4px] bg-[#9E1422] ${openMobileSection === navItem.id ? 'scale-x-100' : 'scale-x-0'
-                            }`}
-                        />
-                      </div>
+                  {nav.navItems.map((navItem, navIndex) => {
+                    // Collect all highlighted links from all sections for this nav item
+                    const allHighlightedLinks = [];
+                    navItem.sections?.forEach((sec) => {
+                      const filteredLinks = filterLinks(sec.links || []);
+                      const highlightedLinks = filteredLinks.filter(link => link.isHighlighted);
+                      allHighlightedLinks.push(...highlightedLinks);
+                    });
 
-                      {openMobileSection === navItem.id && (
-                        <div
-                          className="dropdown-content bg-white px-0 py-3 mb-2 text-left"
-                          style={{
-                            animation: 'slideInFromTop 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
-                          }}
-                        >
-                          <div className="space-y-6">
-                            {navItem.sections.map((sec, i) => {
-                              const filteredLinks = filterLinks(sec.links);
-                              if (filteredLinks.length === 0) return null;
+                    // Use a unique identifier combining id and index to ensure uniqueness
+                    const uniqueNavId = `${navItem.id}-${navIndex}`;
 
-                              const regularLinks = filteredLinks.filter(link => !link.isHighlighted);
-                              const highlightedLinks = filteredLinks.filter(link => link.isHighlighted);
+                    // Debug logging
+                    if (process.env.NODE_ENV === 'development') {
+                      console.log(`Mobile Nav Item: ${navItem.label}, ID: ${navItem.id}, Unique ID: ${uniqueNavId}`);
+                    }
 
-                              return (
-                                <div key={i}>
-                                  <h3 className="text-[12px] font-bold text-[#3C3C3B] mb-4 tracking-[1.1px] uppercase">{sec.heading}</h3>
-
-                                  {/* Regular link list */}
-                                  {regularLinks.length > 0 && (
-                                    <div className="space-y-0">
-                                      {regularLinks.map((link, j) => (
-                                        <a key={j} href={link.url} className="link-item block text-base text-[#3C3C3B] hover:text-[#D30013] hover:pl-2 py-3.5 border-b border-gray-100 last:border-b-0">
-                                          {link.header_menu_title || link.title}
-                                        </a>
-                                      ))}
-                                    </div>
-                                  )}
-
-                                  {/* Highlighted items as cards */}
-                                  {highlightedLinks.length > 0 && (
-                                    <div className={`grid grid-cols-2 gap-4 ${regularLinks.length > 0 ? 'mt-4' : ''}`}>
-                                      {highlightedLinks.map((link, j) => (
-                                        <a key={j} href={link.url} className="block group">
-                                          <div className="bg-white rounded text-left overflow-hidden shadow-sm border border-[#F2EDE9] hover:shadow-md transition-all duration-300">
-                                            {link.imageUrl && (
-                                              <div className="aspect-[4/3] overflow-hidden relative">
-                                                <img
-                                                  src={link.imageUrl}
-                                                  alt={link.title}
-                                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                />
-                                              </div>
-                                            )}
-                                            <div className="h-[36px] px-2 flex items-center justify-between bg-white">
-                                              <span className="text-[12px] leading-3 font-semibold text-[#D30013]">{link.title}</span>
-                                              <Icon icon="Icon-Chevron-Large" size={15} color="#D30013" className="font-semibold flex-shrink-0 group-hover:translate-x-1 transition-transform" />
-                                            </div>
-                                          </div>
-                                        </a>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </div>
+                    return (
+                      <React.Fragment key={uniqueNavId}>
+                        <div className="relative">
+                          <button
+                            onClick={() => {
+                              const newSection = openMobileSection === uniqueNavId ? null : uniqueNavId;
+                              console.log(`Clicked: ${navItem.label} (${uniqueNavId}), Setting openMobileSection to:`, newSection);
+                              setOpenMobileSection(newSection);
+                            }}
+                            className="w-full flex items-center justify-between py-4"
+                          >
+                            <span className="text-[20px] text-[#3C3C3B] font-normal">{navItem.label}</span>
+                            <ChevronDown className={`chevron-rotate w-7 h-6 text-[#D30013] ${openMobileSection === uniqueNavId ? 'rotate-180' : 'rotate-0'}`} />
+                          </button>
+                          {/* Red underline when expanded */}
+                          <div
+                            className={`section-underline absolute left-0 right-0 bottom-0 h-[4px] bg-[#9E1422] ${openMobileSection === uniqueNavId ? 'scale-x-100' : 'scale-x-0'
+                              }`}
+                          />
                         </div>
-                      )}
-                    </React.Fragment>
-                  ))}
+
+                        {openMobileSection === uniqueNavId && (
+                          <div
+                            className="dropdown-content bg-white px-0 py-3 mb-2 text-left"
+                            style={{
+                              animation: 'slideInFromTop 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+                            }}
+                          >
+                            <div className="space-y-6">
+                              {/* HIGHLIGHTED SECTION - Show at the top if there are highlighted items */}
+                              {allHighlightedLinks.length > 0 && (
+                                <div>
+                                  <h3 className="text-[12px] font-bold text-[#3C3C3B] mb-4 tracking-[1.1px] uppercase">HIGHLIGHTED</h3>
+                                  <div className="grid grid-cols-2 gap-4">
+                                    {allHighlightedLinks.map((link, j) => (
+                                      <a key={j} href={link.url} className="block group">
+                                        <div className="bg-white rounded text-left overflow-hidden shadow-sm border border-[#F2EDE9] hover:shadow-md transition-all duration-300">
+                                          {link.imageUrl && (
+                                            <div className="aspect-[4/3] overflow-hidden relative">
+                                              <img
+                                                src={link.imageUrl}
+                                                alt={link.title}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                              />
+                                            </div>
+                                          )}
+                                          <div className="h-[36px] px-2 flex items-center justify-between bg-white">
+                                            <span className="text-[12px] leading-3 font-semibold text-[#D30013]">{link.title}</span>
+                                            <Icon icon="Icon-Chevron-Large" size={15} color="#D30013" className="font-semibold flex-shrink-0 group-hover:translate-x-1 transition-transform" />
+                                          </div>
+                                        </div>
+                                      </a>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* REGULAR SECTIONS - Show after highlighted */}
+                              {navItem.sections.map((sec, i) => {
+                                const filteredLinks = filterLinks(sec.links);
+                                if (filteredLinks.length === 0) return null;
+
+                                // Only show regular (non-highlighted) links in the sections
+                                const regularLinks = filteredLinks.filter(link => !link.isHighlighted);
+
+                                // Skip this section if there are no regular links
+                                if (regularLinks.length === 0) return null;
+
+                                return (
+                                  <div key={i}>
+                                    <h3 className="text-[12px] font-bold text-[#3C3C3B] mb-4 tracking-[1.1px] uppercase">{sec.heading}</h3>
+
+                                    {/* Regular link list */}
+                                    <div className="space-y-0">
+                                      {regularLinks.map((link, j) => {
+                                        const linkIsActive = isLinkActive(link.url);
+                                        return (
+                                          <a
+                                            key={j}
+                                            href={link.url}
+                                            className={`link-item block text-base hover:pl-2 py-3.5 border-b border-gray-100 last:border-b-0 ${
+                                              linkIsActive
+                                                ? 'text-[#D30013] font-semibold bg-[#FEF2F2] pl-2'
+                                                : 'text-[#3C3C3B] hover:text-[#D30013]'
+                                            }`}
+                                          >
+                                            {link.header_menu_title || link.title}
+                                          </a>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
 
 
 
