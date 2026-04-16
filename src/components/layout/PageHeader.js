@@ -800,12 +800,12 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                                         />
                                       </div>
                                       <div className="flex-1 flex flex-col">
-                                        <p className="text-sm text-left text-[#3C3C3B] mb-4 leading-relaxed flex-1">
+                                      <p className="text-xs text-left text-[#3C3C3B] mb-4 leading line-clamp-3">
                                           {card.description}
                                         </p>
                                         <a
                                           href={card.url}
-                                          className="block w-full px-6 py-2.5 text-sm text-[#D30013] border border-[#D30013] rounded hover:bg-[#D30013] hover:text-white transition-all duration-200 text-center mt-auto"
+                                          className="block w-fit px-3 py-[7px] text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-[#9E1422] hover:text-white transition-all duration-200 text-center mt-auto"
                                         >
                                           {card.heading}
                                         </a>

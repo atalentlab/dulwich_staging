@@ -1172,13 +1172,14 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                                       )}
                                                       <div className="flex-1 flex flex-col">
                                                         {link.description && (
-                                                          <p className="text-sm text-[#3C3C3B] mb-4 leading-relaxed flex-1">
+                                                          <p className="text-xs text-left text-[#3C3C3B] mb-4 leading line-clamp-3 flex-1">
                                                             {link.description}
                                                           </p>
                                                         )}
                                                         <a
                                                           href={link.url}
-                                                          className="px-4 w-fit py-2 text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-red-600 hover:text-white"
+                                                          className="px-4 w-fit py-[7px] text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-[#9E1422] hover:text-white"
+
                                                         >
                                                           {link.buttonText || link.title}
                                                         </a>

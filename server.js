@@ -229,17 +229,12 @@ const fetchPageData = async (slug, locale = 'en', school = null) => {
 
     console.log(`📡 Fetching from: ${url}`);
     const response = await axios.get(url);
-    const pageData = response.data?.data;
-
-    // Debug: Log the meta data
-    if (pageData?.meta) {
-      console.log('📋 Meta data received:', JSON.stringify(pageData.meta, null, 2));
-    } else {
-      console.log('⚠️  No meta data in response');
-    }
-
-    return pageData;
+    return response.data;
   } catch (error) {
+    // If the API returns a 404 or other error, we might still get redirect data in the error response
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
     console.error('Error fetching page data:', error.message);
     return null;
   }
@@ -414,18 +409,18 @@ app.get('/zh/sitemap.xml', generateSitemap);
 // Handle all routes
 app.get('*', async (req, res) => {
   try {
-    // Read the index.html file
-    const indexPath = path.join(__dirname, 'build', 'index.html');
-    let html = fs.readFileSync(indexPath, 'utf8');
-
-    // Detect school from hostname (subdomain)
+    const urlPath = req.path;
     const hostname = req.hostname;
-    let school = null;
+    const query = req.query;
+    const queryString = Object.keys(query).length > 0 
+      ? '?' + new URLSearchParams(query).toString() 
+      : '';
 
     // List of school subdomains
     const schools = ['singapore', 'shanghai-puxi', 'shanghai-pudong', 'suzhou', 'suzhou-high-school', 'hengqin-high-school', 'beijing', 'seoul', 'bangkok'];
 
-    // Check if hostname is a school subdomain
+    // Detect school from hostname (subdomain)
+    let school = null;
     for (const s of schools) {
       if (hostname.startsWith(s + '.') || hostname === s) {
         school = s;
@@ -433,8 +428,24 @@ app.get('*', async (req, res) => {
       }
     }
 
-    // Parse the URL to get slug and locale
-    const urlPath = req.path;
+    // 1. HTTP Level Redirects (Legacy path cleanup & Business Rules)
+    
+    // A. Redirect /en paths to remove /en prefix (SEO best practice)
+    if (urlPath.startsWith('/en/') || urlPath === '/en') {
+      const newPath = urlPath.replace(/^\/en\/?/, '/') || '/';
+      console.log(`🔄 HTTP 301: Redirecting /en prefix to: ${newPath}`);
+      return res.redirect(301, newPath + queryString);
+    }
+
+    // B. Redirect /zh paths for Bangkok, Singapore, and Seoul schools only (Business requirement)
+    const englishOnlySchools = ['bangkok', 'singapore', 'seoul'];
+    if (school && englishOnlySchools.includes(school) && (urlPath.startsWith('/zh/') || urlPath === '/zh')) {
+      const newPath = urlPath.replace(/^\/zh\/?/, '/') || '/';
+      console.log(`🔄 HTTP 302: Redirecting ${school} /zh page to English: ${newPath}`);
+      return res.redirect(302, newPath + queryString);
+    }
+
+    // Parse the URL to get slug and locale for API call
     let locale = 'en';
     let slug = urlPath;
 
@@ -449,15 +460,37 @@ app.get('*', async (req, res) => {
       slug = urlPath === '/' ? '/' : urlPath.replace(/^\//, '');
     }
 
-    // Remove trailing slashes
+    // Remove trailing slashes for API mapping
     if (slug !== '/' && slug.endsWith('/')) {
       slug = slug.slice(0, -1);
     }
 
-    console.log(`📄 Rendering page: ${slug} (locale: ${locale}, school: ${school || 'none'})`);
+    console.log(`📄 Checking route: ${slug} (locale: ${locale}, school: ${school || 'none'})`);
 
-    // Fetch page data from API
-    const pageData = await fetchPageData(slug, locale, school);
+    // Fetch page data from API (which includes potential dynamic redirects)
+    const apiResponse = await fetchPageData(slug, locale, school);
+
+    // 2. Dynamic CMS Redirect Rules
+    if (apiResponse) {
+      const hasRedirect = apiResponse.redirects?.redirect === true || apiResponse.redirect === true;
+      const redirectTarget = apiResponse.redirects?.target || apiResponse.target;
+      const redirectStatus = parseInt(apiResponse.redirects?.status || apiResponse.status || 301, 10);
+
+      if (hasRedirect && redirectTarget) {
+        console.log(`🔄 HTTP CMS Redirect: ${redirectTarget} (${redirectStatus})`);
+        return res.redirect(redirectStatus, redirectTarget);
+      }
+    }
+
+    // 3. Render Fallback (index.html with SEO injection)
+    const indexPath = path.join(__dirname, 'build', 'index.html');
+    if (!fs.existsSync(indexPath)) {
+      console.error('❌ index.html not found in build folder');
+      return res.status(404).send('Not Found');
+    }
+
+    let html = fs.readFileSync(indexPath, 'utf8');
+    const pageData = apiResponse?.data;
 
     // Inject meta tags if we have page data
     if (pageData) {
