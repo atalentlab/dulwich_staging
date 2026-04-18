@@ -224,8 +224,20 @@ const createSlug = (title) => {
         });
       }
   
-      // Sort cards by weight
-      allCards.sort((a, b) => a.weight - b.weight);
+      // Sort cards by weight - items with null weight go last
+      allCards.sort((a, b) => {
+        const weightA = a.weight;
+        const weightB = b.weight;
+
+        // If both are null, maintain original order
+        if (weightA === null && weightB === null) return 0;
+        // If only A is null, it goes last
+        if (weightA === null) return 1;
+        // If only B is null, it goes last
+        if (weightB === null) return -1;
+        // Both have values, sort normally
+        return weightA - weightB;
+      });
   
       // Build subsectionLinks: flatten all 3rd-level child items
       // from every 2nd-level subsection so the left column shows real navigable links

@@ -749,9 +749,11 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
 
                         return (
                           <NavigationMenu.Item key={navItem.id}>
-                            <NavigationMenu.Trigger className="group px-5 py-1 text-[16px] font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative">
-                              {navItem.label}
-                              <span className={`absolute ${scrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] ${isActive ? 'scale-x-100' : 'scale-x-0'} group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-all duration-200 origin-left`}></span>
+                            <NavigationMenu.Trigger asChild className="group px-5 py-1 text-[16px] font-base text-[#3C3C3B] hover:text-gray-900 data-[state=open]:text-gray-900 outline-none transition-all duration-200 relative cursor-pointer">
+                              <a href={navItem.url || '#'}>
+                                {navItem.label}
+                                <span className={`absolute ${scrolled ? '-bottom-3' : '-bottom-4'} left-0 w-full h-2 bg-[#9E1422] ${isActive ? 'scale-x-100' : 'scale-x-0'} group-hover:scale-x-100 group-data-[state=open]:scale-x-100 transition-all duration-200 origin-left`}></span>
+                              </a>
                             </NavigationMenu.Trigger>
                           <NavigationMenu.Content
                             className={`fixed left-0 right-0 ${scrolled ? 'top-[72px]' : 'top-[140px]'} w-full transition-all duration-200 ease-out z-[60]`}
@@ -1068,13 +1070,25 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                 {nav.mobileNav.map((section) => (
                   <React.Fragment key={section.id}>
                     <div className="relative border-b border-gray-100">
-                      <button
-                        onClick={() => setOpenMobileSection(openMobileSection === section.id ? null : section.id)}
-                        className="w-full flex items-center justify-between py-4"
-                      >
-                        <span className="text-[20px] text-[#3C3C3B] font-normal">{section.label}</span>
-                        <ChevronDown className={`chevron-rotate w-7 h-6 text-[#D30013] translate-x-1 ${openMobileSection === section.id ? 'rotate-180' : 'rotate-0'}`} />
-                      </button>
+                      <div className="w-full flex items-center py-4">
+                        {/* Left 80% - Direct link to page */}
+                        <a
+                          href={section.url || '#'}
+                          className="text-[20px] text-[#3C3C3B] font-normal hover:text-[#D30013] transition-colors text-left"
+                          style={{ width: '80%' }}
+                        >
+                          {section.label}
+                        </a>
+
+                        {/* Right 20% - Dropdown toggle */}
+                        <button
+                          onClick={() => setOpenMobileSection(openMobileSection === section.id ? null : section.id)}
+                          className="flex items-center justify-end"
+                          style={{ width: '20%' }}
+                        >
+                          <ChevronDown className={`chevron-rotate w-7 h-6 text-[#D30013] ${openMobileSection === section.id ? 'rotate-180' : 'rotate-0'}`} />
+                        </button>
+                      </div>
                       {/* Red underline when expanded */}
                       <div
                         className={`section-underline absolute left-0 right-0 bottom-0 h-[4px] bg-[#9E1422] transition-transform duration-300 ${
@@ -1119,7 +1133,16 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                                     <h3 className="text-[12px] font-bold text-[#3C3C3B] mb-3 uppercase tracking-[1.1px]">{sec.heading || 'HIGHLIGHTED'}</h3>
                                   </>
                                 ) : (
-                                  <h3 className="text-[12px] font-bold text-[#3C3C3B] mb-4 uppercase tracking-widest">{sec.heading}</h3>
+                                  /* Make section heading clickable when URL is not # */
+                                  sec.url && sec.url !== '#' ? (
+                                    <h3 className="text-[12px] font-bold text-[#3C3C3B] mb-4 uppercase tracking-widest">
+                                      <a href={sec.url} className="hover:text-[#D30013] transition-colors">
+                                        {sec.heading}
+                                      </a>
+                                    </h3>
+                                  ) : (
+                                    <h3 className="text-[12px] font-bold text-[#3C3C3B] mb-4 uppercase tracking-widest">{sec.heading}</h3>
+                                  )
                                 )}
 
                                 {/* Card Grid for highlighted items */}

@@ -1567,17 +1567,29 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                     return (
                       <React.Fragment key={uniqueNavId}>
                         <div className="relative">
-                          <button
-                            onClick={() => {
-                              const newSection = openMobileSection === uniqueNavId ? null : uniqueNavId;
-                              console.log(`Clicked: ${navItem.label} (${uniqueNavId}), Setting openMobileSection to:`, newSection);
-                              setOpenMobileSection(newSection);
-                            }}
-                            className="w-full flex items-center justify-between py-4"
-                          >
-                            <span className="text-[20px] text-[#3C3C3B] font-normal">{navItem.label}</span>
-                            <ChevronDown className={`chevron-rotate w-7 h-6 text-[#D30013] ${openMobileSection === uniqueNavId ? 'rotate-180' : 'rotate-0'}`} />
-                          </button>
+                          <div className="w-full flex items-center py-4">
+                            {/* Left 80% - Direct link to page */}
+                            <a
+                              href={navItem.url || '#'}
+                              className="text-[20px] text-[#3C3C3B] font-normal hover:text-[#D30013] transition-colors text-left"
+                              style={{ width: '80%' }}
+                            >
+                              {navItem.label}
+                            </a>
+
+                            {/* Right 20% - Dropdown toggle */}
+                            <button
+                              onClick={() => {
+                                const newSection = openMobileSection === uniqueNavId ? null : uniqueNavId;
+                                console.log(`Clicked: ${navItem.label} (${uniqueNavId}), Setting openMobileSection to:`, newSection);
+                                setOpenMobileSection(newSection);
+                              }}
+                              className="flex items-center justify-end"
+                              style={{ width: '20%' }}
+                            >
+                              <ChevronDown className={`chevron-rotate w-7 h-6 text-[#D30013] ${openMobileSection === uniqueNavId ? 'rotate-180' : 'rotate-0'}`} />
+                            </button>
+                          </div>
                           {/* Red underline when expanded */}
                           <div
                             className={`section-underline absolute left-0 right-0 bottom-0 h-[4px] bg-[#9E1422] ${openMobileSection === uniqueNavId ? 'scale-x-100' : 'scale-x-0'

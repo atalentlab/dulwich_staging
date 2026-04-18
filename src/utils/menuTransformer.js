@@ -95,9 +95,21 @@ const getImageKeyFromMenuItem = (item) => {
   
       // Collect ALL highlighted items recursively (level 2, 3, ...)
       const allHighlights = collectAllHighlights(items);
-  
-      // Sort by weight
-      allHighlights.sort((a, b) => (a.highlight_menu?.weight || 0) - (b.highlight_menu?.weight || 0));
+
+      // Sort by weight - items with null weight go last
+      allHighlights.sort((a, b) => {
+        const weightA = a.highlight_menu?.weight;
+        const weightB = b.highlight_menu?.weight;
+
+        // If both are null, maintain original order
+        if (weightA === null && weightB === null) return 0;
+        // If only A is null, it goes last
+        if (weightA === null) return 1;
+        // If only B is null, it goes last
+        if (weightB === null) return -1;
+        // Both have values, sort normally
+        return weightA - weightB;
+      });
   
       // Flat links: only used when there are NO subsections (simple menus)
       const directHighlights = items.filter(item => item.highlight_menu);
@@ -106,6 +118,7 @@ const getImageKeyFromMenuItem = (item) => {
       return {
         id: menuItem.id,
         label: menuItem.title,
+        url: menuItem.url && menuItem.url !== '#' ? menuItem.url : null,
         subsectionLinks,
         links: directRegular.map(item => ({ title: item.title, url: item.url })),
         cards: allHighlights.map(item => ({
@@ -136,10 +149,18 @@ const getImageKeyFromMenuItem = (item) => {
       const highlightedItems = items.filter(item => item.highlight_menu);
       const regularItems = items.filter(item => !item.highlight_menu);
   
-      // Sort highlighted items by weight
+      // Sort highlighted items by weight - items with null weight go last
       const sortedHighlightedItems = highlightedItems.sort((a, b) => {
-        const weightA = a.highlight_menu?.weight || 0;
-        const weightB = b.highlight_menu?.weight || 0;
+        const weightA = a.highlight_menu?.weight;
+        const weightB = b.highlight_menu?.weight;
+
+        // If both are null, maintain original order
+        if (weightA === null && weightB === null) return 0;
+        // If only A is null, it goes last
+        if (weightA === null) return 1;
+        // If only B is null, it goes last
+        if (weightB === null) return -1;
+        // Both have values, sort normally
         return weightA - weightB;
       });
   
@@ -150,6 +171,7 @@ const getImageKeyFromMenuItem = (item) => {
         return {
           id: menuItem.id,
           label: menuItem.title,
+          url: menuItem.url && menuItem.url !== '#' ? menuItem.url : null,
           type: 'simple',
           borderFull: true,
           links: regularItems.map(item => ({
@@ -190,6 +212,7 @@ const getImageKeyFromMenuItem = (item) => {
         return {
           id: menuItem.id,
           label: menuItem.title,
+          url: menuItem.url && menuItem.url !== '#' ? menuItem.url : null,
           type: 'complex',
           borderFull: true,
           sections
