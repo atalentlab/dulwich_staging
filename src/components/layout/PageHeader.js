@@ -800,7 +800,7 @@ function PageHeader({ selectedSchool, setSelectedSchool, setSelectedSchoolSlug, 
                                         />
                                       </div>
                                       <div className="flex-1 flex flex-col">
-                                      <p className="text-xs text-left text-[#3C3C3B] mb-4 leading line-clamp-3">
+                                        <p className="text-xs text-left text-[#3C3C3B] mb-4 leading line-clamp-3">
                                           {card.description}
                                         </p>
                                         <a

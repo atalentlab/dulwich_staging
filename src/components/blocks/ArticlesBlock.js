@@ -222,7 +222,7 @@ const ArticlesBlock = ({ content }) => {
                         </p>
                       )}
                       <a
-                        href={`${locale === 'zh' ? '/zh' : ''}/dulwich-life?slug=${article.slug || article.id}&locale=${locale}&school=${currentSchoolSlug ? currentSchoolSlug : 'beijing'}`}
+                        href={`${locale === 'zh' ? '/zh' : ''}/dulwich-life?slug=${article.slug || article.id}&locale=${locale}&school=${currentSchoolSlug ? `${currentSchoolSlug}-cms` : 'beijing-cms'}`}
                         className="inline-block border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-semibold px-4 py-2 text-sm rounded transition-colors duration-200"
                       >
                         {(location.pathname.startsWith('/zh/') || location.pathname === '/zh') ? '阅读更多' : 'Read More'}

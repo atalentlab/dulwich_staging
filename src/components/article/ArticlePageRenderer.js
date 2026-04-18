@@ -67,8 +67,8 @@ const ArticlePageRenderer = ({ slug: propSlug, locale: propLocale }) => {
 
   // Detect school from subdomain (e.g., 'singapore' from singapore.localhost:3000)
   const detectedSchool = getCurrentSchool();
-  // Add -cms suffix (API expects format like "beijing")
-  const school = detectedSchool ? detectedSchool : null;
+  // Add -cms suffix (API expects format like "beijing-cms")
+  const school = detectedSchool ? `${detectedSchool}-cms` : null;
 
   // Determine if this is a school site or international site
   const isSchool = isSchoolSite();

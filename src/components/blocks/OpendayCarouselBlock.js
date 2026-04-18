@@ -5,10 +5,10 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const COLOR_MAP = {
-  red:    '#D30013',
+  red: '#D30013',
   yellow: '#FFB909',
-  blue:   '#009ED0',
-  green:  '#00A651',
+  blue: '#009ED0',
+  green: '#00A651',
 };
 
 // Extract <li> text items from HTML, or fall back to plain text
@@ -125,9 +125,8 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
     ),
     customPaging: (i) => (
       <button>
-        <div className={`h-2 rounded-full transition-all duration-300 ${
-          currentSlide === i ? 'w-[72px] bg-red-600' : 'w-8 bg-[#F2EDE9] hover:bg-gray-400'
-        }`}></div>
+        <div className={`h-2 rounded-full transition-all duration-300 ${currentSlide === i ? 'w-[72px] bg-red-600' : 'w-8 bg-[#F2EDE9] hover:bg-gray-400'
+          }`}></div>
       </button>
     ),
     responsive: [
@@ -187,63 +186,63 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
                     {...wrapperProps}
                     className="flex flex-col bg-white rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.10)] hover:shadow-[0_6px_28px_rgba(0,0,0,0.16)] transition-all duration-300 transform hover:-translate-y-1 no-underline h-fit overflow-visible w-full"
                   >
-                  {/* Image with Badge */}
-                  <div className="relative h-44 md:h-52 w-full flex-shrink-0 overflow-visible pb-3">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover rounded-t-lg"
-                      onError={(e) => { e.target.src = 'https://assets.dulwich.org/thumbs/articles/fit/600x324/weixin-image-2025-09-16-140743-825.jpg'; }}
-                    />
-                    <div className="absolute -bottom-0 left-4 md:left-6 z-10 overflow-visible">
-                      <span
-                        className="text-white px-3 md:px-4 py-2.5 md:py-3.5 my-1 rounded-full z-10 text-xs md:text-sm font-medium shadow-lg"
-                        style={{ backgroundColor: item.color }}
-                      >
-                        {item.badge}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="w-full p-4 md:p-6 text-left flex flex-col pb-3 md:pb-4 mb-2 bg-white rounded-b-2xl">
-                    <h3
-                      className="text-lg md:text-xl lg:text-2xl font-extrabold mb-2 leading-tight"
-                      style={{ color: item.color }}
-                    >
-                      {item.title}
-                    </h3>
-
-                    <div className="mb-3 md:mb-4">
-                      <p className="text-[#3C3737] font-bold text-sm md:text-base leading-tight mb-1">{item.dateTime}</p>
-                      <p className="text-[#3C3737] text-sm md:text-base">{item.subtitle}</p>
-                    </div>
-
-                    <ul className="mb-3 md:mb-4 space-y-1">
-                      {item.details.map((detail, index) => (
-                        <li key={index} className="flex items-start gap-2 text-[#3C3737]">
-                          {item.details.length > 1 && (
-                            <Check
-                              className="rounded-full text-white mt-1 md:mt-1.5 flex-shrink-0 w-2.5 h-2.5 p-0.2"
-                              style={{ backgroundColor: item.color }}
-                            />
-                          )}
-                          <span className='text-xs md:text-sm text-[#3C3737] font-normal leading-relaxed'>{detail}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {item.cta && item.ctaText && (
-                      <div className="mt-auto">
+                    {/* Image with Badge */}
+                    <div className="relative h-44 md:h-52 w-full flex-shrink-0 overflow-visible pb-3">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-full object-cover rounded-t-lg"
+                        onError={(e) => { e.target.src = 'https://assets.dulwich.org/thumbs/articles/fit/600x324/weixin-image-2025-09-16-140743-825.jpg'; }}
+                      />
+                      <div className="absolute -bottom-0 left-4 md:left-6 z-10 overflow-visible">
                         <span
-                          className="border-2 px-4 md:px-6 py-2 md:py-2.5 rounded-lg font-semibold text-sm md:text-base hover:bg-gray-50 transition-all duration-300 inline-block"
-                          style={{ borderColor: item.color, color: item.color }}
+                          className="text-white px-3 md:px-4 py-2.5 md:py-3.5 my-1 rounded-full z-10 text-xs md:text-sm font-medium shadow-lg"
+                          style={{ backgroundColor: item.color }}
                         >
-                          {item.ctaText}
+                          {item.badge}
                         </span>
                       </div>
-                    )}
-                  </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="w-full p-4 md:p-6 text-left flex flex-col pb-3 md:pb-4 mb-2 bg-white rounded-b-2xl">
+                      <h3
+                        className="text-lg md:text-xl lg:text-2xl font-extrabold mb-2 leading-tight"
+                        style={{ color: item.color }}
+                      >
+                        {item.title}
+                      </h3>
+
+                      <div className="mb-3 md:mb-4">
+                        <p className="text-[#3C3737] font-bold text-sm md:text-base leading-tight mb-1">{item.dateTime}</p>
+                        <p className="text-[#3C3737] text-sm md:text-base">{item.subtitle}</p>
+                      </div>
+
+                      <ul className="mb-3 md:mb-4 space-y-1">
+                        {item.details.map((detail, index) => (
+                          <li key={index} className="flex items-start gap-2 text-[#3C3737]">
+                            {item.details.length > 1 && (
+                              <Check
+                                className="rounded-full text-white mt-1 md:mt-1.5 flex-shrink-0 w-2.5 h-2.5 p-0.2"
+                                style={{ backgroundColor: item.color }}
+                              />
+                            )}
+                            <span className='text-xs md:text-sm text-[#3C3737] font-normal leading-relaxed'>{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {item.cta && item.ctaText && (
+                        <div className="mt-auto">
+                          <span
+                            className="border-2 px-4 md:px-6 py-2 md:py-2.5 rounded-lg font-semibold text-sm md:text-base hover:bg-gray-50 transition-all duration-300 inline-block"
+                            style={{ borderColor: item.color, color: item.color }}
+                          >
+                            {item.ctaText}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </CardWrapper>
                 </div>
               );
@@ -301,7 +300,7 @@ function OpendayCarouselBlock({ items = [], content = [] }) {
         .openday-carousel .slick-track {
           display: flex !important;
           align-items: stretch;
-          margin-left: 14% !important;
+      
           margin-bottom: 20px;
           transition: transform 0.5s ease;
         }

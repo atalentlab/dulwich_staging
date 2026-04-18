@@ -3,12 +3,13 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
+const prerender = require('prerender-node');
 
 const app = express();
-const PORT = process.env.EXPRESS_PORT || process.env.PORT || 4000;
+const PORT = process.env.PORT || 3001;
 
 // API base URL - use production CMS
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.atalent.xyz';
 
 // Serve static files from the React app (but not HTML, robots.txt, or sitemap.xml files)
 app.use((req, res, next) => {
@@ -49,8 +50,8 @@ const fetchSitemapXML = async (url) => {
   }
 };
 
-// Helper function to extract URLs from sitemap XML and replace domain
-const extractUrlsFromSitemap = (xmlContent, targetDomain) => {
+// Helper function to extract URLs from sitemap XML
+const extractUrlsFromSitemap = (xmlContent) => {
   if (!xmlContent) return [];
 
   // Extract all <url> blocks from the XML
@@ -59,33 +60,24 @@ const extractUrlsFromSitemap = (xmlContent, targetDomain) => {
   let match;
 
   while ((match = urlRegex.exec(xmlContent)) !== null) {
-    let urlBlock = match[1];
-
-    // Replace any localhost or CMS domain URLs with the target domain
-
-    urlBlock = urlBlock.replace(
-      /(https?:\/\/)[^\/]+/g,
-      targetDomain
-    );
-
-    urls.push(`  <url>${urlBlock}</url>`);
+    urls.push(`  <url>${match[1]}</url>`);
   }
 
   return urls;
 };
 
 // Helper function to get all URLs from all sitemap types for a school
-const getSchoolSitemapUrls = async (schoolSlug, targetDomain) => {
+const getSchoolSitemapUrls = async (schoolSlug) => {
   const sitemapTypes = ['pages', 'news', 'people'];
   const allUrls = [];
 
   for (const type of sitemapTypes) {
-    const url = `${API_BASE_URL}/sitemap-${type}.xml?subdomain=${schoolSlug}`;
+    const url = `${API_BASE_URL}/sitemap-${type}.xml?subdomain=${schoolSlug}-cms`;
     console.log(`📡 Fetching sitemap-${type}.xml for ${schoolSlug}`);
 
     const xmlContent = await fetchSitemapXML(url);
     if (xmlContent) {
-      const urls = extractUrlsFromSitemap(xmlContent, targetDomain);
+      const urls = extractUrlsFromSitemap(xmlContent);
       allUrls.push(...urls);
       console.log(`✅ Found ${urls.length} URLs in sitemap-${type}.xml for ${schoolSlug}`);
     }
@@ -95,7 +87,7 @@ const getSchoolSitemapUrls = async (schoolSlug, targetDomain) => {
 };
 
 // Helper function to get group sitemap URLs (for main domain)
-const getGroupSitemapUrls = async (targetDomain) => {
+const getGroupSitemapUrls = async () => {
   const sitemapTypes = ['pages', 'news'];
   const allUrls = [];
 
@@ -105,7 +97,7 @@ const getGroupSitemapUrls = async (targetDomain) => {
 
     const xmlContent = await fetchSitemapXML(url);
     if (xmlContent) {
-      const urls = extractUrlsFromSitemap(xmlContent, targetDomain);
+      const urls = extractUrlsFromSitemap(xmlContent);
       allUrls.push(...urls);
       console.log(`✅ Found ${urls.length} URLs in group sitemap-${type}.xml`);
     }
@@ -189,6 +181,7 @@ const injectMetaTags = (html, pageData) => {
 const fetchPageData = async (slug, locale = 'en', school = null) => {
   try {
     let url;
+    const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
 
     // Check if this is a school-specific request
     if (school) {
@@ -196,19 +189,19 @@ const fetchPageData = async (slug, locale = 'en', school = null) => {
       const isHomepage = !normalizedSlug || normalizedSlug === 'home';
 
       if (isHomepage) {
-        // School homepage: /api/school/home?locale=en&slug=singapore
+        // School homepage: /api/school/home?locale=en&slug=singapore-cms
         url = `${API_BASE_URL}/api/school/home?`;
         if (locale) {
           url += `locale=${locale}&`;
         }
-        url += `slug=${school}`;
+        url += `slug=${school}${cmsSuffix}`;
       } else {
-        // School page: /api/school/page?locale=en&slug=about&school=singapore
+        // School page: /api/school/page?locale=en&slug=about&school=singapore-cms
         url = `${API_BASE_URL}/api/school/page?`;
         if (locale) {
           url += `locale=${locale}&`;
         }
-        url += `slug=${normalizedSlug}&school=${school}-cms`;
+        url += `slug=${normalizedSlug}&school=${school}${cmsSuffix}`;
       }
     } else {
       // General page (no school)
@@ -229,12 +222,17 @@ const fetchPageData = async (slug, locale = 'en', school = null) => {
 
     console.log(`📡 Fetching from: ${url}`);
     const response = await axios.get(url);
-    return response.data;
-  } catch (error) {
-    // If the API returns a 404 or other error, we might still get redirect data in the error response
-    if (error.response && error.response.data) {
-      return error.response.data;
+    const pageData = response.data?.data;
+
+    // Debug: Log the meta data
+    if (pageData?.meta) {
+      console.log('📋 Meta data received:', JSON.stringify(pageData.meta, null, 2));
+    } else {
+      console.log('⚠️  No meta data in response');
     }
+
+    return pageData;
+  } catch (error) {
     console.error('Error fetching page data:', error.message);
     return null;
   }
@@ -260,15 +258,10 @@ const generateSitemap = async (req, res) => {
       }
     }
 
-    // Build target domain from request
-    const protocol = req.protocol;
-    const host = req.get('host');
-    const targetDomain = `${protocol}://${host}`;
-
     // If a specific school is detected, return only that school's URLs
     if (school) {
       console.log(`📍 Detected school: ${school}`);
-      const urls = await getSchoolSitemapUrls(school, targetDomain);
+      const urls = await getSchoolSitemapUrls(school);
 
       // Build the sitemap urlset for this school
       let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -291,7 +284,7 @@ const generateSitemap = async (req, res) => {
       console.log('📍 No specific school detected, generating group sitemap');
 
       // Fetch group sitemap URLs
-      const urls = await getGroupSitemapUrls(targetDomain);
+      const urls = await getGroupSitemapUrls();
 
       // Build the sitemap urlset for group pages
       let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -406,21 +399,30 @@ app.get('/robots.txt', generateRobotsTxt);
 app.get('/sitemap.xml', generateSitemap);
 app.get('/zh/sitemap.xml', generateSitemap);
 
+// Prerender middleware for crawler requests (SEO optimization)
+prerender
+  .set('prerenderServiceUrl', process.env.PRERENDER_SERVICE_URL || 'https://service.prerender.io/')
+  .set('prerenderToken', process.env.PRERENDER_TOKEN)
+  .set('forwardHeaders', true)
+  .set('botsOnly', true);
+
+app.use(prerender);
+
 // Handle all routes
 app.get('*', async (req, res) => {
   try {
-    const urlPath = req.path;
+    // Read the index.html file
+    const indexPath = path.join(__dirname, 'build', 'index.html');
+    let html = fs.readFileSync(indexPath, 'utf8');
+
+    // Detect school from hostname (subdomain)
     const hostname = req.hostname;
-    const query = req.query;
-    const queryString = Object.keys(query).length > 0 
-      ? '?' + new URLSearchParams(query).toString() 
-      : '';
+    let school = null;
 
     // List of school subdomains
     const schools = ['singapore', 'shanghai-puxi', 'shanghai-pudong', 'suzhou', 'suzhou-high-school', 'hengqin-high-school', 'beijing', 'seoul', 'bangkok'];
 
-    // Detect school from hostname (subdomain)
-    let school = null;
+    // Check if hostname is a school subdomain
     for (const s of schools) {
       if (hostname.startsWith(s + '.') || hostname === s) {
         school = s;
@@ -428,24 +430,8 @@ app.get('*', async (req, res) => {
       }
     }
 
-    // 1. HTTP Level Redirects (Legacy path cleanup & Business Rules)
-    
-    // A. Redirect /en paths to remove /en prefix (SEO best practice)
-    if (urlPath.startsWith('/en/') || urlPath === '/en') {
-      const newPath = urlPath.replace(/^\/en\/?/, '/') || '/';
-      console.log(`🔄 HTTP 301: Redirecting /en prefix to: ${newPath}`);
-      return res.redirect(301, newPath + queryString);
-    }
-
-    // B. Redirect /zh paths for Bangkok, Singapore, and Seoul schools only (Business requirement)
-    const englishOnlySchools = ['bangkok', 'singapore', 'seoul'];
-    if (school && englishOnlySchools.includes(school) && (urlPath.startsWith('/zh/') || urlPath === '/zh')) {
-      const newPath = urlPath.replace(/^\/zh\/?/, '/') || '/';
-      console.log(`🔄 HTTP 302: Redirecting ${school} /zh page to English: ${newPath}`);
-      return res.redirect(302, newPath + queryString);
-    }
-
-    // Parse the URL to get slug and locale for API call
+    // Parse the URL to get slug and locale
+    const urlPath = req.path;
     let locale = 'en';
     let slug = urlPath;
 
@@ -460,37 +446,15 @@ app.get('*', async (req, res) => {
       slug = urlPath === '/' ? '/' : urlPath.replace(/^\//, '');
     }
 
-    // Remove trailing slashes for API mapping
+    // Remove trailing slashes
     if (slug !== '/' && slug.endsWith('/')) {
       slug = slug.slice(0, -1);
     }
 
-    console.log(`📄 Checking route: ${slug} (locale: ${locale}, school: ${school || 'none'})`);
+    console.log(`📄 Rendering page: ${slug} (locale: ${locale}, school: ${school || 'none'})`);
 
-    // Fetch page data from API (which includes potential dynamic redirects)
-    const apiResponse = await fetchPageData(slug, locale, school);
-
-    // 2. Dynamic CMS Redirect Rules
-    if (apiResponse) {
-      const hasRedirect = apiResponse.redirects?.redirect === true || apiResponse.redirect === true;
-      const redirectTarget = apiResponse.redirects?.target || apiResponse.target;
-      const redirectStatus = parseInt(apiResponse.redirects?.status || apiResponse.status || 301, 10);
-
-      if (hasRedirect && redirectTarget) {
-        console.log(`🔄 HTTP CMS Redirect: ${redirectTarget} (${redirectStatus})`);
-        return res.redirect(redirectStatus, redirectTarget);
-      }
-    }
-
-    // 3. Render Fallback (index.html with SEO injection)
-    const indexPath = path.join(__dirname, 'build', 'index.html');
-    if (!fs.existsSync(indexPath)) {
-      console.error('❌ index.html not found in build folder');
-      return res.status(404).send('Not Found');
-    }
-
-    let html = fs.readFileSync(indexPath, 'utf8');
-    const pageData = apiResponse?.data;
+    // Fetch page data from API
+    const pageData = await fetchPageData(slug, locale, school);
 
     // Inject meta tags if we have page data
     if (pageData) {
@@ -511,4 +475,6 @@ app.get('*', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
   console.log(`📡 API base URL: ${API_BASE_URL}`);
+  console.log(`🤖 Prerender service: ${process.env.PRERENDER_SERVICE_URL}`);
+  console.log(`🔑 Prerender token: ${process.env.PRERENDER_TOKEN ? '✅ Configured' : '❌ Missing - set PRERENDER_TOKEN.  in .env'}`);
 });

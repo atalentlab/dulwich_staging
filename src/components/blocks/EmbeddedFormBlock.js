@@ -1,10 +1,18 @@
 import React from 'react';
 
 const EmbeddedFormBlock = ({ content }) => {
-  const { url, height = '800' } = content;
+  const {
+    url,
+    height = '800',
+    'anchor-id': anchorId,
+  } = content || {};
 
   return (
-    <section className="py-16 px-4 bg-white">
+    <section
+      id={anchorId}
+      data-id={anchorId}
+      className="py-16 px-4 bg-white"
+    >
       <div className="max-w-[1120px] w-full mx-auto">
         <iframe
           src={url?.startsWith('http') ? url : `https://${url}`}
@@ -13,6 +21,7 @@ const EmbeddedFormBlock = ({ content }) => {
           frameBorder="0"
           className="rounded-lg shadow-lg"
           title="Embedded Form"
+          loading="lazy"
         />
       </div>
     </section>

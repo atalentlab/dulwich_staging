@@ -35,21 +35,24 @@ const MainCampusMapBlock = ({ content }) => {
   const detectedSchool = getCurrentSchool();
   const schoolSlug = content?.school || detectedSchool || 'shanghai-pudong';
 
+  // CMS suffix for school API calls
+  const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+
   // Fetch school information
   useEffect(() => {
     const fetchSchoolInfo = async () => {
       try {
         setLoading(true);
         const baseUrl = process.env.REACT_APP_API_URL;
-        // Add -cms suffix for school_info API
-        const apiUrl = `${baseUrl}/api/school_info?locale=${locale}&school=${schoolSlug}-cms`;
+        const schoolParam = schoolSlug.endsWith(cmsSuffix) ? schoolSlug : `${schoolSlug}${cmsSuffix}`;
+        const apiUrl = `${baseUrl}/api/school_info?locale=${locale}&school=${schoolParam}`;
 
         console.log('🗺️ MainCampusMapBlock - Fetching school info:', apiUrl);
 
         const response = await fetch(apiUrl);
 
         if (!response.ok) {
-          console.warn(`🗺️ MainCampusMapBlock - School info API returned ${response.status} for ${schoolSlug}`);
+          console.warn(`🗺️ MainCampusMapBlock - School info API returned ${response.status} for ${schoolParam}`);
           return;
         }
 
@@ -78,7 +81,7 @@ const MainCampusMapBlock = ({ content }) => {
     };
 
     fetchSchoolInfo();
-  }, [locale, schoolSlug]);
+  }, [locale, schoolSlug, cmsSuffix]);
 
   // Copy to clipboard function
   const handleCopy = async (text, field) => {

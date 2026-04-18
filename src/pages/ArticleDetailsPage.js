@@ -61,8 +61,8 @@ function ArticleDetailsPage() {
 
   // Detect school from subdomain or query params
   const detectedSchool = getCurrentSchool();
-  // Add -cms suffix if detecting from subdomain (API expects format like "beijing")
-  const schoolWithSuffix = detectedSchool ? detectedSchool : null;
+  // Add -cms suffix if detecting from subdomain (API expects format like "beijing-cms")
+  const schoolWithSuffix = detectedSchool ? `${detectedSchool}-cms` : null;
   const school = querySchool || schoolWithSuffix;
 
   const { data: article, isLoading, error } = useArticleDetailsBySlug(slug, locale, school);

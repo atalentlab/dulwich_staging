@@ -41,7 +41,7 @@ function TeacherDetailsPage() {
 
   // Detect school
   const detectedSchool = getCurrentSchool();
-  const schoolWithSuffix = detectedSchool ? detectedSchool : null;
+  const schoolWithSuffix = detectedSchool ? `${detectedSchool}-cms` : null;
   const school = querySchool || schoolWithSuffix;
 
   // Fetch all teachers

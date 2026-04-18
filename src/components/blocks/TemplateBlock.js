@@ -124,7 +124,8 @@ const TemplateBlock = ({ content }) => {
       if (template === 'network-news' || template === 'school-news') {
         try {
           // Add CMS suffix to school parameter if present
-          const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}` : null;
+          const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+          const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
 
           console.log('📚 Loading tags for school:', schoolParam, 'locale:', locale);
 
@@ -253,7 +254,8 @@ const TemplateBlock = ({ content }) => {
 
         try {
           // Add CMS suffix to school parameter if present
-          const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}` : null;
+          const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+          const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
 
           const params = {
             slug: 'dulwich-life',
@@ -326,7 +328,8 @@ const TemplateBlock = ({ content }) => {
 
         try {
           // Add CMS suffix to school parameter
-          const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}` : null;
+          const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+          const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
 
           // Fetch ALL teachers in one go with pagination - more efficient than double fetch
           const firstPageResponse = await fetchTeacherList({
@@ -558,7 +561,8 @@ const TemplateBlock = ({ content }) => {
 
     try {
       // Add CMS suffix to school parameter if present
-      const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}` : null;
+      const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
+      const schoolParam = currentSchoolSlug ? `${currentSchoolSlug}${cmsSuffix}` : null;
 
       const params = {
         slug: 'dulwich-life',

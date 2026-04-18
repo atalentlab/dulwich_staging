@@ -56,6 +56,7 @@ import StoriesSection from './StoriesSection';
 import OpendayCarouselBlock from './OpendayCarouselBlock';
 import MainCampusMapBlock from './MainCampusMapBlock';
 import ContactFormBlock from './ContactFormBlock';
+import SchoolLocationsBlock from './SchoolLocationsBlock';
 
 /**
  * Registry mapping block types to components
@@ -69,7 +70,6 @@ export const BLOCK_COMPONENTS = {
   single_image: SingleImageBlock,
   video_upload: VideoUploadBlock,
   video: VideoBlock,
-  contact_form: ContactFormBlock,
 
   // Layout blocks
   triptych: TriptychBlock,
@@ -88,6 +88,7 @@ export const BLOCK_COMPONENTS = {
   cta: CtaBlock,
   quote: QuoteBlock,
   contact_card: ContactCardBlock,
+  contact_form: ContactFormBlock,
 
   // Special blocks
   admissions_promo: AdmissionsPromoBlock,
@@ -113,6 +114,7 @@ export const BLOCK_COMPONENTS = {
   timeline_event: TimelineEventBlock,
   map_block: MapBlock,
   main_campus_map: MainCampusMapBlock,
+  school_locations: SchoolLocationsBlock,
   'our-schools': OurSchoolsBlock,
   taxonomy: TaxonomyBlock,
   template: TemplateBlock,

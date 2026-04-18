@@ -1179,7 +1179,6 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                                         <a
                                                           href={link.url}
                                                           className="px-4 w-fit py-[7px] text-xs text-[#D30013] border border-[#D30013] rounded hover:bg-[#9E1422] hover:text-white"
-
                                                         >
                                                           {link.buttonText || link.title}
                                                         </a>
@@ -1596,7 +1595,7 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                             <div className="space-y-6">
                               {/* Main Section Link - appears first when dropdown opens */}
                               {navItem.url && navItem.url !== '#' && (
-                                <div className="pb-4 border-b border-gray-100">
+                                <div className="border-b border-gray-100">
                                   <a
                                     href={navItem.url}
                                     className="link-item flex items-center justify-between text-base font-semibold text-[#D30013] hover:text-[#B8000F] hover:pl-2 py-2 transition-all"

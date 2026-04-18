@@ -2,68 +2,111 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 /**
- * Custom hook to enable smooth scrolling to anchor links
- * @param {boolean} isReady - Whether the page content is ready (data loaded)
+ * useSmoothScroll Hook
+ * Handles smooth scrolling to sections based on URL hash or query parameter
+ *
+ * Usage:
+ * - Hash-based: /page#section-name
+ * - Query-based: /page?anchor=section-name
+ *
+ * Searches for elements with data-id matching the anchor value
  */
-const useSmoothScroll = (isReady = true) => {
+const useSmoothScroll = (isDataLoaded = true) => {
   const location = useLocation();
 
   useEffect(() => {
-    if (!isReady) return;
-
-    // Check if there's a hash in the URL
-    const hash = location.hash;
-
-    if (hash) {
-      // Remove the # symbol
-      const id = hash.replace('#', '');
-
-      // Wait a bit for the page to render
-      const timer = setTimeout(() => {
-        const element = document.getElementById(id);
-
-        if (element) {
-          element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-          });
-        }
-      }, 100);
-
-      return () => clearTimeout(timer);
+    // Don't run if data isn't loaded yet
+    if (!isDataLoaded) {
+      return;
     }
-  }, [location.hash, isReady]);
 
-  // Handle click events on anchor links
-  useEffect(() => {
-    if (!isReady) return;
+    let anchorId = null;
 
-    const handleAnchorClick = (e) => {
-      const target = e.target.closest('a');
+    // Method 1: Check for hash in URL (e.g., #open-day)
+    if (location.hash) {
+      anchorId = location.hash.substring(1); // Remove the '#'
+    }
+    // Method 2: Check for anchor query parameter (e.g., ?anchor=open-day)
+    else {
+      const params = new URLSearchParams(location.search);
+      anchorId = params.get('anchor');
+    }
 
-      if (target && target.hash) {
-        const id = target.hash.replace('#', '');
-        const element = document.getElementById(id);
+    if (!anchorId) {
+      return;
+    }
 
-        if (element) {
-          e.preventDefault();
-          element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
+    console.log('🔍 Looking for anchor:', anchorId);
+
+    // Try multiple times with increasing delays to ensure DOM is ready
+    const attempts = [300, 600, 1000, 1500];
+    let attemptCount = 0;
+
+    const tryScroll = () => {
+      // First try to find element with data-id attribute
+      const elementWithDataId = document.querySelector(`[data-id="${anchorId}"]`);
+
+      // Responsive header offset: 60px on mobile (below 800px), 120px on desktop (800px and above)
+      const headerOffset = window.innerWidth >= 800 ? 130 : 70;
+
+      if (elementWithDataId) {
+        console.log('✅ Found element with data-id:', anchorId);
+
+        // Calculate position with offset for fixed header
+        const elementPosition = elementWithDataId.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        // Smooth scroll to position
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+
+        console.log(`📍 Scrolled to section: ${anchorId}`);
+        return true;
+      } else {
+        // Fallback: try standard id attribute
+        const elementWithId = document.getElementById(anchorId);
+        if (elementWithId) {
+          console.log('✅ Found element with id:', anchorId);
+
+          const elementPosition = elementWithId.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
           });
 
-          // Update URL without causing a page reload
-          window.history.pushState(null, '', target.hash);
+          console.log(`📍 Scrolled to section (fallback): ${anchorId}`);
+          return true;
+        } else {
+          console.warn(`⚠️ Section not found (attempt ${attemptCount + 1}):`, anchorId);
+          return false;
         }
       }
     };
 
-    document.addEventListener('click', handleAnchorClick);
+    // Initial attempt
+    if (tryScroll()) {
+      return;
+    }
+
+    // Retry with delays if initial attempt failed
+    const timers = attempts.map((delay, index) => {
+      return setTimeout(() => {
+        attemptCount = index + 1;
+        if (tryScroll()) {
+          // Clear remaining timers if successful
+          timers.slice(index + 1).forEach(t => clearTimeout(t));
+        }
+      }, delay);
+    });
 
     return () => {
-      document.removeEventListener('click', handleAnchorClick);
+      timers.forEach(timer => clearTimeout(timer));
     };
-  }, [isReady]);
+  }, [location.hash, location.search, location.pathname, isDataLoaded]);
 };
 
 export default useSmoothScroll;

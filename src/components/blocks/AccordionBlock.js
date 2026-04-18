@@ -141,7 +141,11 @@ if (style === '2') {
                   [&_li]:text-base [&_li]:text-gray-700 [&_li]:leading-relaxed [&_li]:mb-3 [&_li]:pl-3
                   [&_li::marker]:text-gray-700 [&_li::marker]:font-semibold
                   [&_.subtitle]:text-2xl [&_.subtitle]:font-bold [&_.subtitle]:text-gray-900 [&_.subtitle]:mb-6 [&_.subtitle]:leading-snug [&_.subtitle]:block
-                  [&_.lead]:text-lg [&_.lead]:font-semibold [&_.lead]:text-gray-800 [&_.lead]:mb-3"
+                  [&_.lead]:text-lg [&_.lead]:font-semibold [&_.lead]:text-gray-800 [&_.lead]:mb-3
+                  [&_table]:!w-full [&_table]:table-auto
+                  md:[&_table]:w-auto
+                  [&_th]:border [&_th]:border-gray-300 [&_th]:px-2 [&_th]:py-2 [&_th]:text-left [&_th]:text-sm
+                  [&_td]:border [&_td]:border-gray-300 [&_td]:px-2 [&_td]:py-2 [&_td]:text-sm"
                 dangerouslySetInnerHTML={{ __html: copy }}
               />
             )}
@@ -191,15 +195,18 @@ if (style === '3') {
         .accordion-hover-style-4:hover::before {
           height: 100%;
         }
+          .prose p {
+  clear: both !important;
+}
       `}</style>
       <div className="max-w-[1120px] mx-auto">
 
-        <div className="border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+        <div className="border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
 
           {/* Header */}
           <button
             onClick={() => toggleSection('style-3')}
-            className="w-full flex flex-col sm:flex-row items-stretch text-left transition-all duration-300 group relative overflow-hidden accordion-hover-style-3"
+            className="w-full flex flex-col sm:flex-row items-stretch text-left transition-all duration-300 group relative accordion-hover-style-3"
           >
             {/* Image */}
             {content.image && (
@@ -229,7 +236,7 @@ if (style === '3') {
 
               {/* Chevron */}
              <div
-            className={`rounded-full flex items-center justify-center transition-all duration-300 ${
+            className={`rounded-full min-w-[40px] flex items-center justify-center transition-all duration-300 ${
               isOpen
                 ? 'bg-[#D30013] text-white w-14 h-9'
                 : 'border-2 border-[#D30013] text-[#D30013] w-9 h-9 group-hover:bg-[#D30013] group-hover:text-white group-hover:w-14'
@@ -246,43 +253,48 @@ if (style === '3') {
 
           {/* Expanded Content */}
           <div
-            className={`overflow-hidden transition-all duration-500 ${
-              isOpen ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'
-            }`}
-          >
+  className={`transition-all duration-500 overflow-hidden ${
+    isOpen ? 'max-h-[1200px] opacity-100 overflow-y-scroll' : 'max-h-0 opacity-0 overflow-y-hidden'
+  }`}
+>
             <div className="px-6 sm:px-8 pb-8 border-t border-gray-200">
-
-             
 
               {/* Qualifications */}
               <div className="mt-6">
-              
-
                 {copy && (
-                  <div
-                    className="text-left prose prose-lg max-w-none
-                      prose-headings:font-bold prose-headings:text-gray-900 prose-headings:leading-tight
-                      prose-h1:text-3xl prose-h1:mb-6 prose-h1:mt-6
-                      prose-h2:text-2xl prose-h2:mb-6 prose-h2:mt-6 prose-h2:leading-snug
-                      prose-h3:text-xl prose-h3:mb-4 prose-h3:mt-5
-                      prose-h4:text-lg prose-h4:mb-3 prose-h4:mt-4
-                      prose-p:text-base prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-p:mt-0
-                      prose-ol:list-decimal prose-ol:ml-6 prose-ol:pl-6 prose-ol:mb-6 prose-ol:mt-4 prose-ol:space-y-3 prose-ol:text-gray-700
-                      prose-ul:list-disc prose-ul:ml-6 prose-ul:pl-6 prose-ul:mb-6 prose-ul:mt-4 prose-ul:space-y-3 prose-ul:text-gray-700
-                      prose-li:text-base prose-li:text-gray-700 prose-li:leading-relaxed prose-li:mb-3 prose-li:pl-3 prose-li:marker:text-gray-600 prose-li:marker:font-bold
-                      prose-strong:text-gray-900 prose-strong:font-bold
-                      prose-em:text-gray-700 prose-em:italic
-                      prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline hover:prose-a:text-blue-800
-                      prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic
-                      prose-code:text-gray-800 prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded
-                      [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:pl-6 [&_ol]:my-6 [&_ol]:space-y-3
-                      [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:pl-6 [&_ul]:my-6 [&_ul]:space-y-3
-                      [&_li]:text-base [&_li]:text-gray-700 [&_li]:leading-relaxed [&_li]:mb-3 [&_li]:pl-3
-                      [&_li::marker]:text-gray-700 [&_li::marker]:font-semibold
-                      [&_.subtitle]:text-2xl [&_.subtitle]:font-bold [&_.subtitle]:text-gray-900 [&_.subtitle]:mb-6 [&_.subtitle]:leading-snug [&_.subtitle]:block
-                      [&_.lead]:text-lg [&_.lead]:font-semibold [&_.lead]:text-gray-800 [&_.lead]:mb-3"
-                    dangerouslySetInnerHTML={{ __html: copy }}
-                  />
+              <div
+              className="text-left prose prose-lg max-w-none
+                prose-headings:font-bold prose-headings:text-gray-900 prose-headings:leading-tight
+                prose-h1:text-3xl prose-h1:mb-6 prose-h1:mt-6
+                prose-h2:text-2xl prose-h2:mb-6 prose-h2:mt-6 prose-h2:leading-snug
+                prose-h3:text-xl prose-h3:mb-4 prose-h3:mt-5
+                prose-h4:text-lg prose-h4:mb-3 prose-h4:mt-4
+
+                prose-p:text-base prose-p:text-gray-700 prose-p:leading-relaxed
+                prose-p:mb-4 prose-p:mt-0
+                prose-p:clear-both
+
+                prose-ol:list-decimal prose-ol:ml-6 prose-ol:pl-6 prose-ol:mb-6 prose-ol:mt-4 prose-ol:space-y-3 prose-ol:text-gray-700
+                prose-ul:list-disc prose-ul:ml-6 prose-ul:pl-6 prose-ul:mb-6 prose-ul:mt-4 prose-ul:space-y-3 prose-ul:text-gray-700
+                prose-li:text-base prose-li:text-gray-700 prose-li:leading-relaxed prose-li:mb-3 prose-li:pl-3 prose-li:marker:text-gray-600 prose-li:marker:font-bold
+                prose-strong:text-gray-900 prose-strong:font-bold
+                prose-em:text-gray-700 prose-em:italic
+                prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline hover:prose-a:text-blue-800
+                prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic
+                prose-code:text-gray-800 prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded
+
+                [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:pl-6 [&_ol]:my-6 [&_ol]:space-y-3
+                [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:pl-6 [&_ul]:my-6 [&_ul]:space-y-3
+                [&_li]:text-base [&_li]:text-gray-700 [&_li]:leading-relaxed [&_li]:mb-3 [&_li]:pl-3
+                [&_li::marker]:text-gray-700 [&_li::marker]:font-semibold
+                [&_.subtitle]:text-2xl [&_.subtitle]:font-bold [&_.subtitle]:text-gray-900 [&_.subtitle]:mb-6 [&_.subtitle]:leading-snug [&_.subtitle]:block
+                [&_.lead]:text-lg [&_.lead]:font-semibold [&_.lead]:text-gray-800 [&_.lead]:mb-3
+                [&_table]:!w-full [&_table]:table-auto
+                md:[&_table]:w-auto
+                [&_th]:border [&_th]:border-gray-300 [&_th]:px-2 [&_th]:py-2 [&_th]:text-left [&_th]:text-sm
+                [&_td]:border [&_td]:border-gray-300 [&_td]:px-2 [&_td]:py-2 [&_td]:text-sm"
+              dangerouslySetInnerHTML={{ __html: copy }}
+            />
                 )}
 
                                 {/* CTA */}
@@ -407,7 +419,7 @@ if (style === '4') {
                 className={`flex-shrink-0 rounded-full flex items-center justify-center transition-all duration-300 ${
                   isOpen
                     ? 'bg-[#D30013] text-white w-14 h-9'
-                    : 'border-2 border-[#D30013] text-[#D30013] w-9 h-9 group-hover:bg-[#D30013] group-hover:text-white group-hover:w-14'
+                    : 'border-2 border-[#D30013] text-[#D30013] min-w-10 w-9 h-9 group-hover:bg-[#D30013] group-hover:text-white group-hover:w-14'
                 }`}
               >
                 <ChevronDown
@@ -449,7 +461,11 @@ if (style === '4') {
                     [&_li]:text-base [&_li]:text-gray-700 [&_li]:leading-relaxed [&_li]:mb-3 [&_li]:pl-3
                     [&_li::marker]:text-gray-700 [&_li::marker]:font-semibold
                     [&_.subtitle]:text-2xl [&_.subtitle]:font-bold [&_.subtitle]:text-gray-900 [&_.subtitle]:mb-6 [&_.subtitle]:leading-snug [&_.subtitle]:block
-                    [&_.lead]:text-lg [&_.lead]:font-semibold [&_.lead]:text-gray-800 [&_.lead]:mb-3"
+                    [&_.lead]:text-lg [&_.lead]:font-semibold [&_.lead]:text-gray-800 [&_.lead]:mb-3
+                    [&_table]:!w-full [&_table]:table-auto
+                    md:[&_table]:w-auto
+                    [&_th]:border [&_th]:border-gray-300 [&_th]:px-2 [&_th]:py-2 [&_th]:text-left [&_th]:text-sm
+                    [&_td]:border [&_td]:border-gray-300 [&_td]:px-2 [&_td]:py-2 [&_td]:text-sm"
                   dangerouslySetInnerHTML={{ __html: copy }}
                 />
               )}

@@ -3,7 +3,7 @@ import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import EventsPage from './pages/EventsPage';
 import DataGrid from './pages/DataGrid';
-import TestPage from './pages/TestPage';
+// import TestPage from './pages/TestPage'; // Commented out - file not found
 import TextBlockDemo from './pages/TextBlockDemo';
 import LiveWorldWiseGridPage from './pages/LiveWorldWiseGridPage';
 import SEOExamplePage from './pages/SEOExamplePage';
@@ -93,7 +93,7 @@ function App() {
          {/* // <Route path="/home" element={<Home />} /> */}
           <Route path="/events" element={<EventsPage />} />
           <Route path="/datagrid" element={<DataGrid />} />
-          <Route path="/static-blocks" element={<TestPage />} />
+          {/* <Route path="/static-blocks" element={<TestPage />} /> */}
 
           <Route path="/text-block-demo" element={<TextBlockDemo />} />
           <Route path="/live-world-wise-test" element={<LiveWorldWiseGridPage />} />

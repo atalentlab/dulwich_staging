@@ -2,12 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import { MapPin, Users, Calendar } from 'lucide-react';
 import SchoolListingCarouselPage from '../../pages/SchoolListingCarouselPage';
 import SchoolListingListPage from '../../pages/SchoolListingListPage';
+import SchoolLocationsBlock from './SchoolLocationsBlock';
 
 /**
  * School Listing Block Component
  * Routes to different layouts based on listing-style:
  * - 'carousel' → SchoolListingCarouselPage
  * - 'list' → SchoolListingListPage
+ * - 'school_locations' → SchoolLocationsBlock (Globe view)
  * - 'grid' or default → Grid layout (below)
  */
 const SchoolListingBlock = ({ content, schools: propsSchools }) => {
@@ -20,6 +22,10 @@ const SchoolListingBlock = ({ content, schools: propsSchools }) => {
 
   if (listingStyle === 'list') {
     return <SchoolListingListPage title={title} />;
+  }
+
+  if (listingStyle === 'school_locations') {
+    return <SchoolLocationsBlock content={content} />;
   }
 
   // Default: Grid layout

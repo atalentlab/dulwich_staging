@@ -82,56 +82,33 @@ export const fetchSchoolPageBySlug = async (slug, school, locale) => {
       },
     });
 
-    // Check for redirect status codes (301/302) FIRST before checking response.ok
-    const isRedirectStatus = response.status === 301 || response.status === 302;
-
-    if (isRedirectStatus) {
-      console.log('🔄 HTTP Redirect Status Detected:', response.status);
-
-      // Read the response body even though it's a redirect
+    // Handle redirects (301, 302) before checking response.ok
+    // These status codes have response bodies we need to read
+    if (response.status === 301 || response.status === 302) {
+      console.log('🔄 Redirect status detected:', response.status);
       const rawData = await response.json();
-      console.log('📦 Redirect Response Body:', rawData);
-
-      // Extract redirect data from response body
-      let redirectsData = null;
+      console.log('✅ Redirect API Response:', rawData);
 
       if (rawData.success && rawData.data) {
         const apiData = rawData.data;
 
-        if (apiData.redirects) {
-          // Format 1: { redirects: { redirect: true, target: "...", status: "301" } }
-          redirectsData = apiData.redirects;
-        } else if (apiData.redirect === true && apiData.target) {
-          // Format 2: { redirect: true, target: "...", status: "301" }
-          redirectsData = {
-            redirect: apiData.redirect,
-            target: apiData.target,
-            status: apiData.status || response.status.toString()
-          };
-        }
-      }
+        // Ensure redirect data is properly formatted
+        const redirectsData = {
+          redirect: apiData.redirect || true,
+          target: apiData.target,
+          status: apiData.status || response.status.toString()
+        };
 
-      // If no redirect data in body, create from response
-      if (!redirectsData) {
-        redirectsData = {
-          redirect: true,
-          target: rawData.target || rawData.data?.target || '',
-          status: response.status.toString()
+        return {
+          header: apiData.header || {},
+          footer: apiData.footer || {},
+          banner: apiData.banner || {},
+          meta: apiData.meta || null,
+          blocks: apiData.blocks || [],
+          redirects: redirectsData,
+          school: apiData.school || { name: detectedSchool, slug: detectedSchool },
         };
       }
-
-      console.log('✅ Formatted Redirect Data:', redirectsData);
-
-      // Return the redirect data in the expected format
-      return {
-        header: {},
-        footer: {},
-        banner: {},
-        meta: null,
-        blocks: [],
-        redirects: redirectsData,
-        school: { name: detectedSchool, slug: detectedSchool },
-      };
     }
 
     if (!response.ok) {
@@ -288,55 +265,6 @@ export const fetchSchoolHomepage = async (school, locale) => {
         'Content-Type': 'application/json',
       },
     });
-
-    // Check for redirect status codes (301/302) FIRST before checking response.ok
-    const isRedirectStatus = response.status === 301 || response.status === 302;
-
-    if (isRedirectStatus) {
-      console.log('🔄 HTTP Redirect Status Detected in Homepage:', response.status);
-
-      // Read the response body even though it's a redirect
-      const rawData = await response.json();
-      console.log('📦 Homepage Redirect Response Body:', rawData);
-
-      // Extract redirect data from response body
-      let redirectsData = null;
-
-      if (rawData.success && rawData.data) {
-        const apiData = rawData.data;
-
-        if (apiData.redirects) {
-          redirectsData = apiData.redirects;
-        } else if (apiData.redirect === true && apiData.target) {
-          redirectsData = {
-            redirect: apiData.redirect,
-            target: apiData.target,
-            status: apiData.status || response.status.toString()
-          };
-        }
-      }
-
-      // If no redirect data in body, create from response
-      if (!redirectsData) {
-        redirectsData = {
-          redirect: true,
-          target: rawData.target || rawData.data?.target || '',
-          status: response.status.toString()
-        };
-      }
-
-      console.log('✅ Homepage Formatted Redirect Data:', redirectsData);
-
-      // Return the redirect data in the expected format
-      return {
-        header: {},
-        footer: {},
-        banner: {},
-        blocks: [],
-        redirects: redirectsData,
-        school: { name: detectedSchool, slug: detectedSchool },
-      };
-    }
 
     if (!response.ok) {
       const error = new Error(`HTTP error! status: ${response.status}`);

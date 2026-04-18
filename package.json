@@ -7,6 +7,7 @@
     "@ckeditor/ckeditor5-react": "^11.0.1",
     "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-tabs": "^1.1.13",
+    "@react-spring/web": "^10.0.3",
     "@tanstack/react-query": "^5.90.16",
     "@tanstack/react-query-devtools": "^5.91.2",
     "@testing-library/dom": "^10.4.1",
@@ -15,6 +16,7 @@
     "@testing-library/user-event": "^13.5.0",
     "aos": "^2.3.4",
     "axios": "^1.14.0",
+    "cobe": "^2.0.1",
     "dotenv": "^17.3.1",
     "express": "^4.18.2",
     "file-saver": "^2.0.5",
@@ -25,6 +27,7 @@
     "lottie-web": "^5.13.0",
     "lucide-react": "^0.561.0",
     "motion": "^12.23.26",
+    "prerender-node": "^3.8.3",
     "react": "^19.2.3",
     "react-countup": "^6.5.3",
     "react-dom": "^19.2.3",
@@ -45,19 +48,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "prebuild": "node scripts/generate-sitemap.js",
     "build": "react-scripts build",
+    "postbuild": "react-snap",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "node server.js",
     "build:serve": "react-scripts build && node server.js",
-    "generate:sitemap": "node scripts/generate-sitemap.js",
-    "snap": "react-snap",
-    "generate:sitemap:beijing": "SCHOOL=beijing node scripts/generate-sitemap.js",
-    "generate:sitemap:singapore": "SCHOOL=singapore node scripts/generate-sitemap.js",
-    "build:beijing": "SCHOOL=beijing npm run build",
-    "build:singapore": "SCHOOL=singapore npm run build",
-    "build:group": "npm run build"
+    "prerender:test": "node prerender-test.js"
   },
   "reactSnap": {
     "include": [
@@ -95,9 +92,8 @@
     "autoprefixer": "^10.4.22",
     "http-proxy-middleware": "^3.0.5",
     "postcss": "^8.5.6",
+    "prerender": "^5.21.6",
     "react-snap": "^1.23.0",
     "tailwindcss": "^3.4.18"
   }
 }
-
-

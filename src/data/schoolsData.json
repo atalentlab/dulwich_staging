@@ -10,6 +10,7 @@
         "students": 1570,
         "district": "Shunyi District",
         "location": "Beijing, China",
+        "location_coords": [40.0126, 116.4797],
         "tags": ["IGCSE", "IB Diploma"],
         "content": "Largest student body in Beijing. Purpose-built theatre and Olympic-standard sports facilities.",
         "url": "https://beijing.dulwich.org"
@@ -21,6 +22,7 @@
         "ages": "2 to 18",
         "students": 1600,
         "location": "Shanghai (Pudong), China",
+        "location_coords": [31.2304, 121.5610],
         "tags": ["IGCSE", "IB Diploma"],
         "content": "Leading international school with strong academic pathways.",
         "url": "https://shanghai-pudong.dulwich.org"
@@ -32,6 +34,7 @@
         "ages": "2 to 18",
         "students": 450,
         "location": "Shanghai (Puxi), China",
+        "location_coords": [31.2004, 121.4074],
         "tags": ["IGCSE", "IB Diploma"],
         "content": "Excellence in education with comprehensive curriculum.",
         "url": "https://shanghai-puxi.dulwich.org"
@@ -43,6 +46,7 @@
         "ages": "2 to 18",
         "students": 900,
         "location": "Suzhou, China",
+        "location_coords": [31.2989, 120.5853],
         "tags": ["IGCSE", "IB Diploma"],
         "content": "Innovative learning environment with world-class facilities.",
         "url": "https://suzhou.dulwich.org"
@@ -54,6 +58,7 @@
         "ages": "2 to 18",
         "students": 2890,
         "location": "Singapore",
+        "location_coords": [1.3095, 103.8614],
         "tags": ["IGCSE", "IB Diploma"],
         "content": "Premier international education in the heart of Singapore.",
         "url": "https://singapore.dulwich.org"
@@ -65,6 +70,7 @@
         "ages": "2 to 18",
         "students": 650,
         "location": "Seoul, South Korea",
+        "location_coords": [37.5665, 126.9780],
         "tags": ["IGCSE", "IB Diploma"],
         "content": "Bilingual education with global perspective.",
         "url": "https://seoul.dulwich.org"
@@ -76,6 +82,7 @@
         "ages": "14 to 19",
         "students": 700,
         "location": "Suzhou, China",
+        "location_coords": [31.2703, 120.6178],
         "tags": ["IB Diploma"],
         "content": "Specialized high school programme preparing students for university.",
         "url": "https://suzhou-high-school.dulwich.org"
@@ -87,6 +94,7 @@
         "ages": "14 to 18",
         "students": 250,
         "location": "Hengqin, China",
+        "location_coords": [22.1333, 113.5500],
         "tags": ["IB Diploma"],
         "content": "Rigorous academic program with international focus.",
         "url": "https://hengqin.dulwich.org"
@@ -98,6 +106,7 @@
         "ages": "3 to 18",
         "students": 5000,
         "location": "Bangkok, Thailand",
+        "location_coords": [13.7563, 100.5018],
         "tags": ["IGCSE"],
         "content": "Newest addition to the Dulwich family with state-of-the-art facilities.",
         "url": "https://bangkok.dulwich.org"
@@ -109,6 +118,7 @@
         "ages": "6 to 17",
         "students": 800,
         "location": "Shanghai, China",
+        "location_coords": [31.2304, 121.4737],
         "tags": ["Chinese Curriculum"],
         "content": "Blending Chinese national curriculum with international education.",
         "url": "https://shanghai.dehong.cn"
@@ -120,6 +130,7 @@
         "ages": "3 to 16",
         "students": "400+",
         "location": "Beijing, China",
+        "location_coords": [39.9869, 116.4831],
         "tags": ["Chinese Curriculum"],
         "content": "Chinese-language education with international perspective.",
         "url": "https://beijing.dehong.cn"
@@ -131,6 +142,7 @@
         "ages": "6 to 12",
         "students": 350,
         "location": "Xi'an, China",
+        "location_coords": [34.2658, 108.9541],
         "tags": ["Chinese Curriculum"],
         "content": "Quality Chinese education in historic Xi'an.",
         "url": "https://xian.dehong.cn"

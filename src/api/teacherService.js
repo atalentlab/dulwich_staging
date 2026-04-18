@@ -8,7 +8,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.atale
 /**
  * Fetches teacher list with optional filters
  * @param {Object} params - Query parameters
- * @param {string} params.school - School parameter (e.g., 'beijing')
+ * @param {string} params.school - School parameter (e.g., 'beijing-cms')
  * @param {string} params.locale - The locale/language code
  * @param {number} params.page_no - Page number for pagination
  * @param {number} params.limit - Number of items per page
@@ -29,9 +29,7 @@ export const fetchTeacherList = async ({
 
     const params = new URLSearchParams();
 
-    // Add -cms suffix to school parameter
-    const cmsSuffix = process.env.REACT_APP_SCHOOL_CMS_SUFFIX || '-cms';
-    if (school) params.append('school', `${school}${cmsSuffix}`);
+    if (school) params.append('school', school);
     if (locale && locale !== 'en') params.append('locale', locale);
     params.append('page_no', page_no.toString());
     params.append('limit', limit.toString());

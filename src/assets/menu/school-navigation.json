@@ -776,6 +776,13 @@
                 "schools": [
                   "singapore"
                 ]
+              },
+              {
+                "title": "Holiday Camps",
+                "url": "/learning/holistic-education/holiday-camps",
+                "schools": [
+                  "singapore"
+                ]
               }
             ]
           }
@@ -1309,7 +1316,7 @@
               },
               {
                 "title": "Contact",
-                "url": "/admissions/visit/visit-us?anchor=contact"
+                "url": "/contact"
               }
             ]
           }

@@ -24,9 +24,9 @@ import ScrollSpyPage from './ScrollSpyPage';
  *   - /preview/page?slug=mkjrrn5lf51775126879&locale=zh
  *
  * School Preview URLs:
- *   - /preview/page/ldx500q2s11775127037?school=beijing
- *   - /preview/page/ldx500q2s11775127037?school=beijing&locale=zh
- *   - /preview/page?slug=ldx500q2s11775127037&school=beijing&locale=zh
+ *   - /preview/page/ldx500q2s11775127037?school=beijing-cms
+ *   - /preview/page/ldx500q2s11775127037?school=beijing-cms&locale=zh
+ *   - /preview/page?slug=ldx500q2s11775127037&school=beijing-cms&locale=zh
  *
  * If 'school' parameter exists, it's a school preview; otherwise, it's a group preview
  */
@@ -62,7 +62,7 @@ const PreviewPage = () => {
         const schoolParam = searchParams.get('school');
 
         // Priority: query param > subdomain detection
-        const school = schoolParam || (isSchoolPreviewSite && detectedSchool ? detectedSchool : null);
+        const school = schoolParam || (isSchoolPreviewSite && detectedSchool ? `${detectedSchool}-cms` : null);
 
         console.log('🔍 Preview Page - Hostname:', window.location.hostname);
         console.log('🔍 Preview Page - Detected School:', detectedSchool);

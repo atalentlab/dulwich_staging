@@ -7,11 +7,13 @@ const CanvasGlobe = forwardRef(({
   size = 680
 }, ref) => {
   const canvasRef = useRef(null);
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [rotation, setRotation] = useState({ x: 0.2, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [lastMouse, setLastMouse] = useState({ x: 0, y: 0 });
   const animationRef = useRef(null);
-  const targetRotation = useRef({ x: 0, y: 0 });
+  const targetRotation = useRef({ x: 0.2, y: 0 });
+  const velocityRef = useRef({ x: 0, y: 0 });
+  const lastTimeRef = useRef(Date.now());
 
   // Expose pointOfView method to parent
   useImperativeHandle(ref, () => ({
@@ -111,15 +113,45 @@ const CanvasGlobe = forwardRef(({
     return dots;
   };
 
-  // Draw the globe
+  // Draw the globe with enhanced 3D effects
   const drawGlobe = (ctx, rotX, rotY) => {
     ctx.clearRect(0, 0, size, size);
 
     const radius = 150;
-    const segments = 24;
-    const rings = 16;
+    const segments = 32;
+    const rings = 24;
+    const centerX = size / 2;
+    const centerY = size / 2;
 
-    // Draw latitude lines
+    // Draw outer glow/atmosphere effect
+    const atmosphereGradient = ctx.createRadialGradient(centerX, centerY, radius, centerX, centerY, radius + 40);
+    atmosphereGradient.addColorStop(0, 'rgba(100, 149, 237, 0)');
+    atmosphereGradient.addColorStop(0.7, 'rgba(100, 149, 237, 0.1)');
+    atmosphereGradient.addColorStop(1, 'rgba(100, 149, 237, 0.3)');
+    ctx.fillStyle = atmosphereGradient;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius + 40, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw sphere base with gradient for depth
+    const sphereGradient = ctx.createRadialGradient(
+      centerX - radius * 0.3,
+      centerY - radius * 0.3,
+      radius * 0.1,
+      centerX,
+      centerY,
+      radius * 1.5
+    );
+    sphereGradient.addColorStop(0, 'rgba(70, 70, 70, 1)');
+    sphereGradient.addColorStop(0.5, 'rgba(50, 50, 50, 1)');
+    sphereGradient.addColorStop(1, 'rgba(20, 20, 20, 1)');
+
+    ctx.fillStyle = sphereGradient;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw latitude lines with depth-based opacity
     for (let i = 0; i <= rings; i++) {
       const lat = (i / rings) * Math.PI;
       const y = radius * Math.cos(lat);
@@ -135,27 +167,39 @@ const CanvasGlobe = forwardRef(({
         points.push(projected);
       }
 
-      // Draw line
+      // Draw line with depth-based styling
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(180, 180, 180, 0.3)';
-      ctx.lineWidth = 0.5;
-
       let started = false;
+
       for (let j = 0; j < points.length - 1; j++) {
+        const avgZ = (points[j].z + points[j + 1].z) / 2;
+        const depthFactor = Math.max(0, (avgZ + 150) / 300);
+        const opacity = 0.15 + depthFactor * 0.25;
+        const lineWidth = 0.3 + depthFactor * 0.4;
+
         if (points[j].z > -50 && points[j + 1].z > -50) {
+          ctx.strokeStyle = `rgba(180, 180, 180, ${opacity})`;
+          ctx.lineWidth = lineWidth;
+
           if (!started) {
             ctx.moveTo(points[j].x, points[j].y);
             started = true;
           }
           ctx.lineTo(points[j + 1].x, points[j + 1].y);
         } else {
-          started = false;
+          if (started) {
+            ctx.stroke();
+            ctx.beginPath();
+            started = false;
+          }
         }
       }
-      ctx.stroke();
+      if (started) {
+        ctx.stroke();
+      }
     }
 
-    // Draw longitude lines
+    // Draw longitude lines with depth-based opacity
     for (let i = 0; i < segments; i++) {
       const lng = (i / segments) * Math.PI * 2;
 
@@ -171,24 +215,36 @@ const CanvasGlobe = forwardRef(({
         points.push(projected);
       }
 
-      // Draw line
+      // Draw line with depth-based styling
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(180, 180, 180, 0.3)';
-      ctx.lineWidth = 0.5;
-
       let started = false;
+
       for (let j = 0; j < points.length - 1; j++) {
+        const avgZ = (points[j].z + points[j + 1].z) / 2;
+        const depthFactor = Math.max(0, (avgZ + 150) / 300);
+        const opacity = 0.15 + depthFactor * 0.25;
+        const lineWidth = 0.3 + depthFactor * 0.4;
+
         if (points[j].z > -50 && points[j + 1].z > -50) {
+          ctx.strokeStyle = `rgba(180, 180, 180, ${opacity})`;
+          ctx.lineWidth = lineWidth;
+
           if (!started) {
             ctx.moveTo(points[j].x, points[j].y);
             started = true;
           }
           ctx.lineTo(points[j + 1].x, points[j + 1].y);
         } else {
-          started = false;
+          if (started) {
+            ctx.stroke();
+            ctx.beginPath();
+            started = false;
+          }
         }
       }
-      ctx.stroke();
+      if (started) {
+        ctx.stroke();
+      }
     }
 
     // Draw world map dots

@@ -68,6 +68,38 @@ export const fetchPageBySlug = async (slug, locale) => {
       },
     });
 
+    // Handle redirects (301, 302) before checking response.ok
+    // These status codes have response bodies we need to read
+    if (response.status === 301 || response.status === 302) {
+      console.log('🔄 Redirect status detected:', response.status);
+      const rawData = await response.json();
+      console.log('✅ Redirect API Response:', rawData);
+
+      if (rawData.success && rawData.data) {
+        const apiData = rawData.data;
+
+        // Ensure redirect data is properly formatted
+        const redirectsData = {
+          redirect: apiData.redirect || true,
+          target: apiData.target,
+          status: apiData.status || response.status.toString()
+        };
+
+        return {
+          banner: apiData.banner || {},
+          meta: apiData.meta || null,
+          blocks: apiData.blocks || [],
+          redirects: redirectsData,
+          header: STATIC_HEADER,
+          footer: {
+            ...STATIC_FOOTER,
+            schools: apiData.schools || [],
+            articles: apiData.articles || []
+          },
+        };
+      }
+    }
+
     if (!response.ok) {
       const error = new Error(`HTTP error! status: ${response.status}`);
       error.status = response.status;
@@ -144,6 +176,34 @@ export const fetchPageData = async (pageSlug = 'home', locale = 'en') => {
         'Content-Type': 'application/json',
       },
     });
+
+    // Handle redirects (301, 302) before checking response.ok
+    if (response.status === 301 || response.status === 302) {
+      console.log('🔄 Redirect status detected in fetchPageData:', response.status);
+      const rawData = await response.json();
+
+      if (rawData.success && rawData.data) {
+        const apiData = rawData.data;
+        const redirectsData = {
+          redirect: apiData.redirect || true,
+          target: apiData.target,
+          status: apiData.status || response.status.toString()
+        };
+
+        return {
+          banner: apiData.banner || {},
+          meta: apiData.meta || null,
+          blocks: apiData.blocks || [],
+          redirects: redirectsData,
+          header: STATIC_HEADER,
+          footer: {
+            ...STATIC_FOOTER,
+            schools: apiData.schools || [],
+            articles: apiData.articles || []
+          },
+        };
+      }
+    }
 
     if (!response.ok) {
       const error = new Error(`HTTP error! status: ${response.status}`);

@@ -134,7 +134,7 @@ function SitemapPage() {
 
         if (isSchool && detectedSchool) {
           // School site - pass school parameter
-          apiUrl += `?school=${detectedSchool}&locale=${locale}`;
+          apiUrl += `?school=${detectedSchool}-cms&locale=${locale}`;
         } else {
           // International site - only pass locale
           apiUrl += `?locale=${locale}`;

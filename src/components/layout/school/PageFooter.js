@@ -317,7 +317,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
   // Get contact info from API
   const addresses = Array.isArray(schoolInfo?.addresses) ? schoolInfo.addresses : [];
   const primaryAddress = addresses[0] || {};
-  const contactEmail = primaryAddress?.contact_email || 'info@dulwich.org';
+  const contactEmail = primaryAddress?.contact_email || '';
   const contactPhone = primaryAddress?.telephone || '';
   const contactAddress = primaryAddress?.address || '';
   const localizedAddress = primaryAddress?.localized_address || '';
@@ -617,6 +617,14 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                       <p className="text-[14px] text-[#FDFCF8] leading-[24px] whitespace-pre-line">
                         {isChineseVersion && localizedAddress ? localizedAddress : contactAddress}
                       </p>
+                      {contactEmail && (
+                        <a
+                          href={`mailto:${contactEmail}`}
+                          className="text-[14px] text-[#FDFCF8] leading-[24px] mt-2 font-normal hover:text-[#D30013] transition-colors block"
+                        >
+                          {contactEmail}
+                        </a>
+                      )}
                       {contactPhone && (
                         <p className="text-[14px] text-[#FDFCF8] leading-[24px] mt-2">
                           T: {contactPhone}
@@ -634,6 +642,14 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                         <p className="text-[14px] text-[#FDFCF8] leading-[24px] whitespace-pre-line">
                           {isChineseVersion && addr.localized_address ? addr.localized_address : addr.address}
                         </p>
+                        {addr.contact_email && (
+                          <a
+                            href={`mailto:${addr.contact_email}`}
+                            className="text-[14px] text-[#FDFCF8] leading-[24px] mt-2 font-normal hover:text-[#D30013] transition-colors block"
+                          >
+                            {addr.contact_email}
+                          </a>
+                        )}
                         {addr.telephone && (
                           <p className="text-[14px] text-[#FDFCF8] leading-[24px] mt-2">
                             T: {addr.telephone}
@@ -661,8 +677,16 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                     <p className="text-[14px] text-[#FDFCF8] leading-[24px] whitespace-pre-line">
                       {isChineseVersion && localizedAddress ? localizedAddress : contactAddress}
                     </p>
+                    {contactEmail && (
+                      <a
+                        href={`mailto:${contactEmail}`}
+                        className="text-[14px] text-[#FDFCF8] leading-[24px] mt-3 font-normal hover:text-[#D30013] transition-colors block"
+                      >
+                        {contactEmail}
+                      </a>
+                    )}
                     {contactPhone && (
-                      <p className="text-[14px] text-[#FDFCF8] leading-[24px] mt-2">
+                      <p className="text-[14px] text-[#FDFCF8] leading-[24px] mt-3">
                         T: {contactPhone}
                       </p>
                     )}
@@ -678,6 +702,14 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                       <p className="text-[14px] text-[#FDFCF8] leading-[24px] whitespace-pre-line">
                         {isChineseVersion && addr.localized_address ? addr.localized_address : addr.address}
                       </p>
+                      {addr.contact_email && (
+                        <a
+                          href={`mailto:${addr.contact_email}`}
+                          className="text-[14px] text-[#FDFCF8] leading-[24px] mt-3 font-normal hover:text-[#D30013] transition-colors block"
+                        >
+                          {addr.contact_email}
+                        </a>
+                      )}
                       {addr.telephone && (
                         <p className="text-[14px] text-[#FDFCF8] leading-[24px] mt-2">
                           T: {addr.telephone}

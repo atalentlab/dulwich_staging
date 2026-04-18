@@ -2,7 +2,7 @@ import React from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://cms.dulwich.atalent.xyz';
 
 /**
  * DownloadSelectBlock Component
