@@ -985,7 +985,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                     <img
                       src={wechatQRCode}
                       alt="WeChat QR Code"
-                      className="w-32 h-32"
+                      className="w-32 h-32 p-1 bg-[#fff] rounded-lg" 
                       onError={(e) => {
                         e.target.style.display = 'none';
                       }}
@@ -996,12 +996,12 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
 
               {/* Social Icons Grid */}
               <div className="w-full p-2">
-                {/* Row 1: WeChat, RedNote, Youku */}
-                <div className="flex items-center justify-between mb-6 w-[63%]">
+                {/* Balanced 4-column grid for all social icons */}
+                <div className="grid grid-cols-4 gap-4 w-full">
                   {wechatQRCode && (
                     <button
                       onClick={() => handleOpenModal('wechat')}
-                      className="transition-all duration-300 hover:opacity-70 hover:scale-110 cursor-pointer bg-transparent border-0 p-0"
+                      className="transition-all duration-300 hover:opacity-70 hover:scale-110 cursor-pointer bg-transparent border-0 p-0 flex items-center justify-center"
                       aria-label="WeChat"
                     >
                       <Icon icon="Icon-Social-WC" size={28} color="white" />
@@ -1010,7 +1010,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                   {redNoteQRCode && (
                     <button
                       onClick={() => handleOpenModal('rednote')}
-                      className="transition-all duration-300 hover:opacity-70 hover:scale-110 cursor-pointer bg-transparent border-0 p-0"
+                      className="transition-all duration-300 hover:opacity-70 hover:scale-110 cursor-pointer bg-transparent border-0 p-0 flex items-center justify-center"
                       aria-label="RedNote"
                     >
                       <Icon icon="Icon-Social-RedNote" size={44} color="white" />
@@ -1021,22 +1021,29 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                       href={socialLinks.youku}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition-all duration-300 hover:opacity-70 hover:scale-110"
+                      className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-center"
                       aria-label="Youku"
                     >
                       <Icon icon="Icon-Social-YK" size={28} color="white" />
                     </a>
                   )}
-                </div>
-
-                {/* Row 2: Instagram, Facebook, YouTube, LinkedIn */}
-                <div className="flex items-center justify-between w-[90%]">
+                  {socialLinks.youtube && socialLinks.youtube !== '#' && (
+                    <a
+                      href={socialLinks.youtube}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-center"
+                      aria-label="YouTube"
+                    >
+                      <Icon icon="Icon-Social-YT" size={28} color="white" />
+                    </a>
+                  )}
                   {socialLinks.instagram && socialLinks.instagram !== '#' && (
                     <a
                       href={socialLinks.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition-all duration-300 hover:opacity-70 hover:scale-110"
+                      className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-center"
                       aria-label="Instagram"
                     >
                       <Icon icon="Icon-Social-IG" size={28} color="white" />
@@ -1047,21 +1054,10 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                       href={socialLinks.facebook}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition-all duration-300 hover:opacity-70 hover:scale-110"
+                      className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-center"
                       aria-label="Facebook"
                     >
                       <Icon icon="Icon-Social-FB" size={28} color="white" />
-                    </a>
-                  )}
-                  {socialLinks.youtube && socialLinks.youtube !== '#' && (
-                    <a
-                      href={socialLinks.youtube}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-all duration-300 hover:opacity-70 hover:scale-110"
-                      aria-label="YouTube"
-                    >
-                      <Icon icon="Icon-Social-YT" size={28} color="white" />
                     </a>
                   )}
                   {socialLinks.linkedin && socialLinks.linkedin !== '#' && (
@@ -1069,7 +1065,7 @@ function PageFooter({ sectionRefs, isVisible, availableSchools, selectedSchool, 
                       href={socialLinks.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition-all duration-300 hover:opacity-70 hover:scale-110"
+                      className="transition-all duration-300 hover:opacity-70 hover:scale-110 flex items-center justify-center"
                       aria-label="LinkedIn"
                     >
                       <Icon icon="Icon-Social-LI" size={28} color="white" />
