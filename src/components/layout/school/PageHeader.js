@@ -1648,7 +1648,39 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
 
                                 return (
                                   <>
-                                    {/* REGULAR SECTIONS - Show first */}
+                                    {/* HIGHLIGHTED SECTION - Moved to top */}
+                                    {allHighlightedLinks.length > 0 && (
+                                      <div className={`pb-6 ${hasRegularSections ? 'border-b border-gray-100 mb-6' : ''}`}>
+                                        <div className="grid grid-cols-2 gap-4">
+                                          {allHighlightedLinks.map((link, j) => (
+                                            <div key={j} className="flex flex-col">
+                                              <h3 className="text-[10px] font-bold text-[#3C3C3B] mb-3 tracking-[1.1px] uppercase min-h-[30px]">
+                                                {link.title}
+                                              </h3>
+                                              <a href={link.url} className="block group">
+                                                <div className="bg-white rounded text-left overflow-hidden shadow-md border border-[#F2EDE9] hover:shadow-lg transition-all duration-300">
+                                                  {link.imageUrl && (
+                                                    <div className="aspect-[4/3] overflow-hidden relative">
+                                                      <img
+                                                        src={link.imageUrl}
+                                                        alt={link.title}
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                      />
+                                                    </div>
+                                                  )}
+                                                  <div className="h-[36px] px-2 flex items-center justify-between bg-white">
+                                                    <span className="text-[12px] leading-3 font-semibold text-[#D30013]">{link.title}</span>
+                                                    <Icon icon="Icon-Chevron-Large" size={15} color="#D30013" className="font-semibold flex-shrink-0 group-hover:translate-x-1 transition-transform" />
+                                                  </div>
+                                                </div>
+                                              </a>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* REGULAR SECTIONS */}
                                     {navItem.sections.map((sec, i) => {
                                       const filteredLinks = filterLinks(sec.links);
                                       if (filteredLinks.length === 0) return null;
@@ -1688,43 +1720,6 @@ function PageHeader({ selectedSchool, availableSchools, setSelectedSchool, setSe
                                         </div>
                                       );
                                     })}
-
-                                    {/* HIGHLIGHTED SECTION */}
-                                    {allHighlightedLinks.length > 0 && (
-                                      <div className="pt-4">
-                                        <div className="grid grid-cols-4 gap-4">
-                                          {/* Empty spacers to push items to columns 3 and 4 when there are 2 items */}
-                                          {allHighlightedLinks.length === 2 && (
-                                            <>
-                                              <div></div>
-                                              <div></div>
-                                            </>
-                                          )}
-                                          {allHighlightedLinks.length === 1 && (
-                                            <>
-                                              <div></div>
-                                              <div></div>
-                                              <div></div>
-                                            </>
-                                          )}
-                                          {allHighlightedLinks.map((link, j) => (
-                                            <a key={j} href={link.url} className="block group">
-                                              <div className="bg-white rounded text-left overflow-hidden shadow-sm border border-[#F2EDE9] hover:shadow-md transition-all duration-300">
-                                                {link.imageUrl && (
-                                                  <div className="aspect-[4/3] overflow-hidden relative">
-                                                    <img
-                                                      src={link.imageUrl}
-                                                      alt={link.title}
-                                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                    />
-                                                  </div>
-                                                )}
-                                              </div>
-                                            </a>
-                                          ))}
-                                        </div>
-                                      </div>
-                                    )}
                                   </>
                                 );
                               })()}
