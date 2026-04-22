@@ -131,24 +131,25 @@ const createSlug = (title) => {
           imageUrl: child.highlight_menu?.image,
           description: child.highlight_menu?.description,
           buttonText: child.highlight_menu?.button_text || child.highlight_menu?.title || child.title,
-          isHighlighted: true
+          isHighlighted: true,
+          weight: child.highlight_menu?.weight
         }))
       });
     }
-  
+
     return sections;
-  };
-  
-  /**
-   * Map API menu IDs or positions to consistent English IDs
-   * This ensures menu items have stable IDs across different languages
-   */
-  const getStableMenuId = (menuItem, index) => {
+    };
+
+    /**
+    * Map API menu IDs or positions to consistent English IDs
+    * This ensures menu items have stable IDs across different languages
+    */
+    const getStableMenuId = (menuItem, index) => {
     // Try to use header_menu_title if available
     if (menuItem.header_menu_title) {
       return menuItem.header_menu_title;
     }
-  
+
     // Map by API ID if it matches known IDs
     const idMapping = {
       60: 'why-dulwich',
@@ -156,39 +157,39 @@ const createSlug = (title) => {
       796: 'community',
       797: 'admissions'
     };
-  
+
     if (menuItem.id && idMapping[menuItem.id]) {
       return idMapping[menuItem.id];
     }
-  
+
     // Fall back to position-based mapping (0=why, 1=learning, 2=community, 3=admissions)
     const positionMapping = ['why-dulwich', 'learning', 'community', 'admissions'];
     if (index < positionMapping.length) {
       return positionMapping[index];
     }
-  
+
     // Last resort: use slug from title
     return createSlug(menuItem.title);
-  };
-  
-  /**
-   * Transforms API menu data to School PageHeader navigation format
-   */
-  export const transformToSchoolNav = (apiData) => {
+    };
+
+    /**
+    * Transforms API menu data to School PageHeader navigation format
+    */
+    export const transformToSchoolNav = (apiData) => {
     if (!apiData?.success || !Array.isArray(apiData?.data)) {
       return [];
     }
-  
+
     return apiData.data.map((menuItem, index) => {
       const items = menuItem.items || [];
       const sections = [];
       const allCards = [];
       const allHighlightedLinks = [];
-  
+
       // Process each subsection (2nd level items)
       items.forEach(subsection => {
         const subsectionSections = processSubsection(subsection);
-  
+
         // Separate regular and highlighted sections
         subsectionSections.forEach(sec => {
           if (sec.style === 'highlighted') {
@@ -199,7 +200,7 @@ const createSlug = (title) => {
             sections.push(sec);
           }
         });
-  
+
         // Collect highlighted items from this subsection for cards
         const highlightedInSubsection = collectHighlightedItems(subsection.items || []);
         highlightedInSubsection.forEach(item => {
@@ -213,7 +214,14 @@ const createSlug = (title) => {
           });
         });
       });
-  
+
+      // Sort allHighlightedLinks by weight
+      allHighlightedLinks.sort((a, b) => {
+        const weightA = a.weight !== undefined && a.weight !== null ? a.weight : 999;
+        const weightB = b.weight !== undefined && b.weight !== null ? b.weight : 999;
+        return weightA - weightB;
+      });
+
       // Add ONE highlighted section at the end with all collected highlighted links
       if (allHighlightedLinks.length > 0) {
         sections.push({
@@ -222,8 +230,7 @@ const createSlug = (title) => {
           style: 'highlighted',
           links: allHighlightedLinks
         });
-      }
-  
+      }  
       // Sort cards by weight - items with null weight go last
       allCards.sort((a, b) => {
         const weightA = a.weight;
